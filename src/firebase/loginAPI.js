@@ -1,10 +1,9 @@
 import { initializeApp } from 'firebase/app';
-
 import {
     getAuth,
     createUserWithEmailAndPassword,
     signOut,
-    signInWith
+    signInWithEmailAndPassword
 } from 'firebase/auth';
 
 const firebaseConfig = {
@@ -44,9 +43,24 @@ const signOutUser = () => {
     })
 }
 
-// Log in user
-const loginUser = (email, password) => {
-    
+// Gets the current user who is signed in.
+const isLoggedIn = () => {
+    const user = auth.currentUser
+
+    return user 
+        ? true 
+        : false;
 }
 
-export { createUser }
+// Sign in user
+const signInUser = (email, password) => {
+    signInWithEmailAndPassword(auth, email, password)
+        .then(userCredential => {
+            console.log(userCredential.user);
+        })
+        .catch(error => {
+            console.log(error.message);
+        })
+};
+
+export { createUser, isLoggedIn }

@@ -8,8 +8,8 @@ const Signup = ({ navigation }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const signUpHandler = () => {
-        console.log("Sign up clicked");
         createUser(email, password);
+        navigation.navigate("Home");
     }
 
     return (
