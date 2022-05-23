@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, View, Button, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { createUser } from '../firebase/loginAPI';
 
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -7,7 +8,8 @@ const Signup = ({ navigation }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const signUpHandler = () => {
-        console.log("Some backend stuff goes here");
+        console.log("Sign up clicked");
+        createUser(email, password);
     }
 
     return (
