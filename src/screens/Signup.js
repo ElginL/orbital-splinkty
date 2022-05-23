@@ -17,19 +17,19 @@ const Signup = ({ navigation }) => {
                 <View style={styles.formContainer}>
                     <TextInput
                         style={styles.input}
-                        onChangeText={input => setEmail(email + input)}
+                        onChangeText={input => setEmail(input)}
                         keyboardType="email-address"
                         placeholder="Enter your email address"
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={input => setPassword(password + input)}
+                        onChangeText={input => setPassword(input)}
                         placeholder="Enter your password"
                         secureTextEntry
                     />
                     <TextInput
                         style={styles.input}
-                        onChangeText={input => setConfirmPassword(confirmPassword + input)}
+                        onChangeText={input => setConfirmPassword(input)}
                         placeholder="Confirm Password"
                         secureTextEntry
                     />
