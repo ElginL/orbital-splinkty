@@ -9,7 +9,7 @@ const Signup = ({ navigation }) => {
 
     const signUpHandler = () => {
         console.log("Sign up clicked");
-        createUser(email, password);
+        return createUser(email, password, confirmPassword);
     }
 
     return (

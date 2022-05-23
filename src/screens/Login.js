@@ -1,12 +1,27 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput, 
+    Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
+import { logInUser, logOutUser, loggedincheck } from '../firebase/loginAPI';
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     
-    const signInHandler = () => {
-        console.log("Backend goes here");
+    const logInHandler = () => {
+        console.log("Log in clicked!");
+        return logInUser(email, password);
+    }
+
+    // should only appear after logging in (i.e. in homepage/settings page).
+    // inserted here for testing purposes.
+    const logOutHandler = () => {
+        console.log("Log out clicked!");
+        return logOutUser();
+    }
+
+    // for my own testing purposes feel free to delete
+    const loggedin = () => {
+        return loggedincheck();
     }
 
     return (
@@ -27,12 +42,20 @@ const Login = ({ navigation }) => {
                         secureTextEntry
                     />
                     <Button
-                        title="Sign In"
-                        onPress={signInHandler}
+                        title="Log In"
+                        onPress={logInHandler}
                     />
                     <Button
                         title="Don't have an account? Click here to Sign Up"
                         onPress={() => navigation.navigate("Signup")}
+                    />
+                    <Button
+                        title="Log Out"
+                        onPress={logOutHandler}
+                    />
+                    <Button
+                        title="Logged In Test"
+                        onPress={loggedin}
                     />
                 </View>
             </View>
