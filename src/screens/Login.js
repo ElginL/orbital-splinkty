@@ -1,88 +1,70 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, 
-    Keyboard, TouchableWithoutFeedback, Alert } from 'react-native';
-import { logInUser, logOutUser, loggedincheck } from '../firebase/loginAPI';
+import { 
+    StyleSheet, 
+    Text, 
+    View,
+    TextInput, 
+    Keyboard,
+    TouchableWithoutFeedback,
+    TouchableOpacity,
+    Image
+} from 'react-native';
+import HorizontalLine from "../components/HorizontalLine";
+import AuthStyles from '../styles/AuthStyles';
+import { logInUser } from '../firebase/loginAPI';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    
+
     const logInHandler = () => {
-        console.log("Log in clicked!");
-        return logInUser(email, password);
-    }
-
-    // should only appear after logging in (i.e. in homepage/settings page).
-    // inserted here for testing purposes.
-    const logOutHandler = () => {
-        console.log("Log out clicked!");
-        return logOutUser();
-    }
-
-    // for my own testing purposes feel free to delete
-    const loggedin = () => {
-        return loggedincheck();
-    }
+        logInUser(email, password);
+    };
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.screenContainer}>
-                <Text style={styles.headerText}>Log In Page</Text>
-                <View style={styles.formContainer}>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={input => setEmail(input)}
-                        keyboardType="email-address"
-                        placeholder="Enter your email address"
+        <KeyboardAwareScrollView
+            resetScrollToCoords={{ x: 0, y: 0 }}
+            contentContainerStyle={AuthStyles.screenContainer}
+            >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={AuthStyles.screenContainer}>
+                    <Image
+                        style={AuthStyles.teamLogo}
+                        source={require('../assets/SplinktyIcon.png')}
                     />
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={input => setPassword(input)}
-                        placeholder="Enter your password"
-                        secureTextEntry
-                    />
-                    <Button
-                        title="Log In"
-                        onPress={logInHandler}
-                    />
-                    <Button
-                        title="Don't have an account? Click here to Sign Up"
-                        onPress={() => navigation.navigate("Signup")}
-                    />
-                    <Button
-                        title="Log Out"
-                        onPress={logOutHandler}
-                    />
-                    <Button
-                        title="Logged In Test"
-                        onPress={loggedin}
-                    />
+                    <Text style={AuthStyles.headerTitle}>Account Login</Text>
+                    <View style={AuthStyles.formContainer}>
+                        <TextInput
+                            style={AuthStyles.textInput}
+                            onChangeText={input => setEmail(input)}
+                            keyboardType="email-address"
+                            placeholder="Enter your email address"
+                        />
+                        <TextInput
+                            style={AuthStyles.textInput}
+                            onChangeText={input => setPassword(input)}
+                            placeholder="Enter your password"
+                            secureTextEntry
+                        />
+                        <TouchableOpacity 
+                            style={AuthStyles.blueBGBtn}
+                            onPress={logInHandler}>
+                            <Text style={AuthStyles.buttonText}>Log In</Text>
+                        </TouchableOpacity>
+                        <HorizontalLine />
+                        <TouchableOpacity 
+                            style={AuthStyles.blueBGBtn}
+                            onPress={() => navigation.navigate("Signup")}>
+                            <Text style={AuthStyles.buttonText}>Sign Up Account</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-        </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
     );
 };
 
-const styles = StyleSheet.create({
-    screenContainer: {
-        flex: 1
-    },
-    headerText: {
-        fontSize: 40,
-        textAlign: 'center',
-        marginTop: 60,
-        marginBottom: 30
-    },
-    input: {
-        borderColor: 'black',
-        borderWidth: 1,
-        padding: 10,
-        width: '70%',
-        margin: 10
-    },
-    formContainer: {
-        alignItems: 'center'
-    }
-});
+const styles = StyleSheet.create({});
 
 export default Login;

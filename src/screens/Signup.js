@@ -1,6 +1,18 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, Button, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native';
+import { 
+    StyleSheet,
+    Text, 
+    View, 
+    TextInput, 
+    Keyboard, 
+    TouchableWithoutFeedback,
+    TouchableOpacity,
+    Image,
+} from 'react-native';
 import { createUser } from '../firebase/loginAPI';
+import HorizontalLine from '../components/HorizontalLine';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import AuthStyles from '../styles/AuthStyles';
 
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -8,67 +20,58 @@ const Signup = ({ navigation }) => {
     const [confirmPassword, setConfirmPassword] = useState("");
 
     const signUpHandler = () => {
-        console.log("Sign up clicked");
-        return createUser(email, password, confirmPassword);
-    }
+        createUser(email, password, confirmPassword);
+    };
 
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <View style={styles.screenContainer}>
-                <Text style={styles.headerText}>Sign Up Page</Text>
-                <View style={styles.formContainer}>
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={input => setEmail(input)}
-                        keyboardType="email-address"
-                        placeholder="Enter your email address"
+        <KeyboardAwareScrollView
+            resetScrollToCoords={{ x: 0, y: 0 }}
+            contentContainerStyle={AuthStyles.screenContainer}
+            >
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={AuthStyles.screenContainer}>
+                    <Image 
+                        style={AuthStyles.teamLogo}
+                        source={require('../assets/SplinktyIcon.png')}
                     />
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={input => setPassword(input)}
-                        placeholder="Enter your password"
-                        secureTextEntry
-                    />
-                    <TextInput
-                        style={styles.input}
-                        onChangeText={input => setConfirmPassword(input)}
-                        placeholder="Confirm Password"
-                        secureTextEntry
-                    />
-                    <Button
-                        title="Sign Up"
-                        onPress={signUpHandler}
-                    />
-                    <Button
-                        title="Go back to sign in"
-                        onPress={() => navigation.navigate("Login")}
-                    />
+                    <Text style={AuthStyles.headerTitle}>Sign Up Page</Text>
+                    <View style={AuthStyles.formContainer}>
+                        <TextInput
+                            style={AuthStyles.textInput}
+                            onChangeText={input => setEmail(input)}
+                            keyboardType="email-address"
+                            placeholder="Enter your email address"
+                        />
+                        <TextInput
+                            style={AuthStyles.textInput}
+                            onChangeText={input => setPassword(input)}
+                            placeholder="Enter your password"
+                            secureTextEntry
+                        />
+                        <TextInput
+                            style={AuthStyles.textInput}
+                            onChangeText={input => setConfirmPassword(input)}
+                            placeholder="Confirm Password"
+                            secureTextEntry
+                        />
+                        <TouchableOpacity 
+                            style={AuthStyles.blueBGBtn}
+                            onPress={signUpHandler}>
+                            <Text style={AuthStyles.buttonText}>Sign Up</Text>
+                        </TouchableOpacity>
+                        <HorizontalLine />
+                        <TouchableOpacity 
+                            style={AuthStyles.blueBGBtn}
+                            onPress={() => navigation.navigate("Login")}>
+                            <Text style={AuthStyles.buttonText}>Go back to sign in</Text>
+                        </TouchableOpacity>
+                    </View>
                 </View>
-            </View>
-        </TouchableWithoutFeedback>
+            </TouchableWithoutFeedback>
+        </KeyboardAwareScrollView>
     );
 };
 
-const styles = StyleSheet.create({
-    screenContainer: {
-        flex: 1
-    },
-    headerText: {
-        fontSize: 40,
-        textAlign: 'center',
-        marginTop: 60,
-        marginBottom: 30
-    },
-    input: {
-        borderColor: 'black',
-        borderWidth: 1,
-        padding: 10,
-        width: '70%',
-        margin: 10
-    },
-    formContainer: {
-        alignItems: 'center'
-    }
-});
+const styles = StyleSheet.create({});
 
 export default Signup;
