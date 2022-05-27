@@ -132,11 +132,12 @@ const AUTH_ERRORS = {
     "auth/user-mismatch": "The supplied credentials do not correspond to the previously signed in user.",
     "auth/weak-password": "The password must be 6 characters long or more.",
     "auth/web-storage-unsupported": "This browser is not supported or 3rd party cookies and data may be disabled.",
-    "auth/already-initialized": "initializeAuth() has already been called with different options. To avoid this error, call initializeAuth() with the same options as when it was originally called, or call getAuth() to return the already initialized instance."
+    "auth/already-initialized": "initializeAuth() has already been called with different options. To avoid this error, call initializeAuth() with the same options as when it was originally called, or call getAuth() to return the already initialized instance.",
+    "auth/password-mismatch": "Passwords do not match!"
 }
 
 const getErrorMessage = (errorID) => {
-    alert(AUTH_ERRORS[errorID]);
+    return AUTH_ERRORS[errorID];
 }
 
 export default getErrorMessage;
