@@ -1,3 +1,4 @@
+import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import {
     getAuth,
@@ -5,7 +6,6 @@ import {
     signOut,
     signInWithEmailAndPassword
 } from 'firebase/auth';
-import getErrorMessage from './authErrorMessages';
 import {
     apiKey,
     authDomain,
@@ -34,36 +34,26 @@ const auth = getAuth(app);
 
 // Create user with email and password
 const createUser = (email, password, confirmPassword) => {
+    function PasswordMismatchException() {
+        this.code = "auth/password-mismatch"
+        this.message = "Passwords do not match!"
+    }
+    
     if (password !== confirmPassword) {
-        alert("Passwords do not match!");
+        throw new PasswordMismatchException();
     } else {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(userCredential => {
-                alert("Registration successful!");
-            })
-            .catch(error => {
-                getErrorMessage(error.code);
-            })
+        return createUserWithEmailAndPassword(auth, email, password);
     }
 }
 
+// Log out currently logged in user
 const logOutUser = () => {
-    signOut(auth).then(() => {
-        alert("You have logged out.");
-    })
-    .catch(error => {
-        getErrorMessage(error.code);
-    })
+    return signOut(auth);
 }
 
-const logInUser = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            alert("Login successful!");
-        })
-        .catch((error) => {
-            getErrorMessage(error.code);
-        });
+// Log in with given email and password
+function logInUser(email, password) {
+    return signInWithEmailAndPassword(auth, email, password);
 }
 
 export { createUser, logInUser, logOutUser }

@@ -1,6 +1,6 @@
 import MainNavigator from './src/navigator/MainNavigation';
 
-export default App = () => {
+export default function App() {
   return (
     <MainNavigator />
   );
