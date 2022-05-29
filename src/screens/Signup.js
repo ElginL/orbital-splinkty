@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { 
     StyleSheet,
     Text, 
@@ -14,7 +14,7 @@ import HorizontalLine from '../components/HorizontalLine';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import AuthStyles from '../styles/AuthStyles';
 import LoadingOverlay from '../components/LoadingOverlay';
-import { SignedUpPopup, ErrorPopup } from '../components/PopupDialogs';
+import { ErrorPopup } from '../components/PopupDialogs';
 import getErrorMessage from '../firebase/authErrorMessages';
 
 const Signup = ({ navigation }) => {
@@ -22,7 +22,6 @@ const Signup = ({ navigation }) => {
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [isSignedUp, setSignedUp] = useState(false);
     const [isFailed, setFailed] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -30,14 +29,13 @@ const Signup = ({ navigation }) => {
         setIsLoading(true);
         try {
             createUser(email, password, confirmPassword)
-            .then(setSignedUp(true))
+            .then(() => {})
             .catch((error) => {
                 signUpFailHandler(error);
             });
         } catch (error) {
             signUpFailHandler(error);
         }
-        
     };
 
     const signUpFailHandler = (error) => {
@@ -45,7 +43,7 @@ const Signup = ({ navigation }) => {
         setFailed(true);
         setErrorMessage(getErrorMessage(error.code));
     }
-
+    
     const renderLoading = () => {
         if (isLoading) {
             return <LoadingOverlay />;
@@ -57,14 +55,6 @@ const Signup = ({ navigation }) => {
     const renderError = () => {
         if (isFailed) {
             return <ErrorPopup errorMessage={errorMessage} setFailed={setFailed}/> 
-        } else {
-            return;
-        }
-    }
-
-    const renderSignedUp = () => {
-        if (isSignedUp) {
-            return <SignedUpPopup setSignedUp={setSignedUp} />
         } else {
             return;
         }
@@ -103,9 +93,9 @@ const Signup = ({ navigation }) => {
                         />
                         <TouchableOpacity 
                             style={AuthStyles.blueBGBtn}
-                            onPress={
-                                signUpHandler
-                            }>
+                            onPress={() => {
+                                signUpHandler();
+                            }}>
                             <Text style={AuthStyles.buttonText}>Sign Up</Text>
                         </TouchableOpacity>
                         <HorizontalLine />
@@ -119,7 +109,6 @@ const Signup = ({ navigation }) => {
             </TouchableWithoutFeedback>
             {renderLoading()}
             {renderError()}
-            {renderSignedUp()}
         </KeyboardAwareScrollView>
     );
 };
