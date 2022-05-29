@@ -17,9 +17,11 @@ const FriendsPayments = () => {
         const userToOther = obj.data.payments.userToOther;
         
         const amount = Math.abs(otherToUser - userToOther);
+
         const friend = obj.data.otherUser === currentUser 
             ? obj.data.user 
             : obj.data.otherUser;
+            
         const isOweFriend = (obj.data.otherUser === currentUser &&
             otherToUser > userToOther) || 
             (obj.data.user === currentUser && 

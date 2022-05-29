@@ -26,7 +26,7 @@ const FriendsSearchBar = () => {
     const allUsers = useMemo(() => {
         return users.filter(user => !friendsEmail.includes(user.email) &&
             user.email !== getCurrentUser())
-    }, [users, friendsEmail]);
+    }, [users, friendsEmail, inReqs, outReqs]);
 
     const inReqs = useSelector(state => state.friendship.friendRequests);
     const incomingReqs = useMemo(() => inReqs.map(req => req.from), [inReqs]);
@@ -49,7 +49,7 @@ const FriendsSearchBar = () => {
                         id: doc.id 
                     } 
                 }));
-            })
+            });
         });
 
         // Storing the incoming friend requests.
@@ -62,7 +62,7 @@ const FriendsSearchBar = () => {
                         id: doc.id 
                     }
                 }));
-            })
+            });
         });
 
         return () => {
@@ -91,7 +91,6 @@ const FriendsSearchBar = () => {
                                 incomingReqs={incomingReqs} 
                         />)
                     }}
-                    style={styles.flatList}
                 />
             </View>
         </View>
@@ -109,12 +108,12 @@ const styles = StyleSheet.create({
         shadowOffset: { width: 0, height: 0},
         shadowOpacity: 20,
         shadowRadius: 10,
-        width: '70%',
+        width: '85%',
         marginTop: 30,
         padding: 10
     },
     searchResults: {
-        width: '70%',
+        width: '85%',
         position: 'absolute',
         top: 60,
         backgroundColor: 'white'

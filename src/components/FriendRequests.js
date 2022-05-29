@@ -1,9 +1,19 @@
+import { 
+    StyleSheet, 
+    View, 
+    Text, 
+    FlatList 
+} from 'react-native';
+import { 
+    collection, 
+    deleteDoc, 
+    addDoc, 
+    doc 
+} from 'firebase/firestore';
 import FriendRequest from './FriendRequest';
-import { StyleSheet, View, Text, FlatList } from 'react-native';
-import { collection, deleteDoc, addDoc, doc } from 'firebase/firestore';
-import { db, getCurrentUser } from '../firebase/loginAPI';
 import { useSelector, useDispatch } from 'react-redux';
 import { deleteFriendRequest } from '../store/friendsSlice';
+import { db, getCurrentUser } from '../firebase/loginAPI';
 
 const FriendRequests = () => {
     const dispatch = useDispatch();
@@ -12,9 +22,9 @@ const FriendRequests = () => {
 
     const declineHandler = async (id) => {
         dispatch(deleteFriendRequest({ id }));
-        const docRef = doc(db, 'friendrequests', id);
-
+        
         try {
+            const docRef = doc(db, 'friendrequests', id);
             await deleteDoc(docRef);
         } catch (err) {
             console.log(err);
@@ -45,7 +55,7 @@ const FriendRequests = () => {
                             <Text style={styles.emptyText}>
                                 No incoming friend requests...
                             </Text>
-                        )
+                        );
                     }
 
                     return (

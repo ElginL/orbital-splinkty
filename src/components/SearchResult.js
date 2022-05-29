@@ -1,14 +1,13 @@
-import React from 'react';
 import { 
     View,
     Text, 
     StyleSheet, 
     TouchableOpacity,
 } from 'react-native';
+import { addDoc, collection } from 'firebase/firestore';
 import { getCurrentUser, db } from '../firebase/loginAPI';
 import HorizontalLine from './HorizontalLine';
 import { AntDesign } from '@expo/vector-icons';
-import { addDoc, collection } from 'firebase/firestore';
 
 const SearchResult = ({ user, incomingReqs, outgoingReqs }) => {
     const addFriendHandler = (otherUser) => {

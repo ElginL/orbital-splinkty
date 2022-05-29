@@ -5,7 +5,6 @@ import {
     signOut,
     signInWithEmailAndPassword
 } from 'firebase/auth';
-import getErrorMessage from './authErrorMessages';
 import {
     apiKey,
     authDomain,
@@ -15,11 +14,7 @@ import {
     appId,
     measurementId
 } from '@env';
-import {
-    getFirestore,
-    addDoc,
-    collection
-} from "firebase/firestore";
+import { getFirestore } from "firebase/firestore";
 
 // Firebase project configuration
 const firebaseConfig = {
@@ -44,43 +39,27 @@ db.experimentalForceLongPolling = true;
 
 // Create user with email and password
 const createUser = (email, password, confirmPassword) => {
+    function PasswordMismatchException() {
+        this.code = "auth/password-mismatch"
+        this.message = "Passwords do not match!"
+    }
+    
     if (password !== confirmPassword) {
-        alert("Passwords do not match!");
+        throw new PasswordMismatchException();
     } else {
-        createUserWithEmailAndPassword(auth, email, password)
-            .then(userCredential => {
-                alert("Registration successful!");
-                
-                addDoc(collection(db, "users"), {
-                    uid: userCredential.user.uid,
-                    email: userCredential.user.email,
-                });
-            })
-            .catch(error => {
-                console.log(error.message);
-                getErrorMessage(error.code);
-            })
+        return createUserWithEmailAndPassword(auth, email, password);
     }
 }
 
-const logOutUser = () => {
-    signOut(auth).then(() => {
-        alert("You have logged out.");
-    })
-    .catch(error => {
-        getErrorMessage(error.code);
-    })
+// Log in with given email and password
+const logInUser = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
 }
 
-const logInUser = (email, password) => {
-    signInWithEmailAndPassword(auth, email, password)
-        .then((userCredential) => {
-            alert("Login successful!");
-        })
-        .catch((error) => {
-            getErrorMessage(error.code);
-        });
-};
+// Log out currently logged in user
+const logOutUser = () => {
+    return signOut(auth);
+}
 
 const getCurrentUser = () => {
     if (auth != null) {
@@ -90,8 +69,10 @@ const getCurrentUser = () => {
     return null;
 };
 
-const getCurrentUserUID = () => {
-    console.log(auth.currentUser.uid);
-}
-
-export { createUser, logInUser, logOutUser, db, getCurrentUser }
+export { 
+    createUser,
+    logInUser, 
+    logOutUser, 
+    getCurrentUser,
+    db 
+};

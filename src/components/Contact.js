@@ -8,9 +8,17 @@ import {
 const Contact = ({ item }) => {
     return (
         <View style={styles.contact}>
-        <Text>{item.friend}</Text>
+            <Text>{item.friend}</Text>
             {
                 (() => {
+                    if (item.amount === 0) {
+                        return (
+                            <View style={styles.paymentContainer}>
+                                <Text style={styles.nudgeAmount}>$0</Text>
+                            </View>
+                        );
+                    }
+
                     if (item.isOweFriend) {
                         return (
                             <View style={styles.paymentContainer}>
@@ -29,10 +37,10 @@ const Contact = ({ item }) => {
                                 <Text style={styles.nudgeText}>Nudge</Text>
                             </TouchableOpacity>
                         </View>
-                    )
+                    );
                 })()
             }
-    </View>
+        </View>
     );
 };
 
