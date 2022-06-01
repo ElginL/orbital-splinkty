@@ -9,6 +9,6 @@ const styles = StyleSheet.create({
     spinnerTextStyle: {
         color: 'white'
     }
-});
+})
 
 export default styles;

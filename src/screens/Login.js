@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
     StyleSheet, 
     Text, 
@@ -9,20 +9,19 @@ import {
     TouchableOpacity,
     Image
 } from 'react-native';
-import HorizontalLine from "../components/HorizontalLine";
-import AuthStyles from '../styles/AuthStyles';
-import { logInUser } from '../firebase/loginAPI';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import LoadingOverlay from '../components/LoadingOverlay';
+import HorizontalLine from "../components/HorizontalLine";
 import { ErrorPopup } from '../components/PopupDialogs';
+import LoadingOverlay from '../components/LoadingOverlay';
+import { logInUser } from '../firebase/loginAPI';
 import getErrorMessage from '../firebase/authErrorMessages';
+import AuthStyles from '../styles/AuthStyles';
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [isFailed, setFailed] = useState(false);
-    const [isLoggedOut, setLoggedOut] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
     const logInHandler = () => {
@@ -36,23 +35,19 @@ const Login = ({ navigation }) => {
 
     const logInFailHandler = (error) => {
         setIsLoading(false);
-        setFailed(true);
+        setTimeout(() => setFailed(true), 500);
         setErrorMessage(getErrorMessage(error.code));
     }
 
     const renderLoading = () => {
         if (isLoading) {
             return <LoadingOverlay />;
-        } else {
-            return;
         }
     }
 
     const renderError = () => {
         if (isFailed) {
-            return <ErrorPopup errorMessage={errorMessage} setFailed={setFailed}/> 
-        } else {
-            return;
+            return <ErrorPopup errorMessage={errorMessage} setFailed={setFailed}/>;
         }
     }
 
@@ -104,4 +99,5 @@ const Login = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({});
+
 export default Login;

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { 
     StyleSheet,
     Text, 
@@ -9,20 +9,20 @@ import {
     TouchableOpacity,
     Image,
 } from 'react-native';
-import { createUser } from '../firebase/loginAPI';
-import HorizontalLine from '../components/HorizontalLine';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
+import HorizontalLine from '../components/HorizontalLine';
 import AuthStyles from '../styles/AuthStyles';
 import LoadingOverlay from '../components/LoadingOverlay';
-import { SignedUpPopup, ErrorPopup } from '../components/PopupDialogs';
+import { ErrorPopup } from '../components/PopupDialogs';
 import getErrorMessage from '../firebase/authErrorMessages';
+import { addDoc, collection } from 'firebase/firestore';
+import { createUser, db } from '../firebase/loginAPI';
 
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
     const [isLoading, setIsLoading] = useState(false);
-    const [isSignedUp, setSignedUp] = useState(false);
     const [isFailed, setFailed] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -30,10 +30,15 @@ const Signup = ({ navigation }) => {
         setIsLoading(true);
         try {
             createUser(email, password, confirmPassword)
-            .then(setSignedUp(true))
-            .catch((error) => {
-                signUpFailHandler(error);
-            });
+                .then(userCredential => {    
+                    addDoc(collection(db, "users"), {
+                        uid: userCredential.user.uid,
+                        email: userCredential.user.email,
+                    });
+                })
+                .catch((error) => {
+                    signUpFailHandler(error);
+                });
         } catch (error) {
             signUpFailHandler(error);
         }
@@ -42,31 +47,19 @@ const Signup = ({ navigation }) => {
 
     const signUpFailHandler = (error) => {
         setIsLoading(false);
-        setFailed(true);
+        setTimeout(() => setFailed(true), 400);
         setErrorMessage(getErrorMessage(error.code));
     }
 
     const renderLoading = () => {
         if (isLoading) {
             return <LoadingOverlay />;
-        } else {
-            return;
         }
     }
 
     const renderError = () => {
         if (isFailed) {
             return <ErrorPopup errorMessage={errorMessage} setFailed={setFailed}/> 
-        } else {
-            return;
-        }
-    }
-
-    const renderSignedUp = () => {
-        if (isSignedUp) {
-            return <SignedUpPopup setSignedUp={setSignedUp} />
-        } else {
-            return;
         }
     }
 
@@ -81,7 +74,7 @@ const Signup = ({ navigation }) => {
                         style={AuthStyles.teamLogo}
                         source={require('../assets/SplinktyIcon.png')}
                     />
-                    <Text style={AuthStyles.headerTitle}>Sign Up Page</Text>
+                    <Text style={AuthStyles.headerTitle}>Sign Up</Text>
                     <View style={AuthStyles.formContainer}>
                         <TextInput
                             style={AuthStyles.textInput}
@@ -119,7 +112,6 @@ const Signup = ({ navigation }) => {
             </TouchableWithoutFeedback>
             {renderLoading()}
             {renderError()}
-            {renderSignedUp()}
         </KeyboardAwareScrollView>
     );
 };

@@ -18,13 +18,13 @@ const MainNavigator = () => {
     
     useEffect(() => {
         const subscriber = onAuthStateChanged(auth, user => {
-        if (user) {
-            setIsAuth(true);
-        } else {
-            setIsAuth(false);
-        }});
+            if (user) {
+                setIsAuth(true);
+            } else {
+                setIsAuth(false);
+            }});
     
-        return subscriber;
+            return subscriber;
     }, []);
 
     const MainTab = () => {

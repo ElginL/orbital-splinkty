@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import {
     getAuth,
@@ -15,7 +14,9 @@ import {
     appId,
     measurementId
 } from '@env';
+import { getFirestore } from "firebase/firestore";
 
+// Firebase project configuration
 const firebaseConfig = {
     apiKey: apiKey,
     authDomain: authDomain,
@@ -32,6 +33,10 @@ const app = initializeApp(firebaseConfig);
 // Initialize Firebase Authentication
 const auth = getAuth(app);
 
+// Initialize Cloud Firestore and get a reference to the service
+const db = getFirestore(app);
+db.experimentalForceLongPolling = true;
+
 // Create user with email and password
 const createUser = (email, password, confirmPassword) => {
     function PasswordMismatchException() {
@@ -46,14 +51,28 @@ const createUser = (email, password, confirmPassword) => {
     }
 }
 
+// Log in with given email and password
+const logInUser = (email, password) => {
+    return signInWithEmailAndPassword(auth, email, password);
+}
+
 // Log out currently logged in user
 const logOutUser = () => {
     return signOut(auth);
 }
 
-// Log in with given email and password
-function logInUser(email, password) {
-    return signInWithEmailAndPassword(auth, email, password);
-}
+const getCurrentUser = () => {
+    if (auth != null) {
+        return auth.currentUser.email;
+    }
 
-export { createUser, logInUser, logOutUser }
+    return null;
+};
+
+export { 
+    createUser,
+    logInUser, 
+    logOutUser, 
+    getCurrentUser,
+    db 
+};

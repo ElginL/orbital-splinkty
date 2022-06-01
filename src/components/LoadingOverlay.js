@@ -1,5 +1,4 @@
-import React, { Component } from 'react';
-import { Platform, StyleSheet, Text, View } from 'react-native';
+import { View } from 'react-native';
 import Spinner from 'react-native-loading-spinner-overlay';
 import LoadingStyles from '../styles/LoadingStyles';
 
