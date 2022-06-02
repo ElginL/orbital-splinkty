@@ -30,7 +30,7 @@ const Signup = ({ navigation }) => {
         setIsLoading(true);
         try {
             createUser(email, password, confirmPassword)
-                .then(userCredential => {    
+                .then(userCredential => {
                     addDoc(collection(db, "users"), {
                         uid: userCredential.user.uid,
                         email: userCredential.user.email,

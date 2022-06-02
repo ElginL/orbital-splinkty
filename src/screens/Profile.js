@@ -1,10 +1,22 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Button } from 'react-native';
-import { logOutUser } from '../firebase/loginAPI';
+import {
+    StyleSheet, 
+    TouchableOpacity,
+    Text,
+    SafeAreaView,
+    View
+} from 'react-native';
+import {
+    logOutUser,
+    getCurrentUser
+} from '../firebase/loginAPI';
 import { useDispatch } from 'react-redux';
 import { resetUsers } from '../store/usersSlice';
 import { resetFriends } from '../store/friendsSlice';
 import LoadingOverlay from '../components/LoadingOverlay';
+import ProfileImgPicker from '../components/ProfileImgPicker';
+import NotificationSettings from '../components/NotificationSettings';
+import HorizontalLine from '../components/HorizontalLine';
 
 const Profile = () => {
     const dispatch = useDispatch();
@@ -25,23 +37,64 @@ const Profile = () => {
     const renderLoading = () => {
         if (isLoading) {
             return <LoadingOverlay />;
-        } else {
-            return;
         }
     }
 
     return (
-        <View>
-            <Text>Profile Page</Text>
-            <Button
-                title="Log Out Button"
+        <SafeAreaView style={styles.container}>
+            <View style={styles.userProfile}>
+                <ProfileImgPicker />
+                <Text style={styles.userText}>{getCurrentUser()}</Text>
+            </View>
+            <View style={styles.settings}>
+                <Text style={styles.settingsText}>Settings</Text>
+                <HorizontalLine />
+                <NotificationSettings />
+            </View>
+            <TouchableOpacity
                 onPress={logOutHandler}
-            />
+                style={styles.logOutBtn}>
+                <Text style={styles.logOutText}>Log Out</Text>
+            </TouchableOpacity>
             {renderLoading()}
-        </View>
+        </SafeAreaView>
     );
 };
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+    container: {
+        flex: 1
+    },
+    userProfile: {
+        alignItems: 'center',
+        margin: 30
+    },
+    photoFrame: {
+        width: 200,
+        height: 200,
+        borderRadius: 100,
+        borderWidth: 1,
+        borderColor: 'black'
+    },
+    userText: {
+        fontSize: 20,
+        margin: 20,
+        fontWeight: 'bold'
+    },
+    settingsText: {
+        fontSize: 30
+    },
+    settings: {
+        margin: 30
+    },
+    logOutBtn: {
+        marginTop: '25%'
+    },
+    logOutText: {
+        color: 'rgb(10, 132, 255)',
+        fontSize: 20,
+        textAlign: 'center'
+    }
+});
 
 export default Profile;

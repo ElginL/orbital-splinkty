@@ -3,7 +3,8 @@ import {
     getAuth,
     createUserWithEmailAndPassword,
     signOut,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    updateProfile
 } from 'firebase/auth';
 import {
     apiKey,
@@ -15,6 +16,7 @@ import {
     measurementId
 } from '@env';
 import { getFirestore } from "firebase/firestore";
+import { getStorage } from "firebase/storage";
 
 // Firebase project configuration
 const firebaseConfig = {
@@ -36,6 +38,9 @@ const auth = getAuth(app);
 // Initialize Cloud Firestore and get a reference to the service
 const db = getFirestore(app);
 db.experimentalForceLongPolling = true;
+
+// Firebase cloud storage
+const storage = getStorage(app);
 
 // Create user with email and password
 const createUser = (email, password, confirmPassword) => {
@@ -69,10 +74,35 @@ const getCurrentUser = () => {
     return null;
 };
 
+// Sets the authenticated user's photo URL (Profile picture).
+const setUserProfilePicture = (photoURL) => {
+    if (auth != null) {
+        updateProfile(auth.currentUser, {
+            photoURL
+        }).then(() => {
+            console.log("Profile updated!");
+        }).catch(err => {
+            console.log(err.message);
+        })
+    }
+}
+
+// Gets the authenticated user's photo URL.
+const getUserProfilePicture = () => {
+    if (auth != null) {
+        return auth.currentUser.photoURL;
+    }
+
+    return "";
+}
+
 export { 
     createUser,
     logInUser, 
     logOutUser, 
     getCurrentUser,
-    db 
+    db,
+    storage,
+    setUserProfilePicture,
+    getUserProfilePicture
 };
