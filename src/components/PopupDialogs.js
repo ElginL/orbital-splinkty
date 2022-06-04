@@ -1,5 +1,9 @@
 import React, { useState } from 'react';
-import { TouchableOpacity, Text, View } from 'react-native';
+import { 
+    TouchableOpacity, 
+    Text, 
+    View
+} from 'react-native';
 import Modal from "react-native-modal";
 import ViewStyles from '../styles/ViewStyles';
 
