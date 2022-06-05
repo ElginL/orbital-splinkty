@@ -1,9 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { 
+    View, 
+    Text, 
+    StyleSheet 
+} from 'react-native';
 import { useDispatch } from 'react-redux';
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { 
+    collection, 
+    onSnapshot, 
+    query, 
+    where 
+} from "firebase/firestore";
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { addUser } from '../store/usersSlice';
+import { addUser, addProfilePicture } from '../store/usersSlice';
 import { addFriendWithPayments, addFriendEmail } from '../store/friendsSlice';
 
 const Home = () => {
@@ -55,6 +64,10 @@ const Home = () => {
                         id: doc.id 
                     } 
                 }));
+                dispatch(addProfilePicture({
+                    userEmail: doc.data().email,
+                    url: doc.data().photoURL
+                }))
             });
         });
 

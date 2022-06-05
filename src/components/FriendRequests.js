@@ -4,21 +4,22 @@ import {
     Text, 
     FlatList 
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
 import { 
+    addDoc,
     collection, 
     deleteDoc, 
-    addDoc, 
-    doc 
+    doc
 } from 'firebase/firestore';
-import FriendRequest from './FriendRequest';
-import { useSelector, useDispatch } from 'react-redux';
-import { deleteFriendRequest } from '../store/friendsSlice';
 import { db, getCurrentUser } from '../firebase/loginAPI';
+import { deleteFriendRequest } from '../store/friendsSlice';
+import FriendRequest from './FriendRequest';
 
 const FriendRequests = () => {
     const dispatch = useDispatch();
 
     const incomingFriendRequests = useSelector(state => state.friendship.friendRequests);
+    const profilePictures = useSelector(state => state.users.profilePictures);
 
     const declineHandler = async (id) => {
         dispatch(deleteFriendRequest({ id }));
@@ -37,8 +38,8 @@ const FriendRequests = () => {
         addDoc(collection(db, "friendship"), {
             otherUser: getCurrentUser(),
             payments: {
-                otherToUser: 0,
-                userToOther: 0,
+                isOweOtherUser: true,
+                payment: 0
             },
             user,
             id
@@ -49,47 +50,37 @@ const FriendRequests = () => {
         <View style={styles.container}>
             <Text style={styles.subheader}>Friend Requests</Text>
             {
-                (() => {
-                    if (incomingFriendRequests.length === 0) {
-                        return (
-                            <Text style={styles.emptyText}>
-                                No incoming friend requests...
-                            </Text>
-                        );
-                    }
-
-                    return (
+                incomingFriendRequests.length === 0
+                    ? <Text style={styles.emptyText}>No incoming friend requests...</Text>
+                    : (
                         <FlatList
                             keyExtractor={item => item.id}
                             listKey={item => item.id}
                             data={incomingFriendRequests}
                             renderItem={({ item }) => (
-                                <FriendRequest 
+                                <FriendRequest
                                     item={item}
                                     declineHandler={declineHandler}
                                     acceptHandler={acceptHandler}
+                                    url={profilePictures[item.from]}
                                 />
                             )}
                         />
                     )
-                })()
             }
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        margin: 30,
-        zIndex: 9
-    },
-    subheader: {
-        fontSize: 33
-    },
     emptyText: {
         fontStyle: 'italic',
         textAlign: 'center',
-        marginTop: 30,
+        marginVertical: 30,
+    },
+    subheader: {
+        fontSize: 33,
+        margin: 20
     },
 });
 
