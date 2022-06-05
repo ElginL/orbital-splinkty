@@ -72,7 +72,7 @@ const styles = StyleSheet.create({
     emptyText: {
         fontStyle: 'italic',
         textAlign: 'center',
-        marginTop: 30,
+        marginTop: 30
     }
 });
 

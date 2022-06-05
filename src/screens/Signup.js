@@ -34,6 +34,12 @@ const Signup = ({ navigation }) => {
                     addDoc(collection(db, "users"), {
                         uid: userCredential.user.uid,
                         email: userCredential.user.email,
+                        totals: {
+                            in: 0,
+                            out: 0,
+                        },
+                        peopleToPay: 0,
+                        peopleToReceive: 0
                     });
                 })
                 .catch((error) => {

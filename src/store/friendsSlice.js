@@ -17,7 +17,8 @@ const initialState = {
     friendsWithPayments: [],
     friendsEmail: [],
     friendRequests: [],
-    sentFriendRequests: []
+    sentFriendRequests: [],
+    top3Payments: []
 }
 
 export const friendsSlice = createSlice({
@@ -68,6 +69,11 @@ export const friendsSlice = createSlice({
             state.friendRequests = [];
             state.sentFriendRequests = [];
         },
+        extractTop3Payments: (state) => {
+            const copy = state.friendsWithPayments.slice();
+            copy.sort(function(a, b){return b.data.payments.payment - a.data.payments.payment});
+            console.log(copy);
+        }
     }
 });
     
@@ -77,6 +83,7 @@ export const {
     addFriendEmail, 
     addFriendRequest,
     addSentFriendRequest,
-    deleteFriendRequest
+    deleteFriendRequest,
+    extractTop3Payments
 } = friendsSlice.actions;
 export default friendsSlice.reducer;
