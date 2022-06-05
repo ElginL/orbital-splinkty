@@ -1,8 +1,16 @@
 import { 
     storage, 
-    getCurrentUser, 
-    setUserProfilePicture 
+    getCurrentUser,
+    db
 } from "./loginAPI";
+import {
+    doc,
+    updateDoc,
+    getDocs,
+    query,
+    where,
+    collection
+} from "firebase/firestore"
 import { 
     uploadBytes, 
     ref, 
@@ -18,9 +26,9 @@ const uploadImg = async uploadURI => {
     const ProfilePictureRef = ref(storageRef, "ProfilePictures/" + getCurrentUser());
     
     uploadBytes(ProfilePictureRef, blob)
-        .then(async snapshot => {
+        .then(async () => {
+            await updateURLInFirebase();
             console.log("Success");
-            await saveURLInAuthUser();
         });
 }
 
@@ -28,23 +36,35 @@ const deleteProfileImg = async () => {
     const desertRef = ref(storage, "ProfilePictures/" + getCurrentUser());
 
     try {
-        if (desertRef) {
+        if (desertRef !== undefined) {
             deleteObject(desertRef);
+            await updateURLInFirebaseHelper("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
         }
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const saveURLInAuthUser = async () => {
+const updateURLInFirebase = async () => {
     const ProfilePictureRef = ref(storage, "ProfilePictures/" + getCurrentUser());
-    
+
     try {
         const URL = await getDownloadURL(ProfilePictureRef);
-        setUserProfilePicture(URL);
+        await updateURLInFirebaseHelper(URL);
     } catch (err) {
         console.log(err.message);
     }
+}
+
+const updateURLInFirebaseHelper = async (url) => {
+    const q = query(collection(db, "users"), where("email", '==', getCurrentUser()));
+    const querySnapshot = await getDocs(q);
+    querySnapshot.forEach(async document => {
+        const userRef = doc(db, 'users', document.id);
+        await updateDoc(userRef, {
+            photoURL: url
+        });
+    })
 }
 
 export {

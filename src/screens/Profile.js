@@ -65,9 +65,13 @@ const styles = StyleSheet.create({
     container: {
         flex: 1
     },
-    userProfile: {
-        alignItems: 'center',
-        margin: 30
+    logOutBtn: {
+        marginTop: '25%'
+    },
+    logOutText: {
+        color: 'rgb(10, 132, 255)',
+        fontSize: 20,
+        textAlign: 'center'
     },
     photoFrame: {
         width: 200,
@@ -76,25 +80,21 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'black'
     },
-    userText: {
-        fontSize: 20,
-        margin: 20,
-        fontWeight: 'bold'
-    },
     settingsText: {
         fontSize: 30
     },
     settings: {
         margin: 30
     },
-    logOutBtn: {
-        marginTop: '25%'
+    userProfile: {
+        alignItems: 'center',
+        margin: 30
     },
-    logOutText: {
-        color: 'rgb(10, 132, 255)',
+    userText: {
         fontSize: 20,
-        textAlign: 'center'
-    }
+        margin: 20,
+        fontWeight: 'bold'
+    },
 });
 
 export default Profile;

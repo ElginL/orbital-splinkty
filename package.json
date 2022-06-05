@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "~0.16.2",
+    "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-firebase/app": "^14.11.0",
     "@react-navigation/bottom-tabs": "^6.3.1",
     "@react-navigation/native": "^6.0.10",
@@ -30,6 +31,7 @@
     "react-native-modal": "^13.0.1",
     "react-native-safe-area-context": "4.2.4",
     "react-native-screens": "~3.11.1",
+    "react-native-swipe-list-view": "^3.2.9",
     "react-native-virtualized-view": "^0.1.5",
     "react-native-web": "0.17.7",
     "react-redux": "^8.0.2",
