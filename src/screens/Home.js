@@ -1,21 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect } from 'react';
+import { 
+    View, 
+    Text, 
+    StyleSheet 
+} from 'react-native';
 import { useDispatch } from 'react-redux';
-import { collection, onSnapshot, query, where } from "firebase/firestore";
+import { 
+    collection, 
+    onSnapshot, 
+    query, 
+    where,
+    orderBy,
+    limit
+} from "firebase/firestore";
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { addUser } from '../store/usersSlice';
-import { addFriendWithPayments, addFriendEmail, extractTop3Payments } from '../store/friendsSlice';
-import { setData, getTotalIn } from '../store/currUserSlice';
-import FriendsPayments from '../components/FriendsPayments';
-import Greeting from '../components/Greeting';
+import { setData, addTopPayment, getTop3Payments, resetTop3Payments } from '../store/currUserSlice';
+import { addUser, addProfilePicture } from '../store/usersSlice';
+import { addFriendWithPayments, addFriendEmail } from '../store/friendsSlice';
+import Greeting from '../components/Greeting'
+import Top3Payments from '../components/Top3Payments';
 
 const Home = () => {
     const dispatch = useDispatch();
-
+    
     useEffect(() => {
         const friendshipRef = collection(db, "friendship");
         const usersRef = collection(db, "users");
-        
+        dispatch(resetTop3Payments());
+
         /* Adds friends to store, for which the friendship is formed by the current logged in user's
            sent request */
         const q = query(friendshipRef, where('user', '==', getCurrentUser()));
@@ -30,7 +42,7 @@ const Home = () => {
                 dispatch(addFriendEmail({ 
                     friend: doc.data().otherUser 
                 }));
-                dispatch(extractTop3Payments());
+                dispatch(getTop3Payments());
             });
         });
         
@@ -40,7 +52,7 @@ const Home = () => {
         const unsubAcceptedQ = onSnapshot(acceptedQuery, snapshot => {
             snapshot.docs.forEach(doc => {
                 dispatch(addFriendWithPayments({
-                    friend: { 
+                    friend: {
                         data: doc.data(),
                         id: doc.id 
                     }
@@ -48,7 +60,7 @@ const Home = () => {
                 dispatch(addFriendEmail({ 
                     friend: doc.data().user 
                 }));
-                dispatch(extractTop3Payments());
+                dispatch(getTop3Payments());
             });
         });
         
@@ -61,6 +73,10 @@ const Home = () => {
                         id: doc.id 
                     } 
                 }));
+                dispatch(addProfilePicture({
+                    userEmail: doc.data().email,
+                    url: doc.data().photoURL
+                }))
             });
         });
 
@@ -78,28 +94,45 @@ const Home = () => {
             })
         });
 
-        /* Listener for updates to top 3 outgoing payments from user perspective
-        const top3ToPayUserQuery = query(friendshipRef, 
+        const currIsUserQuery = query(friendshipRef, 
             where("user", "==", getCurrentUser()), 
-            where("payments.payment", ">", 0), 
-            where("payments.isOweOtherUser", "==", true),
+            where("payments.payment", ">", 0),
             orderBy("payments.payment", "desc"),
             limit(3));
+        const unsubCurrIsUserQuery = onSnapshot(currIsUserQuery, snapshot => {
+            snapshot.docs.forEach(doc => {
+                dispatch(addTopPayment({
+                    friend: {
+                        data: doc.data(),
+                        id: doc.id 
+                    }
+                }));
+            })
+        })
 
-        // Listener for updates to top 3 outgoing payments from other perspective
-        const top3ToPayOtherQuery = query(friendshipRef, 
+        const currIsOtherQuery = query(friendshipRef, 
             where("otherUser", "==", getCurrentUser()), 
             where("payments.payment", ">", 0),
-            where("payments.isOweOtherUser", "==", false),
             orderBy("payments.payment", "desc"),
             limit(3));
-        */
+        const unsubCurrIsOtherQuery = onSnapshot(currIsOtherQuery, snapshot => {
+            snapshot.docs.forEach(doc => {
+                dispatch(addTopPayment({
+                    friend: {
+                        data: doc.data(),
+                        id: doc.id 
+                    }
+                }));
+            })
+        })
 
         return () => {
             unsubFriendshipQ();
             unsubAcceptedQ();
             unsubUserQ();
             unsubInpayQ();
+            unsubCurrIsUserQuery();
+            unsubCurrIsOtherQuery();
         }
     }, []);
 
@@ -109,10 +142,7 @@ const Home = () => {
                 <Greeting />
             </View>
             <View style={styles.otherView}>
-                <Text>asdasd</Text>
-            </View>
-            <View style={styles.lastView}>
-                <Text>Home Page!!!</Text>
+                <Top3Payments />
             </View>
         </View>
     );
@@ -133,8 +163,8 @@ const styles = StyleSheet.create({
     },
 
     otherView: {
-        flex: 0.4,
-        backgroundColor: 'green'
+        flex: 0.8,
+        alignSelf: "stretch"
     },
 
     lastView: {

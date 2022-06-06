@@ -1,4 +1,5 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
+import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import {
     StyleSheet, 
@@ -6,23 +7,23 @@ import {
     View,
     Image,
 } from 'react-native';
-import { getUserProfilePicture, setUserProfilePicture } from '../firebase/loginAPI';
-import ProfileImgPickerModal from './ProfileImgPickerModal';
 import { uploadImg, deleteProfileImg } from '../firebase/ProfileImgAPI';
+import { getCurrentUser } from '../firebase/loginAPI';
+import ProfileImgPickerModal from './ProfileImgPickerModal';
 
 const ProfileImgPicker = () => {
     const NO_PROFILE_IMG = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
     const [photoURI, setPhotoURI] = useState(NO_PROFILE_IMG);
     const [visible, setVisible] = useState(false);
-
+    
+    const profilePictures = useSelector(state => state.users.profilePictures);
+    
     useEffect(() => {
-        const photoURI = getUserProfilePicture();
-
-        if (photoURI) {
-            setPhotoURI(photoURI);
+        if (profilePictures[getCurrentUser()]) {
+            setPhotoURI(profilePictures[getCurrentUser()]);
         }
-    }, []);
+    }, [profilePictures]);
 
     const onImageLibraryPress = async () => {
         try {
@@ -70,7 +71,6 @@ const ProfileImgPicker = () => {
 
     const onDeletePress = async () => {
         await deleteProfileImg();
-        setUserProfilePicture("");
         
         setPhotoURI(NO_PROFILE_IMG);
         setVisible(false);
@@ -81,9 +81,10 @@ const ProfileImgPicker = () => {
             <TouchableOpacity
                 style={styles.photoFrame}
                 onPress={() => setVisible(true)}>
-                    <Image
-                        style={styles.profileImg} 
-                        source={{ uri: photoURI }} />
+                <Image
+                    style={styles.profileImg} 
+                    source={{ uri: photoURI }}
+                />
             </TouchableOpacity>
             <ProfileImgPickerModal
                 isVisible={visible}

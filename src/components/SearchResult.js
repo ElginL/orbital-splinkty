@@ -1,57 +1,130 @@
 import { 
     View,
-    Text, 
-    StyleSheet, 
+    Text,
+    StyleSheet,
     TouchableOpacity,
+    Image
 } from 'react-native';
-import { addDoc, collection } from 'firebase/firestore';
+import { useDispatch } from 'react-redux';
+import { 
+    addDoc, 
+    collection, 
+    deleteDoc, 
+    doc 
+} from 'firebase/firestore';
 import { getCurrentUser, db } from '../firebase/loginAPI';
-import HorizontalLine from './HorizontalLine';
-import { AntDesign } from '@expo/vector-icons';
+import { deleteSentFriendRequest } from '../store/friendsSlice';
 
-const SearchResult = ({ user, incomingReqs, outgoingReqs }) => {
-    const addFriendHandler = (otherUser) => {
+const SearchResult = ({ user, outgoingReqs, profilePic }) => {
+    const dispatch = useDispatch();
+
+    const addFriendHandler = otherUser => {
         addDoc(collection(db, "friendrequests"), {
             from: getCurrentUser(),
             to: otherUser
         });
     }
 
+    const cancelHandler = async () => {
+        let id = "";
+        for (const request of outgoingReqs) {
+            if (request.to === user.email) {
+                id = request.id;
+                break;
+            }
+        }
+
+        dispatch(deleteSentFriendRequest({
+            id
+        }));
+
+        const docRef = doc(db, "friendrequests", id);
+        try {
+            await deleteDoc(docRef);
+        } catch (error) {
+            console.log(error.message);
+        }
+
+    }
+
+    const outgoingReqsContains = (email) => {
+        for (const request of outgoingReqs) {
+            if (request.to === email) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return (
         <View>
-            <HorizontalLine />
-            <View style={styles.resultContainer}>
-                <Text style={styles.singleSearchResult}>
-                    {user.email}
-                </Text>
+            <View style={styles.searchResult}>
+                <View style={styles.userDisplay}>
+                    <Image
+                        source={{ uri: profilePic }} 
+                        style={styles.contactImg} />
+                    <Text style={styles.name}>{user.email}</Text>
+                </View>
                 {
                     (() => {
-                        if (!incomingReqs.includes(user.email) && !outgoingReqs.includes(user.email)) {
+                        if (!outgoingReqsContains(user.email)) {
                             return (
                                 <TouchableOpacity
-                                    onPress={() => addFriendHandler(user.email) }>
-                                    <AntDesign name="plus" size={24} color="black" />
+                                    onPress={() => addFriendHandler(user.email) }
+                                    style={styles.addBtn}>
+                                    <Text style={styles.addText}>Add</Text>
                                 </TouchableOpacity>
                             )
                         }
-                        return <Text>Pending</Text>
+                        return (
+                            <TouchableOpacity
+                                onPress={cancelHandler}
+                            >
+                                <Text style={styles.pendingText}>Cancel</Text>
+                            </TouchableOpacity>
+                        )
                     })()
-                } 
-            </View> 
-            <HorizontalLine />
+                }
+            </View>
         </View>
     )
 };
 
 const styles = StyleSheet.create({
-    singleSearchResult: {
-        padding: 10,
+    contactImg: {
+        width: 50,
+        height: 50,
+        borderRadius: 25,
+        marginRight: 10
     },
-    resultContainer: {
+    searchResult: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        paddingRight: 10
+        padding: 15
+    },
+    userDisplay: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    name: {
+        fontSize: 17
+    },
+    addBtn: {
+        backgroundColor: '#24a0ed',
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
+    addText: {
+        color: 'white',
+        fontSize: 18
+    },
+    pendingText: {
+        backgroundColor: '#3083ba',
+        paddingVertical: 5,
+        paddingHorizontal: 9,
+        fontSize: 18,
+        color: 'white'
     }
 });
 

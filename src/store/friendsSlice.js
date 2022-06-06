@@ -3,7 +3,7 @@ import { isEqual } from 'lodash';
 
 /*
     friendsWithPayments: [
-        { data: { otherUser: "test@test.com", payments: { otherToUser: 0, userToOther: 0 }, user: "test1@test.com" }, id: 342424 },
+        { data: { otherUser: "test@test.com", payments: { isOweOtherUser: true, payment: 0 }, user: "test1@test.com" }, id: 342424 },
         ...
     ]
 
@@ -63,16 +63,32 @@ export const friendsSlice = createSlice({
                 state.friendRequests.splice(index, 1);
             }
         },
+        deleteSentFriendRequest: (state, action) => {
+            const index = state.sentFriendRequests.findIndex(el => el.id === action.payload.id);
+
+            if (index > -1) {
+                state.sentFriendRequests.splice(index, 1);
+            }
+        },
+        deleteFriendship: (state, action) => {
+            const emailIndex = state.friendsEmail.findIndex(email => email === action.payload.friendEmail);
+
+            if (emailIndex > -1) {
+                state.friendsEmail.splice(emailIndex, 1);
+            }
+
+            const paymentIndex = state.friendsWithPayments.findIndex(el => el.id === action.payload.id);
+
+            if (paymentIndex > -1) {
+                state.friendsWithPayments.splice(paymentIndex, 1);
+            }
+
+        },
         resetFriends: (state) => {
             state.friendsWithPayments = [];
             state.friendsEmail = [];
             state.friendRequests = [];
             state.sentFriendRequests = [];
-        },
-        extractTop3Payments: (state) => {
-            const copy = state.friendsWithPayments.slice();
-            copy.sort(function(a, b){return b.data.payments.payment - a.data.payments.payment});
-            console.log(copy);
         }
     }
 });
@@ -84,6 +100,7 @@ export const {
     addFriendRequest,
     addSentFriendRequest,
     deleteFriendRequest,
-    extractTop3Payments
+    deleteSentFriendRequest,
+    deleteFriendship,
 } = friendsSlice.actions;
 export default friendsSlice.reducer;

@@ -1,10 +1,9 @@
 import { initializeApp } from 'firebase/app';
 import {
-    getAuth,
     createUserWithEmailAndPassword,
+    getAuth,
     signOut,
-    signInWithEmailAndPassword,
-    updateProfile
+    signInWithEmailAndPassword
 } from 'firebase/auth';
 import {
     apiKey,
@@ -44,9 +43,11 @@ const storage = getStorage(app);
 
 // Create user with email and password
 const createUser = (email, password, confirmPassword) => {
-    function PasswordMismatchException() {
-        this.code = "auth/password-mismatch"
-        this.message = "Passwords do not match!"
+    class PasswordMismatchException {
+        constructor() {
+            this.code = "auth/password-mismatch";
+            this.message = "Passwords do not match!";
+        }
     }
     
     if (password !== confirmPassword) {
@@ -74,28 +75,6 @@ const getCurrentUser = () => {
     return null;
 };
 
-// Sets the authenticated user's photo URL (Profile picture).
-const setUserProfilePicture = (photoURL) => {
-    if (auth != null) {
-        updateProfile(auth.currentUser, {
-            photoURL
-        }).then(() => {
-            console.log("Profile updated!");
-        }).catch(err => {
-            console.log(err.message);
-        })
-    }
-}
-
-// Gets the authenticated user's photo URL.
-const getUserProfilePicture = () => {
-    if (auth != null) {
-        return auth.currentUser.photoURL;
-    }
-
-    return "";
-}
-
 export { 
     createUser,
     logInUser, 
@@ -103,6 +82,5 @@ export {
     getCurrentUser,
     db,
     storage,
-    setUserProfilePicture,
-    getUserProfilePicture
+    auth
 };

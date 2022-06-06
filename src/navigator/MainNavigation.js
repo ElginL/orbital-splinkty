@@ -1,17 +1,16 @@
 import React, { useState, useEffect } from 'react';
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
-import Friends from '../screens/Friends';
 import Profile from '../screens/Profile';
 import Home from '../screens/Home';
 import Camera from '../screens/Camera';
+import FriendsNavigator from './FriendsStackNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import { getAuth, onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/loginAPI';
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
-
-const auth = getAuth();
 
 const MainNavigator = () => {
     const [isAuth, setIsAuth] = useState(false);
@@ -22,9 +21,10 @@ const MainNavigator = () => {
                 setIsAuth(true);
             } else {
                 setIsAuth(false);
-            }});
+            }
+        });
     
-            return subscriber;
+        return subscriber;
     }, []);
 
     const MainTab = () => {
@@ -54,13 +54,14 @@ const MainNavigator = () => {
                         }} 
                     />
                     <Tab.Screen
-                        name="Friends" 
-                        component={Friends}
+                        name="FriendsStack" 
+                        component={FriendsNavigator}
                         options={{
                             tabBarLabel: 'Friend List',
                             tabBarIcon: ({ color, size }) => (
                                 <FontAwesome5 name="user-friends" color={color} size={size} />
-                            )
+                            ),
+                            headerShown: false
                         }}
                     />
                     <Tab.Screen
