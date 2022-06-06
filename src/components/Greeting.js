@@ -17,16 +17,15 @@ const Greeting = () => {
     const peopleToReceive = useSelector((state) => state.currUser.peoplein);
     const peopleToPay = useSelector((state) => state.currUser.peopleout)
     const NO_PROFILE_IMG = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
+    const profilePictures = useSelector((state) => state.users.profilePictures);
     const [photoURI, setPhotoURI] = useState(NO_PROFILE_IMG);
     const [visible, setVisible] = useState(false);
 
     useEffect(() => {
-        const photoURI = getUserProfilePicture();
-
-        if (photoURI) {
-            setPhotoURI(photoURI);
+        if (profilePictures[getCurrentUser()]) {
+            setPhotoURI(profilePictures[getCurrentUser()]);
         }
-    }, []);
+    }, [profilePictures]);
 
     const renderIncoming = () => {
         if (peopleToReceive == 1) {

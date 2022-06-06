@@ -16,7 +16,6 @@ const ContactSimple = ({ item }) => {
                     style={styles.contactImg} />
                 <Text style={styles.name}>{item.friend}</Text>
             </View>
-            <View>
             {
                 (() => {
                     if (item.amount === 0) {
@@ -40,7 +39,6 @@ const ContactSimple = ({ item }) => {
                     )
                 })()
             }
-            </View>
         </View>
     );
 };
@@ -89,7 +87,7 @@ const styles = StyleSheet.create({
     userDisplay: {
         flexDirection: 'row',
         alignItems: 'center'
-    },
+    }
 });
 
 export default ContactSimple;
