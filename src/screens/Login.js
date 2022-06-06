@@ -17,6 +17,7 @@ import { logInUser } from '../firebase/loginAPI';
 import getErrorMessage from '../firebase/authErrorMessages';
 import AuthStyles from '../styles/AuthStyles';
 
+
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -31,6 +32,7 @@ const Login = ({ navigation }) => {
             .catch((error) => {
                 logInFailHandler(error);
             });
+        
     };
 
     const logInFailHandler = (error) => {

@@ -8,9 +8,7 @@ import {
     Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import Contact from './Contact';
-import ProfileImgPicker from '../components/ProfileImgPicker';
-import { getUserProfilePicture, setUserProfilePicture, getCurrentUser } from '../firebase/loginAPI';
+import { getUserProfilePicture, getCurrentUser } from '../firebase/loginAPI';
 
 const Greeting = () => {
     const currentUser = getCurrentUser();
