@@ -75,20 +75,11 @@ const getCurrentUser = () => {
     return null;
 };
 
-const getUserProfilePicture = () => {
-    if (auth != null) {
-        return auth.currentUser.photoURL;
-    }
-
-    return "";
-}
-
 export { 
     createUser,
     logInUser, 
     logOutUser, 
     getCurrentUser,
-    getUserProfilePicture,
     db,
     storage,
     auth
