@@ -8,6 +8,13 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
+    container: {
+        flex: 1,
+        backgroundColor: 'transparent',
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+
     popupBG: {
         justifyContent: 'center',
         alignItems: 'center',

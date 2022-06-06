@@ -17,7 +17,8 @@ const initialState = {
     friendsWithPayments: [],
     friendsEmail: [],
     friendRequests: [],
-    sentFriendRequests: []
+    sentFriendRequests: [],
+    top3Payments: []
 }
 
 export const friendsSlice = createSlice({
@@ -88,7 +89,7 @@ export const friendsSlice = createSlice({
             state.friendsEmail = [];
             state.friendRequests = [];
             state.sentFriendRequests = [];
-        },
+        }
     }
 });
     
@@ -100,6 +101,6 @@ export const {
     addSentFriendRequest,
     deleteFriendRequest,
     deleteSentFriendRequest,
-    deleteFriendship
+    deleteFriendship,
 } = friendsSlice.actions;
 export default friendsSlice.reducer;
