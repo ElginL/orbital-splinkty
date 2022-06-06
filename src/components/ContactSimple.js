@@ -8,26 +8,6 @@ import {
 
 const ContactSimple = ({ item }) => {
     
-    const renderOwedAmount = () => {
-        if (item.amount === 0) {
-            return;
-        }
-
-        else if (item.isOweFriend) {
-            return (
-                <View style={styles.paymentContainer}>
-                    <Text style={styles.payAmount}>${item.amount}</Text>
-                </View>
-            );
-        }
-
-        return (
-            <View style={styles.paymentContainer}>
-                <Text style={styles.nudgeAmount}>${item.amount}</Text>
-            </View>
-        );
-    }
-
     return (
         <View style={styles.contact}>
             <View style={styles.userDisplay}>
@@ -36,7 +16,31 @@ const ContactSimple = ({ item }) => {
                     style={styles.contactImg} />
                 <Text style={styles.name}>{item.friend}</Text>
             </View>
-            {renderOwedAmount()}
+            <View>
+            {
+                (() => {
+                    if (item.amount === 0) {
+                        return;
+                    }
+            
+                    else if (item.isOweFriend) {
+                        return (
+                            <View style={styles.paymentContainer}>
+                                <Text style={styles.payMessage}>To Pay</Text>
+                                <Text style={styles.payAmount}>${item.amount}</Text>
+                            </View>
+                        );
+                    }
+            
+                    return (
+                        <View style={styles.paymentContainer}>
+                            <Text style={styles.nudgeMessage}>To Receive</Text>
+                            <Text style={styles.nudgeAmount}>${item.amount}</Text>
+                        </View>
+                    )
+                })()
+            }
+            </View>
         </View>
     );
 };
@@ -66,8 +70,17 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 20,
     },
+    nudgeMessage: {
+        color: 'green',
+        fontSize: 10
+    },
+    payMessage: {
+        color: 'red',
+        fontSize: 10
+    },
     paymentContainer: {
-        alignItems: 'center'
+        alignItems: 'center',
+        flexDirection: 'column'
     },
     payText: {
         color: 'blue',

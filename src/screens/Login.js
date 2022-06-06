@@ -32,7 +32,6 @@ const Login = ({ navigation }) => {
             .catch((error) => {
                 logInFailHandler(error);
             });
-        
     };
 
     const logInFailHandler = (error) => {
