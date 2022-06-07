@@ -1,28 +1,21 @@
-import React, { useState, useEffect } from 'react';
 import {
     StyleSheet, 
-    TouchableOpacity,
     Text,
-    SafeAreaView,
     View,
-    Image
+    FlatList
 } from 'react-native';
-import { db, getCurrentUser } from '../firebase/loginAPI';
-import { useDispatch, useSelector } from 'react-redux';
+import { getCurrentUser } from '../firebase/loginAPI';
+import { useSelector } from 'react-redux';
 import ContactSimple from './ContactSimple';
-import { getTop3Payments } from '../store/currUserSlice';
-import { SwipeListView } from 'react-native-swipe-list-view';
 
 const Top3Payments = () => {
-    const dispatch = useDispatch();
-    const currentUser = getCurrentUser();
-    const currTop3Payments = useSelector((state) => state.currUser.top3Payments);
     const profilePictures = useSelector(state => state.users.profilePictures);
-
+    
+    const currTop3Payments = useSelector(state => state.currUser.top3Payments);
     const currTop3PaymentsCopy = currTop3Payments.map(obj => {
         const amount = obj.data.payments.payment;
 
-        const friend = obj.data.otherUser === currentUser 
+        const friend = obj.data.otherUser === getCurrentUser()
             ? obj.data.user 
             : obj.data.otherUser;
             
@@ -38,14 +31,23 @@ const Top3Payments = () => {
         };
     });
 
+    const hasTopOutstandingPayments = () => {
+        for (const payment of currTop3PaymentsCopy) {
+            if (payment.amount !== 0) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     return (
         <View style={styles.container}>
             <Text style={styles.sectionHeader}>Top Outstanding Payments</Text>
             {
-                currTop3Payments.length === 0
+                !hasTopOutstandingPayments()
                     ? <Text style={styles.emptyText}>No Outstanding Payments!</Text>
                     : (
-                        <SwipeListView
+                        <FlatList
                             keyExtractor={item => item.id}
                             listKey={item => item.id}
                             data={currTop3PaymentsCopy}
@@ -61,7 +63,6 @@ const Top3Payments = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flexShrink: 1,
         flex: 1
     },
     emptyText: {
@@ -70,9 +71,9 @@ const styles = StyleSheet.create({
         marginTop: 30,
     },
     sectionHeader: {
-        fontSize: 30,
+        fontSize: 28,
         margin: 10,
-        flexShrink: 1
+        textAlign: 'center'
     }
 });
 

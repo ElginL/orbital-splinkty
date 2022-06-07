@@ -37,9 +37,9 @@ const Signup = ({ navigation }) => {
                         photoURL: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
                         peopleToPay: 0,
                         peopleToReceive: 0,
-                        totals: {
-                            in: 0,
-                            out: 0
+                        total: {
+                            receiving: 0,
+                            paying: 0
                         }
                     });
                 })

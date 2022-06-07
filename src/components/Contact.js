@@ -96,7 +96,8 @@ const styles = StyleSheet.create({
         borderRadius: 10
     },
     paymentContainer: {
-        alignItems: 'center'
+        alignItems: 'center',
+        width: 80
     },
     payText: {
         color: 'blue',

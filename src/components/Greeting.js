@@ -1,25 +1,22 @@
 import React, { useState, useEffect } from 'react';
 import {
     StyleSheet, 
-    TouchableOpacity,
     Text,
-    SafeAreaView,
     View,
     Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
-import { getUserProfilePicture, getCurrentUser } from '../firebase/loginAPI';
+import { getCurrentUser } from '../firebase/loginAPI';
 
 const Greeting = () => {
-    const currentUser = getCurrentUser();
-    const currIn = useSelector((state) => state.currUser.totalin);
-    const currOut = useSelector((state) => state.currUser.totalout);
-    const peopleToReceive = useSelector((state) => state.currUser.peoplein);
-    const peopleToPay = useSelector((state) => state.currUser.peopleout)
-    const NO_PROFILE_IMG = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-    const profilePictures = useSelector((state) => state.users.profilePictures);
-    const [photoURI, setPhotoURI] = useState(NO_PROFILE_IMG);
-    const [visible, setVisible] = useState(false);
+    const cashToReceive = useSelector(state => state.currUser.cashToReceive);
+    const cashToPay = useSelector(state => state.currUser.cashToPay);
+    const pplToReceiveFromCount = useSelector(state => state.currUser.pplToReceiveFromCount);
+    const pplToPayCount = useSelector(state => state.currUser.pplToPayCount);
+
+    const profilePictures = useSelector(state => state.users.profilePictures);
+
+    const [photoURI, setPhotoURI] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
 
     useEffect(() => {
         if (profilePictures[getCurrentUser()]) {
@@ -27,35 +24,45 @@ const Greeting = () => {
         }
     }, [profilePictures]);
 
-    const renderIncoming = () => {
-        if (peopleToReceive == 1) {
-            return <Text style={styles.greetingMessageIncoming}>
-                Total incoming payments: ${currIn} to {peopleToReceive} person</Text>;
-        }
-        return <Text style={styles.greetingMessageIncoming}>
-            Total incoming payments: ${currIn} to {peopleToReceive} people</Text>;
-    }
-
-    const renderOutgoing = () => {
-        if (peopleToPay == 1) {
-            return <Text style={styles.greetingMessageOutgoing}>
-                Total outgoing payments: ${currOut} to {peopleToPay} person</Text>;
-        }
-        return <Text style={styles.greetingMessageOutgoing}>
-            Total outgoing payments: ${currOut} to {peopleToPay} people</Text>;
-    }
-
     return (
         <View style={styles.container}>
-            <View style={styles.profileImgContainer}>
-                <Image
-                    style={styles.profileImg} 
-                    source={{ uri: photoURI }} />
-            </View>
-            <View style={styles.greetingMessageContainer}>
-                <Text style={styles.greetingTitle}>Hello, {currentUser}.</Text>
-                {renderOutgoing()}
-                {renderIncoming()}
+            <Image
+                style={styles.profileImg} 
+                source={{ uri: photoURI }} 
+            />
+            <Text style={styles.greetingTitle}>
+                Welcome Back
+            </Text>
+            <Text style={styles.username}>
+                {getCurrentUser()}
+            </Text>
+            <View style={styles.totalContainer}>
+                <View style={styles.totalCard}>
+                    <Text style={styles.paymentText}>
+                        Total to pay:
+                    </Text>
+                    <Text style={styles.paymentAmount}>
+                        ${cashToPay}
+                    </Text>
+                    {
+                        pplToReceiveFromCount === 1
+                            ? <Text style={styles.paymentText}>to {pplToPayCount} person</Text>
+                            : <Text style={styles.paymentText}>to {pplToPayCount} people</Text>
+                    }
+                </View>
+                <View style={styles.totalCard}>
+                    <Text style={styles.receiveText}>
+                        Total to receive:
+                    </Text>
+                    <Text style={styles.receiveAmount}>
+                        ${cashToReceive}
+                    </Text>
+                    {
+                        pplToPayCount === 1
+                            ? <Text style={styles.receiveText}>from {pplToReceiveFromCount} person</Text>
+                            : <Text style={styles.receiveText}>from {pplToReceiveFromCount} people</Text>
+                    }
+                </View>
             </View>
         </View>
     )
@@ -63,38 +70,59 @@ const Greeting = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        flexDirection: "row",
-        backgroundColor: 'transparent'
-    },
-    profileImg: {
-        width: 100,
-        height: 100,
-        borderRadius: 100,
-        top: 5,
-        left: 5
-    },
-    profileImgContainer: {
-        justifyContent: "center"
+        alignItems: 'center'
     },
     greetingTitle: {
-        flexShrink: 1,
-        fontSize: 18
+        fontSize: 18,
     },
-    greetingMessageIncoming: {
-        flexShrink: 1,
-        fontSize: 14,
-        color: "green"
+    totalCard: {
+        margin: 10,
+        backgroundColor: 'white',
+        padding: 15,
+        borderRadius: 15,
+        width: 175,
+        shadowColor: "#000",
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.23,
+        shadowRadius: 2.62,
+        elevation: 4,
     },
-    greetingMessageOutgoing: {
-        flexShrink: 1,
-        fontSize: 14,
-        color: "red"
+    totalContainer: {
+        flexDirection: "row",
+        marginVertical: 20,
     },
-    greetingMessageContainer: {
-        flexShrink: 1,
-        justifyContent: "center",
-        paddingLeft: 20
+    paymentAmount: {
+        color: "red",
+        textAlign: 'center',
+        fontSize: 30,
+        marginVertical: 5
+    },
+    paymentText: {
+        textAlign: 'center'
+    },
+    receiveText: {
+        textAlign: 'center'
+    },
+    profileImg: {
+        width: 140,
+        height: 140,
+        borderRadius: 70,
+        alignSelf: 'center',
+        margin: 20
+    },
+    receiveAmount: {
+        color: "green",
+        textAlign: 'center',
+        fontSize: 30,
+        marginVertical: 5
+    },
+    username: {
+        fontSize: 25,
+        fontWeight: 'bold',
+        marginTop: 10
     }
 });
 

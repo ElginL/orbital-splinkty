@@ -13,6 +13,7 @@ import {
 import { useDispatch } from 'react-redux';
 import { resetUsers } from '../store/usersSlice';
 import { resetFriends } from '../store/friendsSlice';
+import { resetCurrentUser } from '../store/currUserSlice';
 import LoadingOverlay from '../components/LoadingOverlay';
 import ProfileImgPicker from '../components/ProfileImgPicker';
 import NotificationSettings from '../components/NotificationSettings';
@@ -25,6 +26,7 @@ const Profile = () => {
     const logOutHandler = () => {
         dispatch(resetFriends());
         dispatch(resetUsers());
+        dispatch(resetCurrentUser());
 
         setIsLoading(true);
         logOutUser()
