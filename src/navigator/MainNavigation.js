@@ -3,7 +3,7 @@ import Login from '../screens/Login';
 import Signup from '../screens/Signup';
 import Profile from '../screens/Profile';
 import Home from '../screens/Home';
-import Camera from '../screens/Camera';
+import CameraStack from './CameraStack';
 import FriendsNavigator from './FriendsStackNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
@@ -44,14 +44,15 @@ const MainNavigator = () => {
                         }}
                     />
                     <Tab.Screen 
-                        name="Camera" 
-                        component={Camera}
+                        name="CameraStack" 
+                        component={CameraStack}
                         options={{
                             tabBarLabel: 'Camera',
                             tabBarIcon: ({ color, size }) => (
                                 <FontAwesome name="camera" color={color} size={size} />
-                            )
-                        }} 
+                            ),
+                            headerShown: false
+                        }}
                     />
                     <Tab.Screen
                         name="FriendsStack" 
