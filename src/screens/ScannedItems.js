@@ -6,7 +6,7 @@ import {
     TouchableOpacity,
     FlatList
 } from 'react-native';
-import ItemModal from '../components/ItemModal';
+import AddItemModal from '../components/AddItemModal';
 import ScannedItem from '../components/ScannedItem';
 
 const ScannedItems = ({ route, navigation }) => {
@@ -31,17 +31,31 @@ const ScannedItems = ({ route, navigation }) => {
         setItems(tmp);
     }, []);
 
-    const addItemHandler = (description, quantity, price, itemId) => {
-        setItems([ ...items, { description, quantity, price }]);
+    const addItemHandler = (description, quantity, price) => {
+        if (!isValidFormInput(description, quantity, price)) {
+            return false;
+        }
+
+        setItems([ ...items, { 
+            description, 
+            quantity: parseInt(quantity),
+            price: parseFloat(price) 
+        }]);
+
+        return true;
     };
 
     const editItemHandler = (description, quantity, price, itemId) => {
+        if (!isValidFormInput(description, quantity, price)) {
+            return false;
+        }
+
         const editedItems = items.map(item => {
             if (item.id === itemId) {
                 return {
                     description,
-                    quantity,
-                    price
+                    quantity: parseInt(quantity),
+                    price: parseFloat(price)
                 }
             }
 
@@ -49,12 +63,30 @@ const ScannedItems = ({ route, navigation }) => {
         })
 
         setItems(editedItems);
+        return true;
     }
 
     const deleteItemHandler = itemId => {
         const index = items.findIndex(el => el.id === itemId);
         setItems([ ...items.slice(0, index), ...items.slice(index + 1)]);
     }
+
+    const isValidFormInput = (description, quantity, price) => {
+        if (description === "" || quantity === "" || price === "") {
+            return false;
+        }
+
+        let dotCount = 0;
+        for (let i = 0; i < price.length; i++) {
+            if (price.charAt(i) === ".") {
+                dotCount++;
+            }
+        }
+
+        return dotCount <= 1;
+    }
+
+    console.log(items);
 
     return (
         <View style={styles.container}>
@@ -65,7 +97,7 @@ const ScannedItems = ({ route, navigation }) => {
                 </TouchableOpacity>
             </View>
             <FlatList
-                keyExtractor={item => item.description}
+                keyExtractor={item => Math.random(1000)}
                 data={items}
                 renderItem={({ item }) => (
                     <ScannedItem
@@ -75,16 +107,9 @@ const ScannedItems = ({ route, navigation }) => {
                     />
                 )}
             />
-            <ItemModal
-                title="Add Item"
+            <AddItemModal
                 isVisible={modalVisible}
-                initialDescription=""
-                initialPrice=""
-                initialQuantity=""
-                itemId=""
-                submitHandler={addItemHandler}
-                deleteBtnIsEnabled={false}
-                deleteItemHandler={null}
+                addHandler={addItemHandler}
                 onClose={() => setModalVisible(false)}
             />
         </View>

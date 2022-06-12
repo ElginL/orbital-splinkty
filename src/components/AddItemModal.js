@@ -10,21 +10,16 @@ import {
     Keyboard
 } from 'react-native';
 
-const ItemModal = ({
-    title,
+const AddItemModal = ({
     isVisible,
-    initialDescription,
-    initialPrice,
-    initialQuantity,
-    itemId,
-    submitHandler,
-    deleteBtnIsEnabled,
-    deleteItemHandler,
+    addHandler,
     onClose
 }) => {
-    const [ description, setDescription ] = useState(initialDescription);
-    const [ quantity, setQuantity ] = useState(initialQuantity);
-    const [ price, setPrice ] = useState(initialPrice);
+    const [ description, setDescription ] = useState("");
+    const [ quantity, setQuantity ] = useState("");
+    const [ price, setPrice ] = useState("");
+
+    const [hasError, setHasError] = useState(false);
 
     return (
         <Modal
@@ -35,13 +30,16 @@ const ItemModal = ({
                 <View style={{ flex: 1 }}>
                     <View style={styles.topBar}>
                         <TouchableOpacity
-                            onPress={onClose}
+                            onPress={() => {
+                                setHasError(false);
+                                onClose();
+                            }}
                             style={styles.cancelBtn}>
                             <Text style={styles.cancelText}>
                                 Cancel
                             </Text>
                         </TouchableOpacity>
-                        <Text style={styles.addTitle}>{title}</Text>
+                        <Text style={styles.addTitle}>Add Item</Text>
                     </View>
                     <View style={styles.mainBody}>
                         <View style={styles.formSection}>
@@ -79,36 +77,29 @@ const ItemModal = ({
                                 placeholder="e.g. 7.22"
                             />
                         </View>
-                        <View style={styles.btnContainer}>
-                            {
-                                !deleteBtnIsEnabled
-                                    ? null
-                                    : (
-                                        <TouchableOpacity 
-                                            onPress={() => {
-                                                deleteItemHandler(itemId)
-                                                onClose();
-                                            }}>
-                                            <Text style={styles.deleteText}>
-                                                Delete
-                                            </Text>
-                                        </TouchableOpacity>
-                                    )
-                            }
-                            <TouchableOpacity
-                                style={styles.addBtn}
-                                onPress={() => {
-                                    submitHandler(description, quantity, price, itemId);
+                        <Text style={hasError ? styles.error : styles.warning}>
+                            *All Fields Must Be Filled
+                        </Text>
+                        <Text style={hasError ? styles.error : styles.warning}>
+                            *Price Must Only Have At Most One Decimal
+                        </Text>
+                        <TouchableOpacity
+                            style={styles.addBtn}
+                            onPress={() => {
+                                if (addHandler(description, quantity, price)) {
                                     setDescription("");
                                     setQuantity("");
                                     setPrice("");
+                                    setHasError(false);
                                     onClose();
-                                }}>
-                                <Text style={styles.addBtnText}>
-                                    {title}
-                                </Text>
-                            </TouchableOpacity>
-                        </View>
+                                }
+
+                                setHasError(true);
+                            }}>
+                            <Text style={styles.addBtnText}>
+                                Add
+                            </Text>
+                        </TouchableOpacity>
                     </View>
                 </View>
             </TouchableWithoutFeedback>
@@ -118,7 +109,8 @@ const ItemModal = ({
 
 const styles = StyleSheet.create({
     addBtn: {
-        alignSelf: 'center'
+        alignSelf: 'center',
+        marginTop: 40
     },
     addBtnText: {
         color: 'rgb(10, 132, 255)',
@@ -129,12 +121,6 @@ const styles = StyleSheet.create({
         width: '100%',
         left: '45%',
         fontSize: 20
-    },
-    btnContainer: {
-        flexDirection: 'row',
-        marginTop: 30,
-        alignItems: 'center',
-        justifyContent: 'space-around'
     },
     cancelText: {
         fontSize: 18,
@@ -174,6 +160,12 @@ const styles = StyleSheet.create({
         backgroundColor: 'lightgrey',
         alignItems: 'center'
     },
+    warning: {
+        color: 'orange'
+    },
+    error: {
+        color: 'red'
+    }
 });
 
-export default ItemModal;
+export default AddItemModal;

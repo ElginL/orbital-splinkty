@@ -5,7 +5,7 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native';
-import ItemModal from './ItemModal';
+import EditItemModal from './EditItemModal';
 
 const ScannedItem = ({ item, editItemHandler, deleteItemHandler }) => {
     const description = item.description;
@@ -34,16 +34,11 @@ const ScannedItem = ({ item, editItemHandler, deleteItemHandler }) => {
                 </TouchableOpacity>
             </View>
             <Text style={styles.price}>{price}</Text>
-            <ItemModal
-                title="Edit Item"
+            <EditItemModal
                 isVisible={modalVisible}
-                initialDescription={description}
-                initialPrice={price}
-                initialQuantity={quantity}
-                itemId={item.id}
-                submitHandler={editItemHandler}
-                deleteBtnIsEnabled={true}
-                deleteItemHandler={deleteItemHandler}
+                item={item}
+                editHandler={editItemHandler}
+                deleteHandler={deleteItemHandler}
                 onClose={() => setModalVisible(false)}
             />
         </View>
