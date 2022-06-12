@@ -86,8 +86,6 @@ const ScannedItems = ({ route, navigation }) => {
         return dotCount <= 1;
     }
 
-    console.log(items);
-
     return (
         <View style={styles.container}>
             <View style={styles.topBar}>

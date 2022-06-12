@@ -29,7 +29,7 @@ const ReceiptOptions = ({ navigation }) => {
         }
 
         const result = await ImagePicker.launchCameraAsync({
-            allowsEditing: true,
+            // allowsEditing: true,
         });
 
         if (!result.cancelled) {
@@ -46,7 +46,7 @@ const ReceiptOptions = ({ navigation }) => {
 
     const pickImage = async () => {
         const result = await ImagePicker.launchImageLibraryAsync({
-            allowsEditing: true
+            // allowsEditing: true
         });
 
         if (!result.cancelled) {
