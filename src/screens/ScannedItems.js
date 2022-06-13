@@ -6,11 +6,19 @@ import {
     TouchableOpacity,
     FlatList
 } from 'react-native';
+import { useDispatch, useSelector } from 'react-redux';
+import {
+    addReceiptItem, 
+    editReceiptItem, 
+    deleteReceiptItem 
+} from '../store/receiptSlice';
 import AddItemModal from '../components/AddItemModal';
 import ScannedItem from '../components/ScannedItem';
 
-const ScannedItems = ({ route, navigation }) => {
-    const [items, setItems] = useState([]);
+const ScannedItems = ({ route }) => {
+    const dispatch = useDispatch();
+
+    const items = useSelector(state => state.receipt.receiptItems);
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
@@ -18,17 +26,16 @@ const ScannedItems = ({ route, navigation }) => {
         const prices = route.params.prices;
         const quantities = route.params.quantities;
 
-        const tmp = [];
         for (let i = 0; i < itemsDescription.length; i++) {
-            tmp.push({ 
-                description: itemsDescription[i], 
-                price: prices[i], 
-                quantity: quantities[i],
-                id: Math.random(1000)
-            });
+            dispatch(addReceiptItem({
+                newItem: {
+                    description: itemsDescription[i], 
+                    price: prices[i], 
+                    quantity: quantities[i],
+                    id: Math.random(1000)
+                }
+            }))
         }
-    
-        setItems(tmp);
     }, []);
 
     const addItemHandler = (description, quantity, price) => {
@@ -36,11 +43,14 @@ const ScannedItems = ({ route, navigation }) => {
             return false;
         }
 
-        setItems([ ...items, { 
-            description, 
-            quantity: parseInt(quantity),
-            price: parseFloat(price) 
-        }]);
+        dispatch(addReceiptItem({
+            newItem: {
+                description,
+                quantity: parseInt(quantity),
+                price: parseFloat(price),
+                id: Math.random(1000)
+            }
+        }));
 
         return true;
     };
@@ -50,26 +60,21 @@ const ScannedItems = ({ route, navigation }) => {
             return false;
         }
 
-        const editedItems = items.map(item => {
-            if (item.id === itemId) {
-                return {
-                    description,
-                    quantity: parseInt(quantity),
-                    price: parseFloat(price)
-                }
-            }
+        dispatch(editReceiptItem({
+            description,
+            quantity,
+            price,
+            id: itemId
+        }));
 
-            return item;
-        })
-
-        setItems(editedItems);
         return true;
-    }
+    };
 
     const deleteItemHandler = itemId => {
-        const index = items.findIndex(el => el.id === itemId);
-        setItems([ ...items.slice(0, index), ...items.slice(index + 1)]);
-    }
+        dispatch(deleteReceiptItem({
+            id: itemId
+        }));
+    };
 
     const isValidFormInput = (description, quantity, price) => {
         if (description === "" || quantity === "" || price === "") {
@@ -84,7 +89,7 @@ const ScannedItems = ({ route, navigation }) => {
         }
 
         return dotCount <= 1;
-    }
+    };
 
     return (
         <View style={styles.container}>
@@ -111,7 +116,7 @@ const ScannedItems = ({ route, navigation }) => {
                 onClose={() => setModalVisible(false)}
             />
         </View>
-    )
+    );
 };
 
 const styles = StyleSheet.create({

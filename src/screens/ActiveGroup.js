@@ -14,21 +14,9 @@ import HorizontalLine from '../components/HorizontalLine';
 const ActiveGroup = () => {
     const friendsEmail = useSelector(state => state.friendship.friendsEmail);
     const profileImgs = useSelector(state => state.users.profilePictures);
-
-    const [members, setMembers] = useState([]);
+    const activeGroupMembers = useSelector(state => state.receipt.activeGroupMembers);
+    
     const [filteredFriends, setFilteredFriends] = useState(friendsEmail);
-
-    const addMember = memberToAdd => {
-        setMembers([ ...members, memberToAdd ]);
-    }
-
-    const removeMember = memberToRemove => {
-        const indexToRemove = members.findIndex(member => member === memberToRemove);
-        setMembers([ 
-            ...members.slice(0, indexToRemove), 
-            ...members.slice(indexToRemove + 1) 
-        ]);
-    }
 
     return (
         <View style={styles.container}>
@@ -40,12 +28,11 @@ const ActiveGroup = () => {
             <View style={styles.selectedPplContainer}>
                 <FlatList
                     keyExtractor={item => item}
-                    data={members}
+                    data={activeGroupMembers}
                     renderItem={({ item }) => (
                         <SelectedFriend 
                             email={item}
                             profileImg={profileImgs[item]}
-                            removeMember={removeMember}
                         />
                     )}
                     horizontal={true}
@@ -68,9 +55,7 @@ const ActiveGroup = () => {
                                 <ActiveGroupContact 
                                     email={item}
                                     profileImg={profileImgs[item]}
-                                    contains={members.includes(item)}
-                                    addMember={addMember}
-                                    removeMember={removeMember}
+                                    contains={activeGroupMembers.includes(item)}
                                 />
                             )}
                         />

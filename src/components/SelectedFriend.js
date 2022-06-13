@@ -6,8 +6,18 @@ import {
     StyleSheet
 } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
+import { useDispatch } from 'react-redux';
+import { removeActiveGroupMember } from '../store/receiptSlice';
 
-const SelectedFriends = ({ email, profileImg, removeMember }) => {
+const SelectedFriends = ({ email, profileImg }) => {
+    const dispatch = useDispatch();
+
+    const removeMember = memberToRemove => {
+        dispatch(removeActiveGroupMember({
+            memberToRemove
+        }));
+    };
+
     return (
         <TouchableOpacity 
             style={styles.container}

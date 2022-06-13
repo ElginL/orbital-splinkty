@@ -6,22 +6,32 @@ import {
     TouchableOpacity,
     StyleSheet
 } from 'react-native';
+import { useDispatch } from 'react-redux';
 import Checkbox from 'expo-checkbox';
+import { addActiveGroupMember, removeActiveGroupMember } from '../store/receiptSlice';
 
-const ActiveGroupContact = ({ 
-    email, 
-    profileImg, 
-    contains, 
-    addMember, 
-    removeMember 
-}) => {
+const ActiveGroupContact = ({ email, profileImg, contains }) => {
+    const dispatch = useDispatch();
+
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
         if (!contains && isChecked) {
             setIsChecked(false);
         }
-    }, [contains])
+    }, [contains]);
+
+    const addMember = newMember => {
+        dispatch(addActiveGroupMember({
+            newMember
+        }));
+    };
+
+    const removeMember = memberToRemove => {
+        dispatch(removeActiveGroupMember({
+            memberToRemove
+        }));
+    };
 
     return (
         <TouchableOpacity
@@ -72,7 +82,7 @@ const styles = StyleSheet.create({
         borderRadius: 15,
     },
     email: {
-        
+        fontSize: 16
     },
     profileImg: {
         width: 50,

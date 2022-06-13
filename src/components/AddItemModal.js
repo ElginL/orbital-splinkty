@@ -51,6 +51,7 @@ const AddItemModal = ({
                                 onChangeText={text => setDescription(text)}
                                 value={description}
                                 placeholder="e.g. Nuggets"
+                                placeholderTextColor="grey"
                             />
                         </View>
                         <View style={styles.formSection}>
@@ -63,6 +64,7 @@ const AddItemModal = ({
                                 onChangeText={quantity => setQuantity(quantity)}
                                 value={quantity.toString()}
                                 placeholder="e.g. 1"
+                                placeholderTextColor="grey"
                             />
                         </View>
                         <View style={styles.formSection}>
@@ -75,6 +77,7 @@ const AddItemModal = ({
                                 onChangeText={price => setPrice(price)}
                                 value={price.toString()}
                                 placeholder="e.g. 7.22"
+                                placeholderTextColor="grey"
                             />
                         </View>
                         <Text style={hasError ? styles.error : styles.warning}>
@@ -135,7 +138,7 @@ const styles = StyleSheet.create({
     },
     input: {
         borderWidth: 1,
-        padding: 10
+        padding: 10,
     },
     mainBody: {
         marginTop: 50,
@@ -150,7 +153,7 @@ const styles = StyleSheet.create({
     },
     sectionTitle: {
         fontSize: 18,
-        marginBottom: 5
+        marginBottom: 5,
     },
     topBar: {
         flexDirection: 'row',
