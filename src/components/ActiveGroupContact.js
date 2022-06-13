@@ -8,7 +8,13 @@ import {
 } from 'react-native';
 import Checkbox from 'expo-checkbox';
 
-const ActiveGroupContact = ({ email, profileImg, contains, addMember, removeMember }) => {
+const ActiveGroupContact = ({ 
+    email, 
+    profileImg, 
+    contains, 
+    addMember, 
+    removeMember 
+}) => {
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
