@@ -8,19 +8,23 @@ import { DraxView } from 'react-native-drax';
 const ItemDraggable = ({ item }) => {
     return (
         <DraxView
-            style={styles.draggable}
+            style={item.quantity !== 0 ? styles.draggable : [styles.draggable, styles.notDraggable]}
             onDragStart={() => {
                 console.log(`dragging ${item.description}`);
             }}
             payload={item}
             renderContent={() => (
-                <View style={styles.draggableItem}>
+                <View>
                     <Text style={styles.draggableText}>
                         {item.description}
                     </Text>
-                    <Text style={styles.draggableQty}>Qty: {item.quantity}</Text>
+                    <Text style={styles.draggableQty}>
+                        Qty: {item.quantity}
+                    </Text>
                 </View>
             )}
+            draggingStyle={styles.draggingStyle}
+            draggable={!(item.quantity === 0)}
         />
     );
 };
@@ -32,7 +36,8 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderRadius: 10,
         margin: 10,
-        justifyContent: 'center'
+        justifyContent: 'center',
+        backgroundColor: 'white'
     },
     draggableText: {
         textAlign: 'center'
@@ -40,6 +45,12 @@ const styles = StyleSheet.create({
     draggableQty: {
         textAlign: 'center',
         marginTop: 5
+    },
+    draggingStyle: {
+        opacity: 0.1
+    },
+    notDraggable: {
+        opacity: 0.1
     }
 });
 

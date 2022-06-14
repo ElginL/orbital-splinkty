@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -7,10 +8,21 @@ import {
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { DraxView } from 'react-native-drax';
-import { editReceiptItemsMember } from '../store/receiptSlice';
+import { editReceiptItemMemberQty } from '../store/receiptSlice';
+import ItemQuantityModal from './ItemQuantityModal';
 
 const ItemReceiver = ({ email, profileImg, receivedItems }) => {
     const dispatch = useDispatch();
+
+    const [modalData, setModalData] = useState({ isVisible: false, payload: null });
+
+    const receiveDragDropHandler = (id, quantityDropped) => {
+        dispatch(editReceiptItemMemberQty({
+            id,
+            member: email,
+            quantityDropped
+        }))
+    }
 
     return (
         <View>
@@ -30,18 +42,32 @@ const ItemReceiver = ({ email, profileImg, receivedItems }) => {
                         style={styles.receivedItems}
                         data={receivedItems}
                         renderItem={({ item }) => (
-                            <Text>{item.description}</Text>
+                            <View style={styles.receivedItem}>
+                                <Text>
+                                    {item[email]}x {item.description}
+                                </Text>
+                            </View>
                         )}
                         horizontal={true}
                     />
                 )}
                 onReceiveDragDrop={({ dragged: { payload } }) => {
-                    dispatch(editReceiptItemsMember({
-                        id: payload.id,
-                        member: email
-                    }))
+                    setModalData({ isVisible: true, payload });
                 }}
             />
+            {
+                modalData.payload === null
+                    ? null
+                    : (
+                        <ItemQuantityModal
+                            isVisible={modalData.isVisible}
+                            itemId={modalData.payload.id}
+                            maxQuantity={modalData.payload.quantity}
+                            receiveDragDropHandler={receiveDragDropHandler}
+                            onClose={() => setModalData({ ...modalData, isVisible: false })}
+                        />
+                    )
+            }
         </View>
     )
 };
@@ -61,10 +87,15 @@ const styles = StyleSheet.create({
         borderRadius: 33,
         marginRight: 20
     },
+    receivedItem: {
+        margin: 10,
+        justifyContent: 'center',
+        flex: 1
+    },
     receivedItems: {
         borderWidth: 1,
         height: 60,
-        marginHorizontal: 10
+        marginHorizontal: 10,
     }
 })
 

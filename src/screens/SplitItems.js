@@ -26,7 +26,7 @@ const SplitItems = () => {
             }))
         })  
     }, [receivingItemList]);
-    
+
     return (
         <DraxProvider>
             <View style={styles.container}>
@@ -72,8 +72,8 @@ const styles = StyleSheet.create({
         margin: 10
     },
     activeGroupText: {
-        fontSize: 30,
-        margin: 10
+        fontSize: 25,
+        marginHorizontal: 10
     },
     container: {
         flex: 1,
@@ -82,9 +82,11 @@ const styles = StyleSheet.create({
     draggableItems: {
         flexDirection: 'row',
         flexWrap: 'wrap',
+        marginHorizontal: 20
     },
     receiverContainer: {
-        marginTop: 20,
+        marginTop: 10,
+        flex: 1
     },
 });
 

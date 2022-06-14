@@ -10,7 +10,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import {
     addReceiptItem, 
     editReceiptItem, 
-    deleteReceiptItem 
+    deleteReceiptItem,
+    emptyReceiptItems 
 } from '../store/receiptSlice';
 import AddItemModal from '../components/AddItemModal';
 import ScannedItem from '../components/ScannedItem';
@@ -22,6 +23,8 @@ const ScannedItems = ({ route }) => {
     const [modalVisible, setModalVisible] = useState(false);
 
     useEffect(() => {
+        dispatch(emptyReceiptItems());
+
         const itemsDescription = route.params.itemsDescription;
         const prices = route.params.prices;
         const quantities = route.params.quantities;

@@ -16,8 +16,10 @@ const ActiveGroupContact = ({ email, profileImg, contains }) => {
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
-        if (!contains && isChecked) {
+        if (!contains) {
             setIsChecked(false);
+        } else {
+            setIsChecked(true);
         }
     }, [contains]);
 

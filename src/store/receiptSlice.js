@@ -72,18 +72,21 @@ export const receiptSlice = createSlice({
                 };
             });
         },
-        editReceiptItemsMember: (state, action) => {
+        editReceiptItemMemberQty: (state, action) => {
             state.receiptItems = state.receiptItems.map(item => {
                 if (item.id === action.payload.id) {
                     return {
                         ...item,
-                        quantity: 0,
-                        [action.payload.member]: item.quantity
+                        quantity: item.quantity - action.payload.quantityDropped,
+                        [action.payload.member]: item[action.payload.member] + action.payload.quantityDropped
                     }
                 }
 
                 return item;
             })
+        },
+        emptyReceiptItems: state => {
+            state.receiptItems = [];
         }
     }
 });
@@ -95,6 +98,7 @@ export const {
     editReceiptItem,
     deleteReceiptItem,
     addMemberToReceiptItems,
-    editReceiptItemsMember
+    editReceiptItemMemberQty,
+    emptyReceiptItems
 } = receiptSlice.actions;
 export default receiptSlice.reducer;
