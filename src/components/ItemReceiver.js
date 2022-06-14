@@ -1,4 +1,3 @@
-import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -6,39 +5,44 @@ import {
     Image,
     FlatList
 } from 'react-native';
+import { useDispatch } from 'react-redux';
 import { DraxView } from 'react-native-drax';
-import ItemDraggable from './ItemDraggable';
+import { editReceiptItemsMember } from '../store/receiptSlice';
 
-const ItemReceiver = ({ item, profileImgs }) => {
-    const [receivedItems, setReceivedItems] = useState([]);
+const ItemReceiver = ({ email, profileImg, receivedItems }) => {
+    const dispatch = useDispatch();
 
     return (
-        <DraxView
-            renderContent={() => (
-                <View>
-                    <View style={styles.contact}>
-                        <Image
-                            source={{ uri: profileImgs[item.email] }}
-                            style={styles.profileImg}
-                        />
-                        <Text style={styles.emailText}>
-                            {item.email}
-                        </Text>
-                    </View>
+        <View>
+            <View style={styles.contact}>
+                <Image
+                    source={{ uri: profileImg }}
+                    style={styles.profileImg}
+                />
+                <Text style={styles.emailText}>
+                    {email}
+                </Text>
+            </View>
+            <DraxView
+                renderContent={() => (
                     <FlatList
                         keyExtractor={item => item.id}
                         style={styles.receivedItems}
                         data={receivedItems}
                         renderItem={({ item }) => (
-                            <ItemDraggable item={item} />
+                            <Text>{item.description}</Text>
                         )}
+                        horizontal={true}
                     />
-                </View>
-            )}
-            onReceiveDragDrop={({ dragged: { payload } }) => {
-                setReceivedItems([ ...receivedItems, payload ]);
-            }}
-        />
+                )}
+                onReceiveDragDrop={({ dragged: { payload } }) => {
+                    dispatch(editReceiptItemsMember({
+                        id: payload.id,
+                        member: email
+                    }))
+                }}
+            />
+        </View>
     )
 };
 

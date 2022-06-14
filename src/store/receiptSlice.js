@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 /*
     activeGroupMembers: [email: 'test1@test.com', ...]
-    receiptItems: [{ id: 2, description: 'Nuggets', quantity: 6, price: 7.20 }, ... ]
+    receiptItems: [{ id: 2, description: 'Nuggets', quantity: 6, price: 7.20, test1@test.com: 3, test2@test.com: 3 }, ... ]
 */
 const initialState = {
     activeGroupMembers: [],
@@ -63,6 +63,27 @@ export const receiptSlice = createSlice({
                 ...state.receiptItems.slice(0, index),
                 ...items.slice(index + 1)
             ];
+        },
+        addMemberToReceiptItems: (state, action) => {
+            state.receiptItems = state.receiptItems.map(item => {
+                return {
+                    ...item,
+                    [action.payload.member]: 0
+                };
+            });
+        },
+        editReceiptItemsMember: (state, action) => {
+            state.receiptItems = state.receiptItems.map(item => {
+                if (item.id === action.payload.id) {
+                    return {
+                        ...item,
+                        quantity: 0,
+                        [action.payload.member]: item.quantity
+                    }
+                }
+
+                return item;
+            })
         }
     }
 });
@@ -72,6 +93,8 @@ export const {
     removeActiveGroupMember,
     addReceiptItem,
     editReceiptItem,
-    deleteReceiptItem
+    deleteReceiptItem,
+    addMemberToReceiptItems,
+    editReceiptItemsMember
 } = receiptSlice.actions;
 export default receiptSlice.reducer;

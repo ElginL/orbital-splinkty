@@ -1,78 +1,62 @@
+import React, { useEffect } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     FlatList,
 } from 'react-native';
-import { DraxProvider, DraxScrollView } from 'react-native-drax';
-import { useSelector } from 'react-redux';
+import { DraxProvider } from 'react-native-drax';
+import { useDispatch, useSelector } from 'react-redux';
 import ItemDraggable from '../components/ItemDraggable';
 import ItemReceiver from '../components/ItemReceiver';
+import { addMemberToReceiptItems } from '../store/receiptSlice';
 
 const SplitItems = () => {
+    const dispatch = useDispatch();
+
     const profileImgs = useSelector(state => state.users.profilePictures);
 
-    const draggableItems = [
-        {
-            id: 1,
-            description: 'Nuggets',
-            quantity: 6,
-            price: 7.20
-        },
-        {
-            id: 2,
-            description: 'Mac Spicy',
-            quantity: 1,
-            price: 7.70
-        },
-        {
-            id: 3,
-            description: 'Fish Balls',
-            quantity: 3,
-            price: 4.32
-        }
-    ];
+    const draggableItems = useSelector(state => state.receipt.receiptItems)
+    const receivingItemList = useSelector(state => state.receipt.activeGroupMembers);
 
-    const receivingItemList = [
-        {
-            id: 4,
-            email: "test1@test.com",
-        },
-        {
-            id: 5,
-            email: "test2@test.com",
-        }
-    ];
-
+    useEffect(() => {
+        receivingItemList.forEach(receivingItem => {
+            dispatch(addMemberToReceiptItems({
+                member: receivingItem
+            }))
+        })  
+    }, [receivingItemList]);
+    
     return (
         <DraxProvider>
             <View style={styles.container}>
                 <Text style={styles.allItemsText}>
                     All Items
                 </Text>
-                <DraxScrollView>
-                    <FlatList
-                        keyExtractor={item => item.id}
-                        data={draggableItems}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        style={styles.itemsList}
-                        renderItem={({ item }) => (
-                            <ItemDraggable item={item} />
-                        )}
-                    />
-                </DraxScrollView>
+                <View style={styles.draggableItems}>
+                    {
+                        draggableItems.map(item => (
+                            <ItemDraggable
+                                item={item}
+                                key={item.id}
+                            />
+                        ))
+                    }
+                </View>
                 <View style={styles.receiverContainer}>
                     <Text style={styles.activeGroupText}>
                         Group Members
                     </Text>
                     <FlatList
-                        keyExtractor={item => item.id}
+                        keyExtractor={item => Math.random(1000)}
                         data={receivingItemList}
                         renderItem={({ item }) => (
                             <ItemReceiver
-                                item={item}
-                                profileImgs={profileImgs}
+                                email={item}
+                                profileImg={profileImgs[item]}
+                                receivedItems={draggableItems.filter(draggableItem => {
+                                    return draggableItem[item] > 0;
+                                })}
                             />
                         )}
                     />
@@ -94,6 +78,10 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white'
+    },
+    draggableItems: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
     },
     receiverContainer: {
         marginTop: 20,

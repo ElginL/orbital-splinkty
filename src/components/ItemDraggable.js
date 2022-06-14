@@ -1,6 +1,7 @@
 import {
     Text,
-    StyleSheet
+    StyleSheet,
+    View
 } from 'react-native';
 import { DraxView } from 'react-native-drax';
 
@@ -13,9 +14,12 @@ const ItemDraggable = ({ item }) => {
             }}
             payload={item}
             renderContent={() => (
-                <Text style={styles.draggableText}>
-                    {item.description}
-                </Text>
+                <View style={styles.draggableItem}>
+                    <Text style={styles.draggableText}>
+                        {item.description}
+                    </Text>
+                    <Text style={styles.draggableQty}>Qty: {item.quantity}</Text>
+                </View>
             )}
         />
     );
@@ -24,15 +28,19 @@ const ItemDraggable = ({ item }) => {
 const styles = StyleSheet.create({
     draggable: {
         width: 100,
-        height: 50,
+        height: 60,
         borderWidth: 1,
         borderRadius: 10,
-        marginHorizontal: 10,
+        margin: 10,
         justifyContent: 'center'
     },
     draggableText: {
         textAlign: 'center'
     },
+    draggableQty: {
+        textAlign: 'center',
+        marginTop: 5
+    }
 });
 
 export default ItemDraggable;
