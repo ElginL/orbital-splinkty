@@ -25,13 +25,15 @@ export const friendsSlice = createSlice({
     initialState,
     reducers: {
         addFriendWithPayments: (state, action) => {
-            const index = state.friendsWithPayments.findIndex(el => isEqual(el, action.payload.friend) ||
-                el.id === action.payload.friend.id);
+            const index = state.friendsWithPayments.findIndex(el => (
+                isEqual(el, action.payload.friend) || el.id === action.payload.friend.id));
 
             if (index === -1) {
-                state.friendsWithPayments = [ ...state.friendsWithPayments, action.payload.friend ];
-            }
-            else {
+                state.friendsWithPayments = [ 
+                    ...state.friendsWithPayments, 
+                    action.payload.friend 
+                ];
+            } else {
                 state.friendsWithPayments[index] = action.payload.friend
             }
         },
@@ -43,15 +45,15 @@ export const friendsSlice = createSlice({
             }
         },
         addFriendRequest: (state, action) => {
-            const index = state.friendRequests.findIndex(el => el.id === action.payload.request.id
-                || el.from === action.payload.request.from);
+            const index = state.friendRequests.findIndex(el => (
+                el.id === action.payload.request.id || el.from === action.payload.request.from));
 
             if (index === -1) {
                 state.friendRequests = [ ...state.friendRequests, action.payload.request ];
             }
         },
         addSentFriendRequest: (state, action) => {
-            const index = state.sentFriendRequests.findIndex(el => el.id === action.payload.request.id
+            const index = state.sentFriendRequests.findIndex(el => el.id === action.payload.request.id 
                 || el.to === action.payload.request.to);
                 
             if (index === -1) {
@@ -62,27 +64,39 @@ export const friendsSlice = createSlice({
             const index = state.friendRequests.findIndex(el => el.id === action.payload.id);
             
             if (index > -1) {
-                state.friendRequests.splice(index, 1);
+                state.friendRequests = [
+                    ...state.friendRequests.slice(0, index),
+                    ...state.friendRequests.slice(index + 1)
+                ];
             }
         },
         deleteSentFriendRequest: (state, action) => {
             const index = state.sentFriendRequests.findIndex(el => el.id === action.payload.id);
 
             if (index > -1) {
-                state.sentFriendRequests.splice(index, 1);
+                state.sentFriendRequests = [
+                    ...state.sentFriendRequests.slice(0, index),
+                    ...state.sentFriendRequests.slice(index + 1)
+                ];
             }
         },
         deleteFriendship: (state, action) => {
             const emailIndex = state.friendsEmail.findIndex(email => email === action.payload.friendEmail);
 
             if (emailIndex > -1) {
-                state.friendsEmail.splice(emailIndex, 1);
+                state.friendsEmail = [
+                    ...state.friendsEmail.slice(0, emailIndex),
+                    ...state.friendsEmail.slice(emailIndex + 1)
+                ]
             }
 
             const paymentIndex = state.friendsWithPayments.findIndex(el => el.id === action.payload.id);
 
             if (paymentIndex > -1) {
-                state.friendsWithPayments.splice(paymentIndex, 1);
+                state.friendsWithPayments = [
+                    ...state.friendsWithPayments.slice(0, paymentIndex),
+                    ...state.friendsWithPayments.slice(paymentIndex + 1)
+                ];
             }
         },
         resetFriends: (state) => {
@@ -90,7 +104,6 @@ export const friendsSlice = createSlice({
             state.friendsEmail = [];
             state.friendRequests = [];
             state.sentFriendRequests = [];
-            state.top3Payments = [];
         }
     }
 });
