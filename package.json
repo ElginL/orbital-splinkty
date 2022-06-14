@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@expo/webpack-config": "~0.16.2",
+    "@google-cloud/vision": "^2.4.2",
     "@react-native-async-storage/async-storage": "~1.17.3",
     "@react-native-firebase/app": "^14.11.0",
     "@react-navigation/bottom-tabs": "^6.3.1",

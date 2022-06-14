@@ -9,7 +9,7 @@ import { SwipeListView } from 'react-native-swipe-list-view';
 import { useDispatch, useSelector } from 'react-redux';
 import { 
     doc,
-    deleteDoc
+    deleteDoc,
 } from 'firebase/firestore';
 import { db, getCurrentUser } from '../firebase/loginAPI';
 import { deleteFriendship } from '../store/friendsSlice';
@@ -34,8 +34,9 @@ const FriendsPayments = () => {
             ? obj.data.user 
             : obj.data.otherUser;
             
-        const isOweFriend = obj.data.payments.isOweOtherUser;
-        
+            const isOweFriend = (obj.data.payments.isOweOtherUser && friend == obj.data.otherUser) || 
+                                (!obj.data.payments.isOweOtherUser && friend == obj.data.user);
+
         return {
             amount,
             friend,

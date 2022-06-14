@@ -1,28 +1,26 @@
 import { 
     StyleSheet, 
     View, 
-    Text, 
-    TouchableOpacity,
+    Text,
     Image
 } from 'react-native';
 
 const ContactSimple = ({ item }) => {
-    
+    if (item.amount === 0) {
+        return null;
+    }
+
     return (
         <View style={styles.contact}>
             <View style={styles.userDisplay}>
-                <Image 
+                <Image
                     source={{ uri: item.friendProfilePicURL }} 
                     style={styles.contactImg} />
                 <Text style={styles.name}>{item.friend}</Text>
             </View>
             {
                 (() => {
-                    if (item.amount === 0) {
-                        return;
-                    }
-            
-                    else if (item.isOweFriend) {
+                    if (item.isOweFriend) {
                         return (
                             <View style={styles.paymentContainer}>
                                 <Text style={styles.payMessage}>To Pay</Text>
@@ -78,7 +76,8 @@ const styles = StyleSheet.create({
     },
     paymentContainer: {
         alignItems: 'center',
-        flexDirection: 'column'
+        flexDirection: 'column',
+        width: 60
     },
     payText: {
         color: 'blue',

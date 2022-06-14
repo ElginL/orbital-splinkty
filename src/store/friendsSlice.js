@@ -18,7 +18,6 @@ const initialState = {
     friendsEmail: [],
     friendRequests: [],
     sentFriendRequests: [],
-    top3Payments: []
 }
 
 export const friendsSlice = createSlice({
@@ -31,6 +30,9 @@ export const friendsSlice = createSlice({
 
             if (index === -1) {
                 state.friendsWithPayments = [ ...state.friendsWithPayments, action.payload.friend ];
+            }
+            else {
+                state.friendsWithPayments[index] = action.payload.friend
             }
         },
         addFriendEmail: (state, action) => {
@@ -82,13 +84,13 @@ export const friendsSlice = createSlice({
             if (paymentIndex > -1) {
                 state.friendsWithPayments.splice(paymentIndex, 1);
             }
-
         },
         resetFriends: (state) => {
             state.friendsWithPayments = [];
             state.friendsEmail = [];
             state.friendRequests = [];
             state.sentFriendRequests = [];
+            state.top3Payments = [];
         }
     }
 });

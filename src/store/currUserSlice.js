@@ -2,12 +2,12 @@ import { createSlice } from '@reduxjs/toolkit';
 import { isEqual } from 'lodash';
 
 const initialState = {
-    email: "",
-    totalin: 0,
-    totalout: 0,
-    peoplein: 0,
-    peopleout: 0,
-    top3Payments: []
+    cashToReceive: 0,
+    cashToPay: 0,
+    pplToPayCount: 0,
+    pplToReceiveFromCount: 0,
+    top3Payments: [],
+    allPayments: []
 };
 
 export const currUserSlice = createSlice({
@@ -15,45 +15,48 @@ export const currUserSlice = createSlice({
     initialState,
     reducers: {
         setData: (state, action) => {
-            state.email = action.payload.email;
-            state.totalin = action.payload.totalin;
-            state.totalout = action.payload.totalout;
-            state.peoplein = action.payload.peopleToReceive;
-            state.peopleout = action.payload.peopleToPay;
+            state.cashToReceive = action.payload.cashToReceive;
+            state.cashToPay = action.payload.cashToPay;
+            state.pplToReceiveFromCount = action.payload.pplToReceiveFromCount;
+            state.pplToPayCount = action.payload.pplToPayCount;
         },
-        incrementPeopleIn: (state) => {
-            state.peoplein += 1;
+        changePplToPayCount: (state, action) => {
+            action.payload.isIncrease
+                ? state.pplToPayCount += 1
+                : state.pplToPayCount -= 1;
         },
-        incrementPeopleOut: (state) => {
-            state.peopleout += 1;
-        },
-        decrementPeopleIn: (state) => {
-            state.peoplein -= 1;
-        },
-        decrementPeopleOut: (state) => {
-            state.peopleout -= 1;
+        changePplToReceiveFromCount: (state, action) => {
+            action.payload.isIncrease
+                ? state.pplToReceiveFromCount += 1
+                : state.pplToReceiveFromCount -= 1;
         },
         addTopPayment: (state, action) => {
-            const index = state.top3Payments.findIndex(el => isEqual(el, action.payload.friend) ||
-                el.id === action.payload.friend.id);
-
+            const index = state.allPayments.findIndex(el => isEqual(el, action.payload.friend)
+                || el.id === action.payload.friend.id);
+            
+            const paymentAmount = action.payload.friend.data.payments.payment;
             if (index === -1) {
-                if (state.top3Payments.length == 3) {
-                    state.top3Payments[2] = action.payload.friend;
-                } else {
-                    state.top3Payments = [ ...state.top3Payments, action.payload.friend ];
+                if (paymentAmount !== 0) {
+                    state.allPayments = [ ...state.allPayments, action.payload.friend ];
                 }
             } else {
-                state.top3Payments[index] = action.payload.friend;
+                if (paymentAmount !== 0) {
+                    state.allPayments[index] = action.payload.friend;
+                } else {
+                    state.allPayments.splice(index, 1);
+                }
             }
-            state.top3Payments.sort(function(a, b){return b.data.payments.payment - a.data.payments.payment});
+
+            state.allPayments.sort((a, b) => b.data.payments.payment - a.data.payments.payment);
+            state.top3Payments = state.allPayments.slice(0, 3);
         },
-        getTop3Payments: (state) => {
-            const copy = state.top3Payments.slice();
-            console.log(copy);
-        },
-        resetTop3Payments: (state) => {
+        resetCurrentUser: (state) => {
+            state.cashToReceive = 0;
+            state.cashToPay = 0;
+            state.pplToPayCount = 0;
+            state.pplToReceiveFromCount = 0;
             state.top3Payments = [];
+            state.allPayments = [];
         }
     }
 });
@@ -61,8 +64,7 @@ export const currUserSlice = createSlice({
 export const { 
     setData,
     addTopPayment,
-    getTop3Payments,
-    resetTop3Payments
+    resetCurrentUser
 } = currUserSlice.actions;
 
 export default currUserSlice.reducer;
