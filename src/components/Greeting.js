@@ -8,12 +8,12 @@ import {
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../firebase/loginAPI';
 
-const Greeting = () => {
-    const cashToReceive = useSelector(state => state.currUser.cashToReceive);
-    const cashToPay = useSelector(state => state.currUser.cashToPay);
-    const pplToReceiveFromCount = useSelector(state => state.currUser.pplToReceiveFromCount);
-    const pplToPayCount = useSelector(state => state.currUser.pplToPayCount);
-
+const Greeting = ({
+    cashToReceive,
+    cashToPay,
+    pplToReceiveFromCount,
+    pplToPayCount
+}) => {
     const profilePictures = useSelector(state => state.users.profilePictures);
 
     const [photoURI, setPhotoURI] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
@@ -70,10 +70,36 @@ const Greeting = () => {
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white'
     },
     greetingTitle: {
         fontSize: 18,
+    },
+    paymentAmount: {
+        color: "red",
+        textAlign: 'center',
+        fontSize: 30,
+        marginVertical: 5
+    },
+    paymentText: {
+        textAlign: 'center'
+    },
+    profileImg: {
+        width: 140,
+        height: 140,
+        borderRadius: 70,
+        alignSelf: 'center',
+        margin: 20
+    },
+    receiveText: {
+        textAlign: 'center'
+    },
+    receiveAmount: {
+        color: "green",
+        textAlign: 'center',
+        fontSize: 30,
+        marginVertical: 5
     },
     totalCard: {
         margin: 10,
@@ -93,31 +119,6 @@ const styles = StyleSheet.create({
     totalContainer: {
         flexDirection: "row",
         marginVertical: 20,
-    },
-    paymentAmount: {
-        color: "red",
-        textAlign: 'center',
-        fontSize: 30,
-        marginVertical: 5
-    },
-    paymentText: {
-        textAlign: 'center'
-    },
-    receiveText: {
-        textAlign: 'center'
-    },
-    profileImg: {
-        width: 140,
-        height: 140,
-        borderRadius: 70,
-        alignSelf: 'center',
-        margin: 20
-    },
-    receiveAmount: {
-        color: "green",
-        textAlign: 'center',
-        fontSize: 30,
-        marginVertical: 5
     },
     username: {
         fontSize: 25,

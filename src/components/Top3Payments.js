@@ -11,8 +11,13 @@ import ContactSimple from './ContactSimple';
 const Top3Payments = () => {
     const profilePictures = useSelector(state => state.users.profilePictures);
     
-    const currTop3Payments = useSelector(state => state.currUser.top3Payments);
-    const currTop3PaymentsCopy = currTop3Payments.map(obj => {
+    const friendsWithPayment = useSelector(state => state.friendship.friendsWithPayments);
+    const sortedFriendsWithPayment = [...friendsWithPayment].sort((first, second) => {
+        return second.data.payments.payment - first.data.payments.payment;
+    });
+    sortedFriendsWithPayment.splice(3)
+
+    const top3Payments = sortedFriendsWithPayment.map(obj => {
         const amount = obj.data.payments.payment;
 
         const friend = obj.data.otherUser === getCurrentUser()
@@ -32,7 +37,7 @@ const Top3Payments = () => {
     });
 
     const hasTopOutstandingPayments = () => {
-        for (const payment of currTop3PaymentsCopy) {
+        for (const payment of top3Payments) {
             if (payment.amount !== 0) {
                 return true;
             }
@@ -50,7 +55,7 @@ const Top3Payments = () => {
                         <FlatList
                             keyExtractor={item => item.id}
                             listKey={item => item.id}
-                            data={currTop3PaymentsCopy}
+                            data={top3Payments}
                             renderItem={({ item }) => (
                                 <ContactSimple item={item} />
                             )}

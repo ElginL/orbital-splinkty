@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import Login from '../screens/Login';
-import Signup from '../screens/Signup';
-import Profile from '../screens/Profile';
 import Home from '../screens/Home';
 import CameraStack from './CameraStack';
+import Login from '../screens/Login';
+import Profile from '../screens/Profile';
+import Signup from '../screens/Signup';
 import FriendsNavigator from './FriendsStackNavigator';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';

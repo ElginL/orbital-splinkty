@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     View,
     StyleSheet 
@@ -11,16 +11,19 @@ import {
     where
 } from "firebase/firestore";
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { setData } from '../store/currUserSlice';
 import { addUser, addProfilePicture } from '../store/usersSlice';
 import { addFriendWithPayments, addFriendEmail } from '../store/friendsSlice';
-import { addTopPayment } from '../store/currUserSlice';
 import Greeting from '../components/Greeting';
 import Top3Payments from '../components/Top3Payments';
 
 const Home = () => {
     const dispatch = useDispatch();
     
+    const [cashToReceive, setCashToReceive] = useState(0);
+    const [cashToPay, setCashToPay] = useState(0);
+    const [pplToReceiveFromCount, setPplToReceiveFromCount] = useState(0);
+    const [pplToPayCount, setPplToPayCount] = useState(0);
+
     useEffect(() => {
         const friendshipRef = collection(db, "friendship");
         const usersRef = collection(db, "users");
@@ -39,12 +42,6 @@ const Home = () => {
                 dispatch(addFriendEmail({ 
                     friend: doc.data().otherUser 
                 }));
-                dispatch(addTopPayment({
-                    friend: {
-                        data: doc.data(),
-                        id: doc.id 
-                    }
-                }));
             });
         });
         
@@ -62,16 +59,10 @@ const Home = () => {
                 dispatch(addFriendEmail({ 
                     friend: doc.data().user 
                 }));
-                dispatch(addTopPayment({
-                    friend: {
-                        data: doc.data(),
-                        id: doc.id 
-                    }
-                }));
             });
         });
         
-        // Listener for users, add to store if someone sign up for an account.
+        // Listener for users, add to store if someone signs up for an account.
         const unsubUserQ = onSnapshot(collection(db, "users"), snapshot => {
             snapshot.docs.forEach(doc => {
                 dispatch(addUser({ 
@@ -87,17 +78,15 @@ const Home = () => {
             });
         });
 
-        // Listener for updates to current user's total in/out, update store
+        // Listener for updates to current user's total in/out.
         const currUserQuery = query(usersRef, where("email", "==", getCurrentUser()));
         const unsubCurrUserQ = onSnapshot(currUserQuery, snapshot => {
             snapshot.docs.forEach(doc => {
-                dispatch(setData({
-                    cashToReceive: doc.data().total.receiving,
-                    cashToPay: doc.data().total.paying,
-                    pplToReceiveFromCount: doc.data().peopleToReceive,
-                    pplToPayCount: doc.data().peopleToPay
-                }));
-            })
+                setCashToReceive(doc.data().total.receiving);
+                setCashToPay(doc.data().total.paying);
+                setPplToReceiveFromCount(doc.data().peopleToReceive);
+                setPplToPayCount(doc.data().peopleToPay);
+            });
         });
 
         return () => {
@@ -110,7 +99,12 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <Greeting />
+            <Greeting 
+                cashToReceive={cashToReceive}
+                cashToPay={cashToPay}
+                pplToReceiveFromCount={pplToReceiveFromCount}
+                pplToPayCount={pplToPayCount}
+            />
             <Top3Payments />
         </View>
     );
