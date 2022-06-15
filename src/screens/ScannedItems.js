@@ -35,7 +35,8 @@ const ScannedItems = ({ route }) => {
                     description: itemsDescription[i], 
                     price: prices[i], 
                     quantity: quantities[i],
-                    id: Math.random(1000)
+                    id: Math.random(1000),
+                    totalQuantity: quantities[i]
                 }
             }))
         }
@@ -51,7 +52,8 @@ const ScannedItems = ({ route }) => {
                 description,
                 quantity: parseInt(quantity),
                 price: parseFloat(price),
-                id: Math.random(1000)
+                id: Math.random(1000),
+                totalQuantity: parseInt(quantity)
             }
         }));
 
@@ -67,7 +69,8 @@ const ScannedItems = ({ route }) => {
             description,
             quantity,
             price,
-            id: itemId
+            id: itemId,
+            totalQuantity: quantity
         }));
 
         return true;
