@@ -10,10 +10,10 @@ import {
     logOutUser,
     getCurrentUser
 } from '../firebase/loginAPI';
-import LoadingOverlay from '../components/LoadingOverlay';
-import ProfileImgPicker from '../components/ProfileImgPicker';
-import NotificationSettings from '../components/NotificationSettings';
 import HorizontalLine from '../components/HorizontalLine';
+import NotificationSettings from '../components/NotificationSettings';
+import ProfileImgPicker from '../components/ProfileImgPicker';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 const Profile = () => {
     const [isLoading, setIsLoading] = useState(false);
@@ -32,7 +32,9 @@ const Profile = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.userProfile}>
                 <ProfileImgPicker />
-                <Text style={styles.userText}>{getCurrentUser()}</Text>
+                <Text style={styles.userText}>
+                    {getCurrentUser()}
+                </Text>
             </View>
             <View style={styles.settings}>
                 <Text style={styles.settingsText}>Settings</Text>
