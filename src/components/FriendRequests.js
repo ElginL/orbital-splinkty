@@ -4,7 +4,7 @@ import {
     Text, 
     FlatList 
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { 
     addDoc,
     collection, 
@@ -12,18 +12,13 @@ import {
     doc
 } from 'firebase/firestore';
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { deleteFriendRequest } from '../store/friendsSlice';
 import FriendRequest from './FriendRequest';
 
 const FriendRequests = () => {
-    const dispatch = useDispatch();
-
     const incomingFriendRequests = useSelector(state => state.friendship.friendRequests);
     const profilePictures = useSelector(state => state.users.profilePictures);
 
     const declineHandler = async (id) => {
-        dispatch(deleteFriendRequest({ id }));
-        
         try {
             const docRef = doc(db, 'friendrequests', id);
             await deleteDoc(docRef);
@@ -35,14 +30,10 @@ const FriendRequests = () => {
     const acceptHandler = async (user, id) => {
         await declineHandler(id);
 
-        addDoc(collection(db, "friendship"), {
-            otherUser: getCurrentUser(),
-            payments: {
-                isOweOtherUser: true,
-                payment: 0
-            },
-            user,
-            id
+        await addDoc(collection(db, "friendship"), {
+            connection: [ user, getCurrentUser() ],
+            isOweIndex1: true,
+            paymentAmount: 0
         });
     }
 
@@ -80,7 +71,7 @@ const styles = StyleSheet.create({
     },
     subheader: {
         fontSize: 33,
-        margin: 20
+        marginVertical: 10
     },
 });
 

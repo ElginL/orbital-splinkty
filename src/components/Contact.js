@@ -6,31 +6,37 @@ import {
     Image
 } from 'react-native';
 
-const Contact = ({ item }) => {
+const Contact = ({ item, profileImg }) => {
     return (
         <View style={styles.contact}>
             <View style={styles.userDisplay}>
                 <Image 
-                    source={{ uri: item.friendProfilePicURL }} 
+                    source={{ uri: profileImg }} 
                     style={styles.contactImg} />
-                <Text style={styles.name}>{item.friend}</Text>
+                <Text style={styles.name}>
+                    {item.friend}
+                </Text>
             </View>
             {
                 (() => {
                     if (item.amount === 0) {
                         return (
-                            <View style={styles.paymentContainer}>
-                                <Text style={styles.nudgeAmount}>$0</Text>
-                            </View>
+                            <Text style={styles.zeroAmount}>
+                                $0
+                            </Text>
                         );
                     }
 
                     if (item.isOweFriend) {
                         return (
                             <View style={styles.paymentContainer}>
-                                <Text style={styles.payAmount}>${item.amount}</Text>
+                                <Text style={styles.payAmount}>
+                                    ${item.amount}
+                                </Text>
                                 <TouchableOpacity style={styles.payBtn}>
-                                    <Text style={styles.payText}>Pay</Text>
+                                    <Text style={styles.payText}>
+                                        Pay
+                                    </Text>
                                 </TouchableOpacity>
                             </View>
                         );
@@ -38,9 +44,13 @@ const Contact = ({ item }) => {
 
                     return (
                         <View style={styles.paymentContainer}>
-                            <Text style={styles.nudgeAmount}>${item.amount}</Text>
+                            <Text style={styles.nudgeAmount}>
+                                ${item.amount}
+                            </Text>
                             <TouchableOpacity style={styles.nudgeBtn}>
-                                <Text style={styles.nudgeText}>Nudge</Text>
+                                <Text style={styles.nudgeText}>
+                                    Nudge
+                                </Text>
                             </TouchableOpacity>
                         </View>
                     );
@@ -52,11 +62,11 @@ const Contact = ({ item }) => {
 
 const styles = StyleSheet.create({
     contact: {
-        backgroundColor: 'white',
-        padding: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        backgroundColor: 'white',
+        marginVertical: 10
     },
     contactImg: {
         width: 50,
@@ -107,6 +117,12 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
+    zeroAmount: {
+        color: 'green',
+        fontSize: 25,
+        width: 80,
+        textAlign: 'center'
+    }
 });
 
 export default Contact;

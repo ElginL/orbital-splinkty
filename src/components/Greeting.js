@@ -70,8 +70,7 @@ const Greeting = ({
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center',
-        backgroundColor: 'white'
+        alignItems: 'center'
     },
     greetingTitle: {
         fontSize: 18,

@@ -4,7 +4,7 @@ import CameraStack from './CameraStack';
 import Login from '../screens/Login';
 import Profile from '../screens/Profile';
 import Signup from '../screens/Signup';
-import FriendsNavigator from './FriendsStackNavigator';
+import FriendsStack from './FriendsStack';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -56,7 +56,7 @@ const MainNavigator = () => {
                     />
                     <Tab.Screen
                         name="FriendsStack" 
-                        component={FriendsNavigator}
+                        component={FriendsStack}
                         options={{
                             tabBarLabel: 'Friend List',
                             tabBarIcon: ({ color, size }) => (

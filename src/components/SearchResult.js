@@ -5,18 +5,17 @@ import {
     TouchableOpacity,
     Image
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { 
-    addDoc, 
-    collection, 
-    deleteDoc, 
-    doc 
+    addDoc,
+    collection,
+    deleteDoc,
+    doc
 } from 'firebase/firestore';
 import { getCurrentUser, db } from '../firebase/loginAPI';
-import { deleteSentFriendRequest } from '../store/friendsSlice';
 
-const SearchResult = ({ user, outgoingReqs, profilePic }) => {
-    const dispatch = useDispatch();
+const SearchResult = ({ user, profilePic }) => {
+    const outgoingReqs = useSelector(state => state.friendship.sentFriendRequests);
 
     const addFriendHandler = otherUser => {
         addDoc(collection(db, "friendrequests"), {
@@ -34,17 +33,12 @@ const SearchResult = ({ user, outgoingReqs, profilePic }) => {
             }
         }
 
-        dispatch(deleteSentFriendRequest({
-            id
-        }));
-
         const docRef = doc(db, "friendrequests", id);
         try {
             await deleteDoc(docRef);
         } catch (error) {
             console.log(error.message);
         }
-
     }
 
     const outgoingReqsContains = (email) => {
@@ -74,7 +68,7 @@ const SearchResult = ({ user, outgoingReqs, profilePic }) => {
                                     style={styles.addBtn}>
                                     <Text style={styles.addText}>Add</Text>
                                 </TouchableOpacity>
-                            )
+                            );
                         }
                         return (
                             <TouchableOpacity
@@ -82,7 +76,7 @@ const SearchResult = ({ user, outgoingReqs, profilePic }) => {
                             >
                                 <Text style={styles.pendingText}>Cancel</Text>
                             </TouchableOpacity>
-                        )
+                        );
                     })()
                 }
             </View>

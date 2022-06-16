@@ -12,19 +12,26 @@ const FriendRequest = ({ item, declineHandler, acceptHandler, url }) => {
             <View style={styles.userDisplay}>
                 <Image 
                     source={{ uri: url }} 
-                    style={styles.contactImg} />
-                <Text style={styles.name}>{item.from}</Text>
+                    style={styles.contactImg} 
+                />
+                <Text style={styles.name}>
+                    {item.from}
+                </Text>
             </View>
             <View style={styles.btnsContainer}>
                 <TouchableOpacity 
                     style={styles.acceptBtn}
                     onPress={() => acceptHandler(item.from, item.id)}>
-                    <Text style={styles.acceptText}>Confirm</Text>
+                    <Text style={styles.acceptText}>
+                        Confirm
+                    </Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     style={styles.declineBtn}
                     onPress={() => declineHandler(item.id)}>
-                    <Text style={styles.declineText}>Decline</Text>
+                    <Text style={styles.declineText}>
+                        Decline
+                    </Text>
                 </TouchableOpacity>
             </View>
         </View>
@@ -48,7 +55,8 @@ const styles = StyleSheet.create({
     declineBtn: {
         backgroundColor: 'lightgrey',
         padding: 5,
-        paddingHorizontal: 10
+        paddingHorizontal: 10,
+        marginLeft: 10
     },
     declineText: {
         color: 'black'
@@ -66,7 +74,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 20
+        marginVertical: 20
     },
     userDisplay: {
         flexDirection: 'row',

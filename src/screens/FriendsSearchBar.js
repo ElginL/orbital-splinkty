@@ -8,29 +8,27 @@ import {
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../firebase/loginAPI';
 import { FontAwesome } from '@expo/vector-icons';
-import HorizontalLine from './HorizontalLine';
-import SearchResult from './SearchResult';
+import HorizontalLine from '../components/HorizontalLine';
+import SearchResult from '../components/SearchResult';
 
 const FriendsSearchBar = () => {
     const [filteredUsers, setFilteredUsers] = useState([]);
-
-    const friendsEmail = useSelector(state => state.friendship.friendsEmail);
+    
     const photoURLS = useSelector(state => state.users.profilePictures);
+    const friendsEmail = useSelector(state => state.friendship.friendsEmail);
+    const incomingReqs = useSelector(state => state.friendship.friendRequests);
+    const allUsers = useSelector(state => state.users.users);
 
-    const inReqs = useSelector(state => state.friendship.friendRequests);
-    const incomingReqs = useMemo(() => inReqs.map(req => req.from), [inReqs]);
+    const memoizedIncomingReqs = useMemo(() => incomingReqs.map(req => req.from), [incomingReqs]);
 
-    const users = useSelector(state => state.users.users);
-    const allUsers = useMemo(() => {
-        return users.filter(user => !friendsEmail.includes(user.email) &&
+    const searchableUsers = useMemo(() => {
+        return allUsers.filter(user => !friendsEmail.includes(user.email) &&
             user.email !== getCurrentUser() &&
-            !incomingReqs.includes(user.email));
-    }, [users, friendsEmail, incomingReqs]);
-
-    const outgoingReqs = useSelector(state => state.friendship.sentFriendRequests);
+            !memoizedIncomingReqs.includes(user.email));
+    }, [allUsers, friendsEmail, memoizedIncomingReqs]);
 
     const filterUsers = (inputText) => {
-        return allUsers.filter(user => user.email.startsWith(inputText) && inputText !== "");
+        return searchableUsers.filter(user => user.email.startsWith(inputText) && inputText !== "");
     }
 
     return (
@@ -57,9 +55,9 @@ const FriendsSearchBar = () => {
                     return (
                         <SearchResult
                             user={item} 
-                            outgoingReqs={outgoingReqs}
                             profilePic={photoURLS[item.email]}
-                    />)
+                        />
+                    )
                 }}
             />
         </View>

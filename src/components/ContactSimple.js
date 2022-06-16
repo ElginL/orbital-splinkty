@@ -5,18 +5,16 @@ import {
     Image
 } from 'react-native';
 
-const ContactSimple = ({ item }) => {
-    if (item.amount === 0) {
-        return null;
-    }
-
+const ContactSimple = ({ item, profileImg }) => {
     return (
         <View style={styles.contact}>
             <View style={styles.userDisplay}>
                 <Image
-                    source={{ uri: item.friendProfilePicURL }} 
+                    source={{ uri: profileImg }} 
                     style={styles.contactImg} />
-                <Text style={styles.name}>{item.friend}</Text>
+                <Text style={styles.name}>
+                    {item.friend}
+                </Text>
             </View>
             {
                 (() => {
@@ -31,8 +29,8 @@ const ContactSimple = ({ item }) => {
             
                     return (
                         <View style={styles.paymentContainer}>
-                            <Text style={styles.nudgeMessage}>To Receive</Text>
-                            <Text style={styles.nudgeAmount}>${item.amount}</Text>
+                            <Text style={styles.receiveMessage}>To Receive</Text>
+                            <Text style={styles.receiveAmount}>${item.amount}</Text>
                         </View>
                     )
                 })()
@@ -43,11 +41,10 @@ const ContactSimple = ({ item }) => {
 
 const styles = StyleSheet.create({
     contact: {
-        backgroundColor: 'white',
-        padding: 20,
         flexDirection: 'row',
         justifyContent: 'space-between',
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: 10
     },
     contactImg: {
         width: 50,
@@ -58,17 +55,9 @@ const styles = StyleSheet.create({
     name: {
         fontSize: 17
     },
-    nudgeAmount: {
-        color: 'green',
-        fontSize: 20,
-    },
     payAmount: {
         color: 'red',
         fontSize: 20,
-    },
-    nudgeMessage: {
-        color: 'green',
-        fontSize: 10
     },
     payMessage: {
         color: 'red',
@@ -82,6 +71,14 @@ const styles = StyleSheet.create({
     payText: {
         color: 'blue',
         textAlign: 'center'
+    },
+    receiveAmount: {
+        color: 'green',
+        fontSize: 20,
+    },
+    receiveMessage: {
+        color: 'green',
+        fontSize: 10
     },
     userDisplay: {
         flexDirection: 'row',

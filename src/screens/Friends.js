@@ -12,7 +12,10 @@ import {
     collection, 
     where 
 } from 'firebase/firestore';
-import { addFriendRequest, addSentFriendRequest } from '../store/friendsSlice';
+import { 
+    setIncomingFriendRequests, 
+    setSentFriendRequests 
+} from '../store/friendsSlice';
 import { getCurrentUser, db } from '../firebase/loginAPI';
 import { ScrollView } from 'react-native-virtualized-view';
 import FriendsPayments from '../components/FriendsPayments';
@@ -23,34 +26,42 @@ const Friends = () => {
 
     useEffect(() => {
         // Storing the outgoing friend requests.
-        const q = query(collection(db, "friendrequests"), where("from", '==', getCurrentUser()));
-        const unsubQ = onSnapshot(q, snapshot => {
+        const outgoingRequestsQuery = query(collection(db, "friendrequests"), where("from", '==', getCurrentUser()));
+        const unsubOutgoingRequestsQuery = onSnapshot(outgoingRequestsQuery, snapshot => {
+            const sentRequests = [];
+
             snapshot.docs.forEach(doc => {
-                dispatch(addSentFriendRequest({ 
-                    request: { 
-                        to: doc.data().to, 
-                        id: doc.id 
-                    } 
-                }));
+                sentRequests.push({
+                    to: doc.data().to,
+                    id: doc.id
+                });
             });
+
+            dispatch(setSentFriendRequests({
+                sentRequests
+            }));
         });
 
         // Storing the incoming friend requests.
-        const incomingQuery = query(collection(db, "friendrequests"), where('to', '==', getCurrentUser()));
-        const unsubIncomingQ = onSnapshot(incomingQuery, snapshot => {
+        const incomingRequestsQuery = query(collection(db, "friendrequests"), where('to', '==', getCurrentUser()));
+        const unsubIncomingRequestsQuery = onSnapshot(incomingRequestsQuery, snapshot => {
+            const incomingRequests = [];
+
             snapshot.docs.forEach(doc => {
-                dispatch(addFriendRequest({ 
-                    request: { 
-                        from: doc.data().from, 
-                        id: doc.id 
-                    }
-                }));
+                incomingRequests.push({
+                    from: doc.data().from,
+                    id: doc.id
+                })
             });
+
+            dispatch(setIncomingFriendRequests({
+                incomingRequests
+            }))
         });
 
         return () => {
-            unsubQ();
-            unsubIncomingQ();
+            unsubOutgoingRequestsQuery();
+            unsubIncomingRequestsQuery();
         }
     }, []);
 
@@ -70,6 +81,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white',
+        padding: 20
     }
 });
 

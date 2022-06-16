@@ -10,6 +10,7 @@ import {
 import { uploadImg, deleteProfileImg } from '../firebase/ProfileImgAPI';
 import { getCurrentUser } from '../firebase/loginAPI';
 import ProfileImgPickerModal from './ProfileImgPickerModal';
+import { MaterialIcons } from '@expo/vector-icons';
 
 const ProfileImgPicker = () => {
     const NO_PROFILE_IMG = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
@@ -85,6 +86,13 @@ const ProfileImgPicker = () => {
                     style={styles.profileImg} 
                     source={{ uri: photoURI }}
                 />
+                <View style={styles.pencilContainer}>
+                    <MaterialIcons 
+                        name="edit" 
+                        size={30} 
+                        color="green"
+                    />
+                </View>
             </TouchableOpacity>
             <ProfileImgPickerModal
                 isVisible={visible}
@@ -98,11 +106,19 @@ const ProfileImgPicker = () => {
 };
 
 const styles = StyleSheet.create({
+    pencilContainer: {
+        padding: 5,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        borderWidth: 1,
+        position: 'absolute',
+        bottom: 10,
+        right: 5
+    },
     photoFrame: {
         width: 200,
         height: 200,
         borderRadius: 100,
-        borderColor: 'black'
     },
     profileImg: {
         width: 200,

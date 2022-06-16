@@ -10,33 +10,21 @@ import {
     logOutUser,
     getCurrentUser
 } from '../firebase/loginAPI';
-import { useDispatch } from 'react-redux';
-import { resetUsers } from '../store/usersSlice';
-import { resetFriends } from '../store/friendsSlice';
 import LoadingOverlay from '../components/LoadingOverlay';
 import ProfileImgPicker from '../components/ProfileImgPicker';
 import NotificationSettings from '../components/NotificationSettings';
 import HorizontalLine from '../components/HorizontalLine';
 
 const Profile = () => {
-    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
 
     const logOutHandler = () => {
-        dispatch(resetFriends());
-        dispatch(resetUsers());
-
         setIsLoading(true);
-        logOutUser()
-            .then(() => {})
-            .catch((error) => {
-                alert(error);
-            });
-    }
 
-    const renderLoading = () => {
-        if (isLoading) {
-            return <LoadingOverlay />;
+        try {
+            logOutUser();
+        } catch (error) {
+            alert(error);
         }
     }
 
@@ -56,7 +44,11 @@ const Profile = () => {
                 style={styles.logOutBtn}>
                 <Text style={styles.logOutText}>Log Out</Text>
             </TouchableOpacity>
-            {renderLoading()}
+            {
+                isLoading
+                    ? <LoadingOverlay />
+                    : null
+            }
         </SafeAreaView>
     );
 };
@@ -65,9 +57,6 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: 'white'
-    },
-    logOutBtn: {
-        marginTop: '25%'
     },
     logOutText: {
         color: 'rgb(10, 132, 255)',

@@ -54,7 +54,6 @@ const styles = StyleSheet.create({
     },
     container: {
         width: '100%',
-        height: '28%',
     },
     button: {
         alignItems: 'center',
@@ -68,11 +67,11 @@ const styles = StyleSheet.create({
     },
     selectionGroup: {
         backgroundColor: 'white',
-        borderRadius: 20
+        borderRadius: 20,
+        marginBottom: 10
     },
     cancelBtn: {
         backgroundColor: 'white',
-        marginTop: 10,
         padding: 15,
         borderRadius: 20
     }

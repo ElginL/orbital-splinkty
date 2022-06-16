@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { 
-    StyleSheet, 
-    Text, 
-    View,
-    TextInput, 
+    Image,
     Keyboard,
+    Text, 
+    TextInput, 
     TouchableWithoutFeedback,
     TouchableOpacity,
-    Image
+    View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import HorizontalLine from "../components/HorizontalLine";
@@ -16,7 +15,6 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import { logInUser } from '../firebase/loginAPI';
 import getErrorMessage from '../firebase/authErrorMessages';
 import AuthStyles from '../styles/AuthStyles';
-
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -98,7 +96,5 @@ const Login = ({ navigation }) => {
         </KeyboardAwareScrollView>
     );
 };
-
-const styles = StyleSheet.create({});
 
 export default Login;
