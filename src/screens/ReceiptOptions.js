@@ -7,11 +7,11 @@ import {
 } from 'react-native';
 import Modal from 'react-native-modal';
 import { useIsFocused } from '@react-navigation/native';
+import { uploadScannedImage, processImage, deleteScannedImage } from '../firebase/ScannedImgAPI';
 import * as ImagePicker from 'expo-image-picker';
 
 const ReceiptOptions = ({ navigation }) => {
     const isFocused = useIsFocused();
-
     const [modalVisible, setModalVisible] = useState(true);
 
     useEffect(() => {
@@ -33,14 +33,15 @@ const ReceiptOptions = ({ navigation }) => {
         });
 
         if (!result.cancelled) {
-            // TODO: Send this uri to a program that returns back the scanned items.
-            console.log(result.uri);
+            await uploadScannedImage(result.uri);
+            const details = await processImage();
             setModalVisible(false);
             navigation.navigate("Scanned Items", {
-                itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
-                prices: [7.20, 7.70, 5.80, 3.90, 2.40],
-                quantities: [6, 1, 2, 1, 2]
+                itemsDescription: details[1],
+                prices: details[2],
+                quantities: details[0]
             });
+            await deleteScannedImage();
         }
     }
 
@@ -51,13 +52,15 @@ const ReceiptOptions = ({ navigation }) => {
 
         if (!result.cancelled) {
             // TODO: Send this uri to a program that returns back the scanned items.
-            console.log(result.uri);
+            await uploadScannedImage(result.uri);
+            const details = await processImage();
             setModalVisible(false);
             navigation.navigate("Scanned Items", {
-                itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
-                prices: [7.20, 7.70, 5.80, 3.90, 2.40],
-                quantities: [6, 1, 2, 1, 2]
+                itemsDescription: details[1],
+                prices: details[2],
+                quantities: details[0]
             });
+            await deleteScannedImage();
         }
     };
 

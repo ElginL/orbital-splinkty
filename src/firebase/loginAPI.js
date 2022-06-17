@@ -71,7 +71,7 @@ const getCurrentUser = () => {
     if (auth != null) {
         return auth.currentUser.email;
     }
-
+    
     return null;
 };
 
