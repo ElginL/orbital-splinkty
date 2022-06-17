@@ -4,23 +4,36 @@ import {
     Text,
     StyleSheet,
     Image,
-    FlatList
+    FlatList,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { DraxView } from 'react-native-drax';
-import { editReceiptItemMemberQty } from '../store/receiptSlice';
 import ItemQuantityModal from './ItemQuantityModal';
+import { editActiveGroupMember, editReceiptItem } from '../store/receiptSlice';
 
-const ItemReceiver = ({ email, profileImg, receivedItems }) => {
+const ItemReceiver = ({ member, profileImg }) => {
     const dispatch = useDispatch();
 
     const [modalData, setModalData] = useState({ isVisible: false, payload: null });
 
-    const receiveDragDropHandler = (id, quantityDropped) => {
-        dispatch(editReceiptItemMemberQty({
-            id,
-            member: email,
-            quantityDropped
+    const receiveDragDropHandler = quantityDropped => {
+        const priceShare = modalData.payload.price / modalData.payload.initialQuantity * quantityDropped;
+        dispatch(editActiveGroupMember({
+            memberToEdit: member.email,
+            newItem: {
+                description: modalData.payload.description,
+                quantity: quantityDropped,
+                priceShare: parseFloat(priceShare.toFixed(2)),
+                id: modalData.payload.id
+            }
+        }));
+
+        dispatch(editReceiptItem({
+            description: modalData.payload.description,
+            price: modalData.payload.price,
+            remainingQuantity: modalData.payload.remainingQuantity - quantityDropped,
+            initialQuantity: modalData.payload.initialQuantity,
+            id: modalData.payload.id,
         }))
     }
 
@@ -32,7 +45,7 @@ const ItemReceiver = ({ email, profileImg, receivedItems }) => {
                     style={styles.profileImg}
                 />
                 <Text style={styles.emailText}>
-                    {email}
+                    {member.email}
                 </Text>
             </View>
             <DraxView
@@ -40,11 +53,11 @@ const ItemReceiver = ({ email, profileImg, receivedItems }) => {
                     <FlatList
                         keyExtractor={item => item.id}
                         style={styles.receivedItems}
-                        data={receivedItems}
+                        data={member.items}
                         renderItem={({ item }) => (
                             <View style={styles.receivedItem}>
                                 <Text>
-                                    {item[email]}x {item.description}
+                                    {item.quantity}x {item.description}
                                 </Text>
                             </View>
                         )}
@@ -61,8 +74,7 @@ const ItemReceiver = ({ email, profileImg, receivedItems }) => {
                     : (
                         <ItemQuantityModal
                             isVisible={modalData.isVisible}
-                            itemId={modalData.payload.id}
-                            maxQuantity={modalData.payload.quantity}
+                            maxQuantity={modalData.payload.remainingQuantity}
                             receiveDragDropHandler={receiveDragDropHandler}
                             onClose={() => setModalData({ ...modalData, isVisible: false })}
                         />

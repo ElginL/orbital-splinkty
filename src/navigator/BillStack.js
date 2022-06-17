@@ -23,7 +23,7 @@ const NextButton = ({ navigation, location }) => {
     )
 }
 
-const CameraNavigator = () => {
+const BillStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen
@@ -86,4 +86,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CameraNavigator; 
+export default BillStack; 

@@ -27,12 +27,12 @@ const ActiveGroup = () => {
             <HorizontalLine />
             <View style={styles.selectedPplContainer}>
                 <FlatList
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.email}
                     data={activeGroupMembers}
                     renderItem={({ item }) => (
                         <SelectedFriend 
-                            email={item}
-                            profileImg={profileImgs[item]}
+                            member={item}
+                            profileImg={profileImgs[item.email]}
                         />
                     )}
                     horizontal={true}
@@ -55,7 +55,7 @@ const ActiveGroup = () => {
                                 <ActiveGroupContact 
                                     email={item}
                                     profileImg={profileImgs[item]}
-                                    contains={activeGroupMembers.includes(item)}
+                                    activeGroupMembers={activeGroupMembers}
                                 />
                             )}
                         />

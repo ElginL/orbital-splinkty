@@ -9,7 +9,7 @@ import { Entypo } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { removeActiveGroupMember } from '../store/receiptSlice';
 
-const SelectedFriends = ({ email, profileImg }) => {
+const SelectedFriends = ({ member, profileImg }) => {
     const dispatch = useDispatch();
 
     const removeMember = memberToRemove => {
@@ -21,7 +21,7 @@ const SelectedFriends = ({ email, profileImg }) => {
     return (
         <TouchableOpacity 
             style={styles.container}
-            onPress={() => removeMember(email)}>
+            onPress={() => removeMember(member.email)}>
             <Entypo name="circle-with-cross" 
                 size={24} 
                 color="black"
@@ -32,7 +32,7 @@ const SelectedFriends = ({ email, profileImg }) => {
                 style={styles.profileImg}
             />
             <Text style={styles.email} ellipsizeMode='tail' numberOfLines={1}>
-                {email}
+                {member.email}
             </Text>
         </TouchableOpacity>
     );

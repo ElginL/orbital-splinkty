@@ -5,27 +5,52 @@ import {
     StyleSheet,
     TouchableOpacity
 } from 'react-native';
+import { useDispatch } from 'react-redux';
+import {
+    editReceiptItem, 
+    deleteReceiptItem,
+} from '../store/receiptSlice';
 import EditItemModal from './EditItemModal';
 
-const ScannedItem = ({ item, editItemHandler, deleteItemHandler }) => {
-    const description = item.description;
-    const price = item.price;
-    const quantity = item.quantity;
+const ScannedItem = ({ item, isValidFormInput }) => {
+    const dispatch = useDispatch();
 
     const [modalVisible, setModalVisible] = useState(false);
+
+    const editItemHandler = (description, quantity, price, itemId) => {
+        if (!isValidFormInput(description, quantity, price)) {
+            return false;
+        }
+
+        dispatch(editReceiptItem({
+            description,
+            price: parseFloat(price),
+            remainingQuantity: parseInt(quantity),
+            initialQuantity: parseInt(quantity),
+            id: itemId,
+        }));
+
+        return true;
+    };
+
+    const deleteItemHandler = itemId => {
+        dispatch(deleteReceiptItem({
+            id: itemId
+        }));
+    };
 
     return (
         <View style={styles.container}>
             <View style={styles.quantityContainer}>
                 <View style={styles.quantityBox}>
                     <Text style={styles.quantity}>
-                        {quantity}x
+                        {item.initialQuantity}x
                     </Text>
                 </View>
             </View>
             <View style={styles.centerContainer}>
                 <Text style={styles.description}>
-                    {description}
+                    {item.description}
                 </Text>
                 <TouchableOpacity onPress={() => setModalVisible(true)}>
                     <Text style={styles.editBtn}>
@@ -33,7 +58,7 @@ const ScannedItem = ({ item, editItemHandler, deleteItemHandler }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.price}>{price}</Text>
+            <Text style={styles.price}>{item.price}</Text>
             <EditItemModal
                 isVisible={modalVisible}
                 item={item}

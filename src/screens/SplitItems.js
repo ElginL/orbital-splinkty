@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -6,26 +5,15 @@ import {
     FlatList,
 } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ItemDraggable from '../components/ItemDraggable';
 import ItemReceiver from '../components/ItemReceiver';
-import { addMemberToReceiptItems } from '../store/receiptSlice';
 
 const SplitItems = () => {
-    const dispatch = useDispatch();
-
     const profileImgs = useSelector(state => state.users.profilePictures);
 
     const draggableItems = useSelector(state => state.receipt.receiptItems)
     const receivingItemList = useSelector(state => state.receipt.activeGroupMembers);
-
-    useEffect(() => {
-        receivingItemList.forEach(receivingItem => {
-            dispatch(addMemberToReceiptItems({
-                member: receivingItem
-            }))
-        })  
-    }, [receivingItemList]);
 
     return (
         <DraxProvider>
@@ -48,15 +36,12 @@ const SplitItems = () => {
                         Group Members
                     </Text>
                     <FlatList
-                        keyExtractor={item => Math.random(1000)}
+                        keyExtractor={item => item.email}
                         data={receivingItemList}
                         renderItem={({ item }) => (
                             <ItemReceiver
-                                email={item}
-                                profileImg={profileImgs[item]}
-                                receivedItems={draggableItems.filter(draggableItem => {
-                                    return draggableItem[item] > 0;
-                                })}
+                                member={item}
+                                profileImg={profileImgs[item.email]}
                             />
                         )}
                     />

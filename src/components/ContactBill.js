@@ -7,19 +7,7 @@ import {
 } from 'react-native';
 import HorizontalLine from './HorizontalLine';
 
-const ContactBill = ({ email, receiptItems, profileImg }) => {
-    const items = receiptItems.filter(item => item[email] !== 0);
-
-    const calculateTotal = () => {
-        let totalPrice = 0;
-
-        for (const item of items) {
-            totalPrice += item.price / item.totalQuantity * item[email];
-        }
-
-        return totalPrice.toFixed(2);
-    }
-
+const ContactBill = ({ member, profileImg }) => {
     return (
         <View style={styles.container}>
             <View style={styles.contactContainer}>
@@ -28,7 +16,7 @@ const ContactBill = ({ email, receiptItems, profileImg }) => {
                     style={styles.profilePic}
                 />
                 <Text style={styles.emailText}>
-                    {email}
+                    {member.email}
                 </Text>
             </View>
             <View style={styles.detailsContainer}>
@@ -37,15 +25,15 @@ const ContactBill = ({ email, receiptItems, profileImg }) => {
                         Orders:
                     </Text>
                     {
-                        items.length === 0
+                        member.items.length === 0
                             ? <Text>No Orders...</Text>
                             : (
                                 <FlatList
                                     keyExtractor={item => item.id}
-                                    data={items}
+                                    data={member.items}
                                     renderItem={({ item }) => (
                                         <Text>
-                                            {item[email]}x {item.description}
+                                            {item.quantity}x {item.description}
                                         </Text>
                                     )}
                                 />
@@ -57,7 +45,7 @@ const ContactBill = ({ email, receiptItems, profileImg }) => {
                         Total price:
                     </Text>
                     <Text style={styles.calculatedPrice}>
-                        ${calculateTotal()}
+                        ${member.totalPrice}
                     </Text>
                 </View>
             </View>
@@ -68,7 +56,7 @@ const ContactBill = ({ email, receiptItems, profileImg }) => {
 
 const styles = StyleSheet.create({
     calculatedPrice: {
-        fontSize: 16,
+        fontSize: 20,
         color: 'red'
     },
     container: {

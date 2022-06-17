@@ -12,13 +12,11 @@ import {
 
 const ItemQuantityModal = ({
     isVisible,
-    itemId,
     maxQuantity,
     receiveDragDropHandler,
     onClose
 }) => {
     const [ quantity, setQuantity ] = useState(maxQuantity);
-
     const [ hasError, setHasError ] = useState(false)
 
     return (
@@ -68,7 +66,7 @@ const ItemQuantityModal = ({
                                     return;
                                 }
 
-                                receiveDragDropHandler(itemId, quantity);
+                                receiveDragDropHandler(quantity);
                                 setHasError(false);
                                 onClose();
                             }}>

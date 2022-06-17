@@ -51,7 +51,7 @@ const Friends = () => {
                 incomingRequests.push({
                     from: doc.data().from,
                     id: doc.id
-                })
+                });
             });
 
             dispatch(setIncomingFriendRequests({

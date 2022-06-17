@@ -8,7 +8,7 @@ import { DraxView } from 'react-native-drax';
 const ItemDraggable = ({ item }) => {
     return (
         <DraxView
-            style={item.quantity !== 0 ? styles.draggable : [styles.draggable, styles.notDraggable]}
+            style={item.remainingQuantity !== 0 ? styles.draggable : [styles.draggable, styles.notDraggable]}
             onDragStart={() => {
                 console.log(`dragging ${item.description}`);
             }}
@@ -19,12 +19,12 @@ const ItemDraggable = ({ item }) => {
                         {item.description}
                     </Text>
                     <Text style={styles.draggableQty}>
-                        Qty: {item.quantity}
+                        Qty: {item.remainingQuantity}
                     </Text>
                 </View>
             )}
             draggingStyle={styles.draggingStyle}
-            draggable={!(item.quantity === 0)}
+            draggable={!(item.remainingQuantity === 0)}
         />
     );
 };

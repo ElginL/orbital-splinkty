@@ -95,6 +95,7 @@ const AddItemModal = ({
                                     setPrice("");
                                     setHasError(false);
                                     onClose();
+                                    return;
                                 }
 
                                 setHasError(true);

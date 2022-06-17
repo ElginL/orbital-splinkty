@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import Home from '../screens/Home';
-import CameraStack from './CameraStack';
+import BillStack from './BillStack';
 import Login from '../screens/Login';
 import Profile from '../screens/Profile';
 import Signup from '../screens/Signup';
@@ -44,12 +44,12 @@ const MainNavigator = () => {
                         }}
                     />
                     <Tab.Screen 
-                        name="CameraStack" 
-                        component={CameraStack}
+                        name="BillStack" 
+                        component={BillStack}
                         options={{
-                            tabBarLabel: 'Camera',
+                            tabBarLabel: 'Split Bill',
                             tabBarIcon: ({ color, size }) => (
-                                <FontAwesome name="camera" color={color} size={size} />
+                                <MaterialCommunityIcons name="cash" color={color} size={size} />
                             ),
                             headerShown: false
                         }}

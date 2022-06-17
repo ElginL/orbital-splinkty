@@ -18,7 +18,7 @@ const EditItemModal = ({
     onClose
 }) => {
     const [ description, setDescription ] = useState(item.description);
-    const [ quantity, setQuantity ] = useState(item.quantity);
+    const [ quantity, setQuantity ] = useState(item.initialQuantity);
     const [ price, setPrice ] = useState(item.price);
 
     const [ hasError, setHasError ] = useState(false)
@@ -101,6 +101,7 @@ const EditItemModal = ({
                                     if (editHandler(description, quantity, price, item.id)) {
                                         setHasError(false);
                                         onClose();
+                                        return;
                                     }
 
                                     setHasError(true);

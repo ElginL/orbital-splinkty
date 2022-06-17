@@ -5,29 +5,52 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native';
+import { 
+    addDoc,
+    collection,
+} from 'firebase/firestore';
+import { db, getCurrentUser } from '../firebase/loginAPI';
 import { useSelector } from 'react-redux';
 import ContactBill from '../components/ContactBill';
 
-const BillVerification = () => {
-    const receiptItems = useSelector(state => state.receipt.receiptItems);
+const BillVerification = ({ navigation }) => {
     const profileImgs = useSelector(state => state.users.profilePictures);
     const activeGroupMembers = useSelector(state => state.receipt.activeGroupMembers);
+
+    const confirmBtnHandler = () => {
+        activeGroupMembers.forEach(async member => {
+            await addDoc(collection(db, "splitrequests"), {
+                from: getCurrentUser(),
+                to: member.email,
+                totalPrice: member.totalPrice,
+                items: member.items.map(item => {
+                    return {
+                        description: item.description,
+                        quantity: item.quantity,
+                        priceShare: item.priceShare
+                    }
+                })
+            });
+        });
+
+        navigation.navigate("Receipt Options");
+    }
 
     return (
         <View style={styles.container}>
             <FlatList
-                keyExtractor={item => item}
+                keyExtractor={item => item.email}
                 data={activeGroupMembers}
                 renderItem={({ item }) => (
                     <ContactBill
-                        email={item}
-                        receiptItems={receiptItems}
-                        profileImg={profileImgs[item]}
+                        member={item}
+                        profileImg={profileImgs[item.email]}
                     />
                 )}
             />
             <View style={styles.confirmBtnContainer}>
-                <TouchableOpacity style={styles.confirmBtn}>
+                <TouchableOpacity style={styles.confirmBtn}
+                    onPress={confirmBtnHandler}>
                     <Text style={styles.confirmBtnText}>
                         Confirm Split
                     </Text>
