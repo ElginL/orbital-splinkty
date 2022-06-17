@@ -75,6 +75,10 @@ export const receiptSlice = createSlice({
         },
         setReceiptItems: (state, action) => {
             state.receiptItems = action.payload.receiptItems;
+        },
+        emptyReceiptStore: state => {
+            state.receiptItems = [];
+            state.activeGroupMembers = [];
         }
     }
 });
@@ -86,6 +90,7 @@ export const {
     addReceiptItem,
     editReceiptItem,
     deleteReceiptItem,
-    setReceiptItems
+    setReceiptItems,
+    emptyReceiptStore
 } = receiptSlice.actions;
 export default receiptSlice.reducer;

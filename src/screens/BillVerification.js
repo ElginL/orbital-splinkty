@@ -10,10 +10,14 @@ import {
     collection,
 } from 'firebase/firestore';
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
+import { emptyReceiptStore } from '../store/receiptSlice';
+
 import ContactBill from '../components/ContactBill';
 
 const BillVerification = ({ navigation }) => {
+    const dispatch = useDispatch();
+
     const profileImgs = useSelector(state => state.users.profilePictures);
     const activeGroupMembers = useSelector(state => state.receipt.activeGroupMembers);
 
@@ -33,7 +37,8 @@ const BillVerification = ({ navigation }) => {
             });
         });
 
-        navigation.navigate("Receipt Options");
+        dispatch(emptyReceiptStore());
+        navigation.navigate("Split Bill");
     }
 
     return (

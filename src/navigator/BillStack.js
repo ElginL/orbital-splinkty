@@ -6,7 +6,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ActiveGroup from '../screens/ActiveGroup';
 import BillVerification from '../screens/BillVerification';
-import ReceiptOptions from '../screens/ReceiptOptions';
+import SplitBill from '../screens/SplitBill';
 import ScannedItems from '../screens/ScannedItems';
 import SplitItems from '../screens/SplitItems';
 
@@ -27,8 +27,8 @@ const BillStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="Receipt Options"
-                component={ReceiptOptions}
+                name="Split Bill"
+                component={SplitBill}
             />
             <Stack.Screen
                 name="Scanned Items"

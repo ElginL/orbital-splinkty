@@ -9,9 +9,6 @@ const ItemDraggable = ({ item }) => {
     return (
         <DraxView
             style={item.remainingQuantity !== 0 ? styles.draggable : [styles.draggable, styles.notDraggable]}
-            onDragStart={() => {
-                console.log(`dragging ${item.description}`);
-            }}
             payload={item}
             renderContent={() => (
                 <View>

@@ -69,13 +69,13 @@ const styles = StyleSheet.create({
         marginVertical: 10
     },
     contactImg: {
-        width: 50,
-        height: 50,
-        borderRadius: 25,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
         marginRight: 10
     },
     name: {
-        fontSize: 17
+        fontSize: 18
     },
     nudgeBtn: {
         backgroundColor: 'green',
