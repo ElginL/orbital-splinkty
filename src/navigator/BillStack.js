@@ -29,6 +29,9 @@ const BillStack = () => {
             <Stack.Screen
                 name="Split Bill"
                 component={SplitBill}
+                options={{
+                    headerShown: false
+                }}
             />
             <Stack.Screen
                 name="Scanned Items"

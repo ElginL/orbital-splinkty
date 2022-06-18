@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import {
+    SafeAreaView,
     StyleSheet,
     View,
     Text,
     FlatList
 } from 'react-native';
-import * as ImagePicker from 'expo-image-picker';
 import { db, getCurrentUser } from '../firebase/loginAPI';
 import {
     query,
@@ -13,7 +13,9 @@ import {
     collection,
     onSnapshot
 } from 'firebase/firestore';
+import CreateSplitRequestBtn from '../components/CreateSplitRequestBtn';
 import SplitRequest from '../components/SplitRequest';
+import HorizontalLine from '../components/HorizontalLine';
 
 const SplitBill = ({ navigation }) => {
     const [incomingSplitRequests, setIncomingSplitRequests] = useState([]);
@@ -38,70 +40,53 @@ const SplitBill = ({ navigation }) => {
         }
     }, []);
 
-    const openCamera = async () => {
-        const permissionResult = await ImagePicker.requestCameraPermissionsAsync();
-
-        if (permissionResult.granted === false) {
-            alert("You need to give camera access in order to use this feature");
-            return;
-        }
-
-        const result = await ImagePicker.launchCameraAsync({
-            // allowsEditing: true,
-        });
-
-        if (!result.cancelled) {
-            // TODO: Send this uri to a program that returns back the scanned items.
-            console.log(result.uri);
-            setModalVisible(false);
-            navigation.navigate("Scanned Items", {
-                itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
-                prices: [7.20, 7.70, 5.80, 3.90, 2.40],
-                quantities: [6, 1, 2, 1, 2]
-            });
-        }
-    }
-
-    const pickImage = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            // allowsEditing: true
-        });
-
-        if (!result.cancelled) {
-            // TODO: Send this uri to a program that returns back the scanned items.
-            console.log(result.uri);
-            setModalVisible(false);
-            navigation.navigate("Scanned Items", {
-                itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
-                prices: [7.20, 7.70, 5.80, 3.90, 2.40],
-                quantities: [6, 1, 2, 1, 2]
-            });
-        }
-    };
-
     return (
-        <View style={styles.container}>
-            <Text style={styles.splitReqHeader}>
-                Incoming Split Requests
-            </Text>
-            <FlatList
-                keyExtractor={item => item.id}
-                data={incomingSplitRequests}
-                renderItem={({ item }) => (
-                    <SplitRequest 
-                        item={item}
-                    />
-                )}
-            />
-        </View>
+        <SafeAreaView style={styles.screenContainer}>
+            <View style={styles.header}>
+                <Text style={styles.headerText}>
+                    Split Bill
+                </Text>
+                <CreateSplitRequestBtn 
+                    style={styles.plusBtn}
+                    navigation={navigation}
+                />
+            </View>
+            <HorizontalLine />
+            <View style={styles.container}>
+                <Text style={styles.splitReqHeader}>
+                    Incoming Split Requests
+                </Text>
+                <FlatList
+                    keyExtractor={item => item.id}
+                    data={incomingSplitRequests}
+                    renderItem={({ item }) => (
+                        <SplitRequest 
+                            item={item}
+                        />
+                    )}
+                />
+            </View>
+        </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        backgroundColor: 'white',
         padding: 20
+    },
+    header: {
+        height: '6%',
+        justifyContent: 'center',
+        alignItems: 'center',
+        flexDirection: 'row'
+    },
+    headerText: {
+        fontSize: 18,
+        fontWeight: '500'
+    },
+    screenContainer: {
+        backgroundColor: 'white',
+        flex: 1
     },
     splitReqHeader: {
         fontSize: 24,
