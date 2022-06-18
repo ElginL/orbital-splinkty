@@ -65,8 +65,7 @@ const styles = StyleSheet.create({
     },
     paymentContainer: {
         alignItems: 'center',
-        flexDirection: 'column',
-        width: 60
+        flexDirection: 'column'
     },
     payText: {
         color: 'blue',

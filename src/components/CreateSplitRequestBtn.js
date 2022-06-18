@@ -17,7 +17,6 @@ const CreateSplitRequestBtn = ({ navigation }) => {
             prices: [],
             quantities: []
         });
-
     }
 
     const openCameraHandler = async () => {
