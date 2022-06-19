@@ -88,7 +88,6 @@ const styles = StyleSheet.create({
         width: 140,
         height: 140,
         borderRadius: 70,
-        alignSelf: 'center',
         margin: 20
     },
     receiveText: {
@@ -105,7 +104,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         padding: 15,
         borderRadius: 15,
-        width: 175,
+        width: '48%',
         shadowColor: "#000",
         shadowOffset: {
             width: 0,

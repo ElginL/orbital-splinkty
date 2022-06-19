@@ -83,7 +83,7 @@ const CreateSplitRequestBtn = ({ navigation }) => {
 const styles = StyleSheet.create({
     container: {
         position: 'absolute',
-        right: 10,
+        right: 30,
     },
 })
 

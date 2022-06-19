@@ -20,7 +20,7 @@ import { db } from '../firebase/loginAPI';
 import HorizontalLine from './HorizontalLine';
 import SplitDetailsModal from './SplitDetailsModal';
 
-const SplitRequest = ({ item }) => {
+const IncomingSplitRequest = ({ item }) => {
     const profileImgs = useSelector(state => state.users.profilePictures);
 
     const [detailsModalVisible, setDetailsModalVisible] = useState(false);
@@ -158,6 +158,7 @@ const SplitRequest = ({ item }) => {
                 isVisible={detailsModalVisible}
                 onClose={() => setDetailsModalVisible(false)}
                 item={item}
+                isIncoming={true}
             />
             <HorizontalLine />
         </View>
@@ -182,8 +183,8 @@ const styles = StyleSheet.create({
     container: {
         flexDirection: 'row',
         justifyContent: 'space-between',
-        marginVertical: 18,
-        alignItems: 'center'
+        alignItems: 'center',
+        padding: 20
     },
     declineBtn: {
         backgroundColor: 'lightgrey',
@@ -224,4 +225,4 @@ const styles = StyleSheet.create({
     }
 });
 
-export default SplitRequest;
+export default IncomingSplitRequest;

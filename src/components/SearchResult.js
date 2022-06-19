@@ -25,15 +25,7 @@ const SearchResult = ({ user, profilePic }) => {
     }
 
     const cancelHandler = async () => {
-        let id = "";
-        for (const request of outgoingReqs) {
-            if (request.to === user.email) {
-                id = request.id;
-                break;
-            }
-        }
-
-        const docRef = doc(db, "friendrequests", id);
+        const docRef = doc(db, "friendrequests", user.id);
         try {
             await deleteDoc(docRef);
         } catch (error) {
@@ -51,35 +43,33 @@ const SearchResult = ({ user, profilePic }) => {
     }
 
     return (
-        <View>
-            <View style={styles.searchResult}>
-                <View style={styles.userDisplay}>
-                    <Image
-                        source={{ uri: profilePic }} 
-                        style={styles.contactImg} />
-                    <Text style={styles.name}>{user.email}</Text>
-                </View>
-                {
-                    (() => {
-                        if (!outgoingReqsContains(user.email)) {
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => addFriendHandler(user.email) }
-                                    style={styles.addBtn}>
-                                    <Text style={styles.addText}>Add</Text>
-                                </TouchableOpacity>
-                            );
-                        }
+        <View style={styles.searchResult}>
+            <View style={styles.userDisplay}>
+                <Image
+                    source={{ uri: profilePic }} 
+                    style={styles.contactImg} />
+                <Text style={styles.name}>{user.email}</Text>
+            </View>
+            {
+                (() => {
+                    if (!outgoingReqsContains(user.email)) {
                         return (
                             <TouchableOpacity
-                                onPress={cancelHandler}
-                            >
-                                <Text style={styles.pendingText}>Cancel</Text>
+                                onPress={() => addFriendHandler(user.email) }
+                                style={styles.addBtn}>
+                                <Text style={styles.addText}>Add</Text>
                             </TouchableOpacity>
                         );
-                    })()
-                }
-            </View>
+                    }
+                    return (
+                        <TouchableOpacity
+                            onPress={cancelHandler}
+                        >
+                            <Text style={styles.pendingText}>Cancel</Text>
+                        </TouchableOpacity>
+                    );
+                })()
+            }
         </View>
     )
 };

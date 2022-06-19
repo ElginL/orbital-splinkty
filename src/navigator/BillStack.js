@@ -6,9 +6,10 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ActiveGroup from '../screens/ActiveGroup';
 import BillVerification from '../screens/BillVerification';
-import SplitBill from '../screens/SplitBill';
 import ScannedItems from '../screens/ScannedItems';
 import SplitItems from '../screens/SplitItems';
+import SplitBillHeader from './SplitBillHeader';
+import SplitRequestTab from './SplitRequestTab';
 
 const Stack = createNativeStackNavigator();
 
@@ -28,10 +29,12 @@ const BillStack = () => {
         <Stack.Navigator>
             <Stack.Screen
                 name="Split Bill"
-                component={SplitBill}
-                options={{
-                    headerShown: false
-                }}
+                component={SplitRequestTab}
+                options={({ navigation }) => ({
+                    headerTitle: () => (
+                        <SplitBillHeader navigation={navigation} />
+                    )
+                })}
             />
             <Stack.Screen
                 name="Scanned Items"

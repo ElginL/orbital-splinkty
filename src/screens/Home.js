@@ -61,7 +61,6 @@ const Home = () => {
             }));
         });
         
-        // Listener for users, add to store if someone sign up for an account.
         const unsubUserQuery = onSnapshot(usersRef, snapshot => {
             const usersEmail = [];
             const profilePictures = {};
@@ -83,7 +82,6 @@ const Home = () => {
             }))
         });
 
-        // Listener for updates to current user's total in/out, update store
         const currUserQuery = query(usersRef, where("email", "==", getCurrentUser()));
         const unsubCurrUserQ = onSnapshot(currUserQuery, snapshot => {
             snapshot.docs.forEach(doc => {

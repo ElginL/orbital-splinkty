@@ -25,11 +25,12 @@ const Login = ({ navigation }) => {
 
     const logInHandler = () => {
         setIsLoading(true);
-        logInUser(email, password)
-            .then(() => {})
-            .catch((error) => {
-                logInFailHandler(error);
-            });
+
+        try {
+            logInUser(email, password);
+        } catch (error) {
+            logInFailHandler(error);
+        }
     };
 
     const logInFailHandler = (error) => {
@@ -75,7 +76,7 @@ const Login = ({ navigation }) => {
                             placeholder="Enter your password"
                             secureTextEntry
                         />
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={AuthStyles.blueBGBtn}
                             onPress={
                                 logInHandler

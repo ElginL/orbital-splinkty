@@ -6,19 +6,36 @@ import {
 } from 'react-native';
 import HorizontalLine from './HorizontalLine';
 
-const SplitDetailsModal = ({ isVisible, onClose, item }) => {
+const SplitDetailsModal = ({ isVisible, onClose, item, isIncoming }) => {
     return (
         <Modal
             isVisible={isVisible}
             onBackButtonPress={onClose}
             onBackdropPress={onClose}>
             <View style={styles.detailsContainer}>
-                <Text style={styles.title}>
-                    Split Request From {'\n'} {item.from}
-                </Text>
-                <Text style={styles.yourOrdersText}>
-                    Your Orders:
-                </Text>
+                {
+                    isIncoming 
+                        ? (
+                            <View>
+                                <Text style={styles.title}>
+                                    Split Request From {'\n'} {item.from}
+                                </Text>
+                                <Text style={styles.yourOrdersText}>
+                                    Your Orders:
+                                </Text>
+                            </View>
+                        )
+                        : (
+                            <View>
+                                <Text style={styles.title}>
+                                    Split Request To {'\n'} {item.to}
+                                </Text>
+                                <Text style={styles.yourOrdersText}>
+                                    His / Her Orders
+                                </Text>
+                            </View>
+                        )
+                }
                 {
                     item.items.map(order => (
                         <View 

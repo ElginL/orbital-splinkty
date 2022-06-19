@@ -56,7 +56,7 @@ const Friends = () => {
 
             dispatch(setIncomingFriendRequests({
                 incomingRequests
-            }))
+            }));
         });
 
         return () => {
