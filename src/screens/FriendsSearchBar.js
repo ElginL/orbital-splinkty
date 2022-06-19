@@ -1,17 +1,47 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import {
     View,
     StyleSheet,
     TextInput,
     FlatList,
 } from 'react-native';
-import { useSelector } from 'react-redux';
-import { getCurrentUser } from '../firebase/loginAPI';
+import { useSelector, useDispatch } from 'react-redux';
+import {
+    query,
+    where,
+    onSnapshot,
+    collection
+} from 'firebase/firestore';
+import { db, getCurrentUser } from '../firebase/loginAPI';
 import { FontAwesome } from '@expo/vector-icons';
 import HorizontalLine from '../components/HorizontalLine';
 import SearchResult from '../components/SearchResult';
+import { setSentFriendRequests } from '../store/friendsSlice';
 
 const FriendsSearchBar = () => {
+    const dispatch = useDispatch();
+    useEffect(() => {
+        const outgoingRequestsQuery = query(collection(db, "friendrequests"), where("from", '==', getCurrentUser()));
+        const unsubOutgoingRequestsQuery = onSnapshot(outgoingRequestsQuery, snapshot => {
+            const sentRequests = [];
+
+            snapshot.docs.forEach(doc => {
+                sentRequests.push({
+                    to: doc.data().to,
+                    id: doc.id
+                });
+            });
+
+            dispatch(setSentFriendRequests({
+                sentRequests
+            }));
+        });
+
+        return () => {
+            unsubOutgoingRequestsQuery();
+        }
+    }, []);
+
     const [filteredUsers, setFilteredUsers] = useState([]);
     
     const photoURLS = useSelector(state => state.users.profilePictures);

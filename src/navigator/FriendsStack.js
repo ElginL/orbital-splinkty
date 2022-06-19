@@ -1,7 +1,7 @@
 import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FontAwesome } from '@expo/vector-icons';
-import Friends from '../screens/Friends';
+import FriendsTab from './FriendsTab'
 import FriendsSearchBar from '../screens/FriendsSearchBar';
 
 const Stack = createNativeStackNavigator();
@@ -10,8 +10,8 @@ const FriendsStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen 
-                name="Friends"
-                component={Friends}
+                name="FriendsTab"
+                component={FriendsTab}
                 options={({ navigation }) => ({
                     headerRight: () => (
                         <TouchableOpacity

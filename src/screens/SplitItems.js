@@ -19,7 +19,7 @@ const SplitItems = () => {
         <DraxProvider>
             <View style={styles.container}>
                 <Text style={styles.allItemsText}>
-                    All Items
+                    Drag and Drop
                 </Text>
                 <View style={styles.draggableItems}>
                     {

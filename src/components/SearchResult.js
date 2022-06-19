@@ -25,7 +25,15 @@ const SearchResult = ({ user, profilePic }) => {
     }
 
     const cancelHandler = async () => {
-        const docRef = doc(db, "friendrequests", user.id);
+        let id = "";
+        for (const request of outgoingReqs) {
+            if (request.to === user.email) {
+                id = request.id;
+                break;
+            }
+        }
+
+        const docRef = doc(db, "friendrequests", id);
         try {
             await deleteDoc(docRef);
         } catch (error) {
