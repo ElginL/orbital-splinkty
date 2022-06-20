@@ -7,6 +7,7 @@ import {
 import * as ImagePicker from 'expo-image-picker';
 import { AntDesign } from '@expo/vector-icons';
 import SplitBillMethodsModal from './SplitBillMethodsModal';
+// import { uploadScannedImage, processImage, deleteScannedImage } from '../firebase/ScannedImgAPI';
 
 const CreateSplitRequestBtn = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -27,36 +28,44 @@ const CreateSplitRequestBtn = ({ navigation }) => {
             return;
         }
 
-        const result = await ImagePicker.launchCameraAsync({
-            // allowsEditing: true,
-        });
+        const result = await ImagePicker.launchCameraAsync();
 
         if (!result.cancelled) {
-            // TODO: Send this uri to a program that returns back the scanned items.
-            console.log(result.uri);
+            // await uploadScannedImage(result.uri);
+            // const details = await processImage();
+
             setModalVisible(false);
             navigation.navigate("Scanned Items", {
+                // itemsDescription: details[1],
+                // prices: details[2],
+                // quantities: details[0]
                 itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
                 prices: [7.20, 7.70, 5.80, 3.90, 2.40],
                 quantities: [6, 1, 2, 1, 2]
             });
+
+            // await deleteScannedImage();
         }
     }
 
     const pickImageHandler = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync({
-            // allowsEditing: true
-        });
+        const result = await ImagePicker.launchImageLibraryAsync();
 
         if (!result.cancelled) {
-            // TODO: Send this uri to a program that returns back the scanned items.
-            console.log(result.uri);
+            // await uploadScannedImage(result.uri);
+            // const details = await processImage();
+
             setModalVisible(false);
             navigation.navigate("Scanned Items", {
+                // itemsDescription: details[1],
+                // prices: details[2],
+                // quantities: details[0]
                 itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
                 prices: [7.20, 7.70, 5.80, 3.90, 2.40],
                 quantities: [6, 1, 2, 1, 2]
             });
+
+            // await deleteScannedImage();
         }
     };
 
