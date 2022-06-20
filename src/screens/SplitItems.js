@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import {
     View,
     Text,
@@ -6,32 +5,21 @@ import {
     FlatList,
 } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
-import { useDispatch, useSelector } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ItemDraggable from '../components/ItemDraggable';
 import ItemReceiver from '../components/ItemReceiver';
-import { addMemberToReceiptItems } from '../store/receiptSlice';
 
 const SplitItems = () => {
-    const dispatch = useDispatch();
-
     const profileImgs = useSelector(state => state.users.profilePictures);
 
-    const draggableItems = useSelector(state => state.receipt.receiptItems)
+    const draggableItems = useSelector(state => state.receipt.receiptItems);
     const receivingItemList = useSelector(state => state.receipt.activeGroupMembers);
 
-    useEffect(() => {
-        receivingItemList.forEach(receivingItem => {
-            dispatch(addMemberToReceiptItems({
-                member: receivingItem
-            }))
-        })  
-    }, [receivingItemList]);
-    
     return (
         <DraxProvider>
             <View style={styles.container}>
                 <Text style={styles.allItemsText}>
-                    All Items
+                    Drag and Drop
                 </Text>
                 <View style={styles.draggableItems}>
                     {
@@ -47,19 +35,28 @@ const SplitItems = () => {
                     <Text style={styles.activeGroupText}>
                         Group Members
                     </Text>
-                    <FlatList
-                        keyExtractor={item => Math.random(1000)}
-                        data={receivingItemList}
-                        renderItem={({ item }) => (
-                            <ItemReceiver
-                                email={item}
-                                profileImg={profileImgs[item]}
-                                receivedItems={draggableItems.filter(draggableItem => {
-                                    return draggableItem[item] > 0;
-                                })}
-                            />
-                        )}
-                    />
+                    {
+                        receivingItemList.length === 0
+                            ? (
+                                <Text style={styles.noText}>
+                                    No group members yet, {'\n'} 
+                                    go back one page to select members
+                                </Text>
+                            )
+                            : (
+                                <FlatList
+                                    keyExtractor={item => item.email}
+                                    data={receivingItemList}
+                                    renderItem={({ item }) => (
+                                        <ItemReceiver
+                                            draggableItems={draggableItems}
+                                            member={item}
+                                            profileImg={profileImgs[item.email]}
+                                        />
+                                    )}
+                                />
+                            )
+                    }
                 </View>
             </View>
         </DraxProvider>
@@ -72,8 +69,8 @@ const styles = StyleSheet.create({
         margin: 10
     },
     activeGroupText: {
-        fontSize: 30,
-        margin: 10
+        fontSize: 25,
+        marginHorizontal: 10
     },
     container: {
         flex: 1,
@@ -82,9 +79,18 @@ const styles = StyleSheet.create({
     draggableItems: {
         flexDirection: 'row',
         flexWrap: 'wrap',
+        marginHorizontal: 20
+    },
+    noText: {
+        textAlign: 'center',
+        marginTop: 50,
+        fontStyle: 'italic',
+        fontWeight: '300',
+        opacity: 0.5
     },
     receiverContainer: {
-        marginTop: 20,
+        marginTop: 10,
+        flex: 1
     },
 });
 

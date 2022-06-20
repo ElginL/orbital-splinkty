@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { 
-    StyleSheet, 
-    Text, 
-    View,
-    TextInput, 
+    Image,
     Keyboard,
+    Text, 
+    TextInput, 
     TouchableWithoutFeedback,
     TouchableOpacity,
-    Image
+    View,
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 import HorizontalLine from "../components/HorizontalLine";
@@ -16,7 +15,6 @@ import LoadingOverlay from '../components/LoadingOverlay';
 import { logInUser } from '../firebase/loginAPI';
 import getErrorMessage from '../firebase/authErrorMessages';
 import AuthStyles from '../styles/AuthStyles';
-
 
 const Login = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -27,11 +25,12 @@ const Login = ({ navigation }) => {
 
     const logInHandler = () => {
         setIsLoading(true);
-        logInUser(email, password)
-            .then(() => {})
-            .catch((error) => {
-                logInFailHandler(error);
-            });
+
+        try {
+            logInUser(email, password);
+        } catch (error) {
+            logInFailHandler(error);
+        }
     };
 
     const logInFailHandler = (error) => {
@@ -77,7 +76,7 @@ const Login = ({ navigation }) => {
                             placeholder="Enter your password"
                             secureTextEntry
                         />
-                        <TouchableOpacity 
+                        <TouchableOpacity
                             style={AuthStyles.blueBGBtn}
                             onPress={
                                 logInHandler
@@ -98,7 +97,5 @@ const Login = ({ navigation }) => {
         </KeyboardAwareScrollView>
     );
 };
-
-const styles = StyleSheet.create({});
 
 export default Login;

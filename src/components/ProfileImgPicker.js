@@ -1,21 +1,25 @@
 import React, { useEffect, useState } from 'react';
-import { useSelector } from 'react-redux';
-import * as ImagePicker from 'expo-image-picker';
 import {
     StyleSheet, 
     TouchableOpacity,
     View,
     Image,
 } from 'react-native';
-import { uploadImg, deleteProfileImg } from '../firebase/ProfileImgAPI';
+import { useSelector } from 'react-redux';
+import * as ImagePicker from 'expo-image-picker';
+import { 
+    uploadImg, 
+    deleteProfileImg 
+} from '../firebase/ProfileImgAPI';
 import { getCurrentUser } from '../firebase/loginAPI';
+import { MaterialIcons } from '@expo/vector-icons';
 import ProfileImgPickerModal from './ProfileImgPickerModal';
 
 const ProfileImgPicker = () => {
     const NO_PROFILE_IMG = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
 
     const [photoURI, setPhotoURI] = useState(NO_PROFILE_IMG);
-    const [visible, setVisible] = useState(false);
+    const [modalVisible, setModalVisible] = useState(false);
     
     const profilePictures = useSelector(state => state.users.profilePictures);
     
@@ -37,7 +41,7 @@ const ProfileImgPicker = () => {
                 setPhotoURI(result.uri);
                 
                 await uploadImg(result.uri);
-                setVisible(false);
+                setModalVisible(false);
             }
         } catch (error) {
             console.log(error.message);
@@ -62,7 +66,7 @@ const ProfileImgPicker = () => {
                 setPhotoURI(result.uri);
                 
                 await uploadImg(result.uri);
-                setVisible(false);
+                setModalVisible(false);
             }
         } catch (error) {
             console.log(error.message);
@@ -73,22 +77,29 @@ const ProfileImgPicker = () => {
         await deleteProfileImg();
         
         setPhotoURI(NO_PROFILE_IMG);
-        setVisible(false);
+        setModalVisible(false);
     }
     
     return (
         <View>
             <TouchableOpacity
                 style={styles.photoFrame}
-                onPress={() => setVisible(true)}>
+                onPress={() => setModalVisible(true)}>
                 <Image
                     style={styles.profileImg} 
                     source={{ uri: photoURI }}
                 />
+                <View style={styles.pencilContainer}>
+                    <MaterialIcons 
+                        name="edit" 
+                        size={30} 
+                        color="green"
+                    />
+                </View>
             </TouchableOpacity>
             <ProfileImgPickerModal
-                isVisible={visible}
-                onClose={() => setVisible(false)}
+                isVisible={modalVisible}
+                onClose={() => setModalVisible(false)}
                 onImageLibraryPress={onImageLibraryPress}
                 onCameraPress={onCameraPress}
                 onDeletePress={onDeletePress}
@@ -98,11 +109,19 @@ const ProfileImgPicker = () => {
 };
 
 const styles = StyleSheet.create({
+    pencilContainer: {
+        padding: 5,
+        backgroundColor: 'white',
+        borderRadius: 20,
+        borderWidth: 1,
+        position: 'absolute',
+        bottom: 10,
+        right: 5
+    },
     photoFrame: {
         width: 200,
         height: 200,
         borderRadius: 100,
-        borderColor: 'black'
     },
     profileImg: {
         width: 200,

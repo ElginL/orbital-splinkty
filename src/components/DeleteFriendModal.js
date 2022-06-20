@@ -28,8 +28,7 @@ const DeleteFriendModal = ({
                         <Text style={styles.noText}>No</Text>
                     </TouchableOpacity>
                     <TouchableOpacity style={styles.yesBtn}
-                        onPress={deleteFriendHandler}
-                        >
+                        onPress={deleteFriendHandler}>
                         <Text style={styles.yesText}>Yes</Text>
                     </TouchableOpacity>
                 </View>

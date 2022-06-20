@@ -1,16 +1,15 @@
 import React, { useState, useEffect } from 'react';
 import { 
-    View, 
-    Text, 
+    View,
+    Text,
     StyleSheet,
     TouchableOpacity,
     FlatList
 } from 'react-native';
 import { useDispatch, useSelector } from 'react-redux';
 import {
-    addReceiptItem, 
-    editReceiptItem, 
-    deleteReceiptItem 
+    addReceiptItem,
+    setReceiptItems
 } from '../store/receiptSlice';
 import AddItemModal from '../components/AddItemModal';
 import ScannedItem from '../components/ScannedItem';
@@ -26,16 +25,20 @@ const ScannedItems = ({ route }) => {
         const prices = route.params.prices;
         const quantities = route.params.quantities;
 
+        const initialItems = [];
         for (let i = 0; i < itemsDescription.length; i++) {
-            dispatch(addReceiptItem({
-                newItem: {
-                    description: itemsDescription[i], 
-                    price: prices[i], 
-                    quantity: quantities[i],
-                    id: Math.random(1000)
-                }
-            }))
+            initialItems.push({
+                description: itemsDescription[i],
+                price: prices[i],
+                remainingQuantity: quantities[i],
+                initialQuantity: quantities[i],
+                id: Math.random(1000)
+            })
         }
+
+        dispatch(setReceiptItems({
+            receiptItems: initialItems
+        }));
     }, []);
 
     const addItemHandler = (description, quantity, price) => {
@@ -46,34 +49,14 @@ const ScannedItems = ({ route }) => {
         dispatch(addReceiptItem({
             newItem: {
                 description,
-                quantity: parseInt(quantity),
                 price: parseFloat(price),
-                id: Math.random(1000)
+                remainingQuantity: parseInt(quantity),
+                initialQuantity: parseInt(quantity),
+                id: Math.random(1000),
             }
         }));
 
         return true;
-    };
-
-    const editItemHandler = (description, quantity, price, itemId) => {
-        if (!isValidFormInput(description, quantity, price)) {
-            return false;
-        }
-
-        dispatch(editReceiptItem({
-            description,
-            quantity,
-            price,
-            id: itemId
-        }));
-
-        return true;
-    };
-
-    const deleteItemHandler = itemId => {
-        dispatch(deleteReceiptItem({
-            id: itemId
-        }));
     };
 
     const isValidFormInput = (description, quantity, price) => {
@@ -100,13 +83,12 @@ const ScannedItems = ({ route }) => {
                 </TouchableOpacity>
             </View>
             <FlatList
-                keyExtractor={item => Math.random(1000)}
+                keyExtractor={item => item.id}
                 data={items}
                 renderItem={({ item }) => (
                     <ScannedItem
                         item={item}
-                        editItemHandler={editItemHandler}
-                        deleteItemHandler={deleteItemHandler}
+                        isValidFormInput={isValidFormInput}
                     />
                 )}
             />

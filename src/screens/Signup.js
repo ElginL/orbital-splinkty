@@ -1,17 +1,16 @@
 import React, { useState } from 'react';
 import { 
-    StyleSheet,
-    Text, 
-    View, 
-    TextInput, 
-    Keyboard, 
-    TouchableWithoutFeedback,
-    TouchableOpacity,
     Image,
+    Keyboard, 
+    Text, 
+    TextInput, 
+    TouchableOpacity,
+    TouchableWithoutFeedback,
+    View, 
 } from 'react-native';
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
-import HorizontalLine from '../components/HorizontalLine';
 import AuthStyles from '../styles/AuthStyles';
+import HorizontalLine from '../components/HorizontalLine';
 import LoadingOverlay from '../components/LoadingOverlay';
 import { ErrorPopup } from '../components/PopupDialogs';
 import getErrorMessage from '../firebase/authErrorMessages';
@@ -121,7 +120,5 @@ const Signup = ({ navigation }) => {
         </KeyboardAwareScrollView>
     );
 };
-
-const styles = StyleSheet.create({});
 
 export default Signup;

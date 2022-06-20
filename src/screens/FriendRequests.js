@@ -1,29 +1,55 @@
+import React, { useEffect } from 'react';
 import { 
-    StyleSheet, 
     View, 
     Text, 
-    FlatList 
+    FlatList,
+    StyleSheet
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { 
-    addDoc,
+import {
+    onSnapshot, 
+    query, 
     collection, 
-    deleteDoc, 
-    doc
+    where,
+    addDoc,
+    deleteDoc,
+    doc 
 } from 'firebase/firestore';
+import { 
+    setIncomingFriendRequests, 
+} from '../store/friendsSlice';
+import { useDispatch, useSelector } from 'react-redux';
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { deleteFriendRequest } from '../store/friendsSlice';
-import FriendRequest from './FriendRequest';
+import FriendRequest from '../components/FriendRequest';
 
 const FriendRequests = () => {
     const dispatch = useDispatch();
+    
+    useEffect(() => {
+        const incomingRequestsQuery = query(collection(db, "friendrequests"), where('to', '==', getCurrentUser()));
+        const unsubIncomingRequestsQuery = onSnapshot(incomingRequestsQuery, snapshot => {
+            const incomingRequests = [];
+
+            snapshot.docs.forEach(doc => {
+                incomingRequests.push({
+                    from: doc.data().from,
+                    id: doc.id
+                });
+            });
+
+            dispatch(setIncomingFriendRequests({
+                incomingRequests
+            }));
+        });
+
+        return () => {
+            unsubIncomingRequestsQuery();
+        }
+    }, []);
 
     const incomingFriendRequests = useSelector(state => state.friendship.friendRequests);
     const profilePictures = useSelector(state => state.users.profilePictures);
 
     const declineHandler = async (id) => {
-        dispatch(deleteFriendRequest({ id }));
-        
         try {
             const docRef = doc(db, 'friendrequests', id);
             await deleteDoc(docRef);
@@ -35,23 +61,22 @@ const FriendRequests = () => {
     const acceptHandler = async (user, id) => {
         await declineHandler(id);
 
-        addDoc(collection(db, "friendship"), {
-            otherUser: getCurrentUser(),
-            payments: {
-                isOweOtherUser: true,
-                payment: 0
-            },
-            user,
-            id
+        await addDoc(collection(db, "friendship"), {
+            connection: [ user, getCurrentUser() ],
+            isOweIndex1: true,
+            paymentAmount: 0
         });
     }
 
     return (
         <View style={styles.container}>
-            <Text style={styles.subheader}>Friend Requests</Text>
             {
                 incomingFriendRequests.length === 0
-                    ? <Text style={styles.emptyText}>No incoming friend requests...</Text>
+                    ? (
+                        <Text style={styles.emptyText}>
+                            No incoming friend requests...
+                        </Text>
+                    )
                     : (
                         <FlatList
                             keyExtractor={item => item.id}
@@ -73,14 +98,14 @@ const FriendRequests = () => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        backgroundColor: 'white'
+    },
     emptyText: {
         fontStyle: 'italic',
         textAlign: 'center',
-        marginVertical: 30,
-    },
-    subheader: {
-        fontSize: 33,
-        margin: 20
+        marginVertical: 200,
     },
 });
 

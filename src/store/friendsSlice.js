@@ -1,9 +1,8 @@
 import { createSlice } from '@reduxjs/toolkit';
-import { isEqual } from 'lodash';
 
 /*
     friendsWithPayments: [
-        { data: { otherUser: "test@test.com", payments: { isOweOtherUser: true, payment: 0 }, user: "test1@test.com" }, id: 342424 },
+        { amount: 99, friend: 'test1@test.com', isOweFriend: true, id: 43242 },
         ...
     ]
 
@@ -24,98 +23,25 @@ export const friendsSlice = createSlice({
     name: 'friendship',
     initialState,
     reducers: {
-        addFriendWithPayments: (state, action) => {
-            const index = state.friendsWithPayments.findIndex(el => (
-                isEqual(el, action.payload.friend) || el.id === action.payload.friend.id));
-
-            if (index === -1) {
-                state.friendsWithPayments = [ 
-                    ...state.friendsWithPayments, 
-                    action.payload.friend 
-                ];
-            } else {
-                state.friendsWithPayments[index] = action.payload.friend
-            }
+        setFriendsWithPayments: (state, action) => {
+            state.friendsWithPayments = action.payload.friendsWithPayments;
         },
-        addFriendEmail: (state, action) => {
-            const index = state.friendsEmail.findIndex(el => isEqual(el, action.payload.friend));
-
-            if (index === -1) {
-                state.friendsEmail = [ ...state.friendsEmail, action.payload.friend ];
-            }
+        setFriendsEmail: (state, action) => {
+            state.friendsEmail = action.payload.friendsEmail;
         },
-        addFriendRequest: (state, action) => {
-            const index = state.friendRequests.findIndex(el => (
-                el.id === action.payload.request.id || el.from === action.payload.request.from));
-
-            if (index === -1) {
-                state.friendRequests = [ ...state.friendRequests, action.payload.request ];
-            }
+        setIncomingFriendRequests: (state, action) => {
+            state.friendRequests = action.payload.incomingRequests;
         },
-        addSentFriendRequest: (state, action) => {
-            const index = state.sentFriendRequests.findIndex(el => el.id === action.payload.request.id 
-                || el.to === action.payload.request.to);
-                
-            if (index === -1) {
-                state.sentFriendRequests = [ ...state.sentFriendRequests, action.payload.request ];
-            }
+        setSentFriendRequests: (state, action) => {
+            state.sentFriendRequests = action.payload.sentRequests;
         },
-        deleteFriendRequest: (state, action) => {
-            const index = state.friendRequests.findIndex(el => el.id === action.payload.id);
-            
-            if (index > -1) {
-                state.friendRequests = [
-                    ...state.friendRequests.slice(0, index),
-                    ...state.friendRequests.slice(index + 1)
-                ];
-            }
-        },
-        deleteSentFriendRequest: (state, action) => {
-            const index = state.sentFriendRequests.findIndex(el => el.id === action.payload.id);
-
-            if (index > -1) {
-                state.sentFriendRequests = [
-                    ...state.sentFriendRequests.slice(0, index),
-                    ...state.sentFriendRequests.slice(index + 1)
-                ];
-            }
-        },
-        deleteFriendship: (state, action) => {
-            const emailIndex = state.friendsEmail.findIndex(email => email === action.payload.friendEmail);
-
-            if (emailIndex > -1) {
-                state.friendsEmail = [
-                    ...state.friendsEmail.slice(0, emailIndex),
-                    ...state.friendsEmail.slice(emailIndex + 1)
-                ]
-            }
-
-            const paymentIndex = state.friendsWithPayments.findIndex(el => el.id === action.payload.id);
-
-            if (paymentIndex > -1) {
-                state.friendsWithPayments = [
-                    ...state.friendsWithPayments.slice(0, paymentIndex),
-                    ...state.friendsWithPayments.slice(paymentIndex + 1)
-                ];
-            }
-        },
-        resetFriends: (state) => {
-            state.friendsWithPayments = [];
-            state.friendsEmail = [];
-            state.friendRequests = [];
-            state.sentFriendRequests = [];
-        }
     }
 });
     
 export const {
-    addFriendWithPayments, 
-    resetFriends, 
-    addFriendEmail, 
-    addFriendRequest,
-    addSentFriendRequest,
-    deleteFriendRequest,
-    deleteSentFriendRequest,
-    deleteFriendship,
+    setFriendsWithPayments,
+    setFriendsEmail,
+    setSentFriendRequests,
+    setIncomingFriendRequests,
 } = friendsSlice.actions;
 export default friendsSlice.reducer;

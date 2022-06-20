@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { 
     View,
     StyleSheet 
@@ -11,106 +11,102 @@ import {
     where
 } from "firebase/firestore";
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { setData } from '../store/currUserSlice';
-import { addUser, addProfilePicture } from '../store/usersSlice';
-import { addFriendWithPayments, addFriendEmail } from '../store/friendsSlice';
-import { addTopPayment } from '../store/currUserSlice';
+import { setUsers, setProfilePictures } from '../store/usersSlice';
+import { setFriendsWithPayments, setFriendsEmail } from '../store/friendsSlice';
 import Greeting from '../components/Greeting';
 import Top3Payments from '../components/Top3Payments';
 
 const Home = () => {
     const dispatch = useDispatch();
-    
+
+    const [cashToReceive, setCashToReceive] = useState(0);
+    const [cashToPay, setCashToPay] = useState(0);
+    const [pplToReceiveFromCount, setPplToReceiveFromCount] = useState(0);
+    const [pplToPayCount, setPplToPayCount] = useState(0);
+
     useEffect(() => {
         const friendshipRef = collection(db, "friendship");
         const usersRef = collection(db, "users");
 
-        /* Adds friends to store, for which the friendship is formed by the current logged in user's
-           sent request */
-        const q = query(friendshipRef, where('user', '==', getCurrentUser()));
-        const unsubFriendshipQ = onSnapshot(q, snapshot => {
+        const friendsQuery = query(friendshipRef, where('connection', 'array-contains', getCurrentUser()));
+        const unsubFriendshipQuery = onSnapshot(friendsQuery, snapshot => {
+            const friendsWithPayments = [];
+            const friendsEmail = [];
+
             snapshot.docs.forEach(doc => {
-                dispatch(addFriendWithPayments({
-                    friend: {
-                        data: doc.data(),
-                        id: doc.id
-                    }
-                }));
-                dispatch(addFriendEmail({ 
-                    friend: doc.data().otherUser 
-                }));
-                dispatch(addTopPayment({
-                    friend: {
-                        data: doc.data(),
-                        id: doc.id 
-                    }
-                }));
-            });
+                const friendArrayIndex = doc.data().connection[0] === getCurrentUser()
+                    ? 1
+                    : 0;
+
+                const isOweFriend = friendArrayIndex === 1
+                    ? doc.data().isOweIndex1
+                    : !doc.data().isOweIndex1;
+
+                friendsWithPayments.push({
+                    amount: doc.data().paymentAmount,
+                    friend: doc.data().connection[friendArrayIndex],
+                    isOweFriend,
+                    id: doc.id
+                });
+
+                friendsEmail.push(doc.data().connection[friendArrayIndex]);
+            }); 
+
+            dispatch(setFriendsWithPayments({
+                friendsWithPayments
+            }));
+
+            dispatch(setFriendsEmail({
+                friendsEmail
+            }));
         });
         
-        /* Adds friends to store, for which the friendship is formed by the logged
-           in user accepting requests. */
-        const acceptedQuery = query(friendshipRef, where('otherUser', "==", getCurrentUser()));
-        const unsubAcceptedQ = onSnapshot(acceptedQuery, snapshot => {
+        const unsubUserQuery = onSnapshot(usersRef, snapshot => {
+            const usersEmail = [];
+            const profilePictures = {};
+
             snapshot.docs.forEach(doc => {
-                dispatch(addFriendWithPayments({
-                    friend: {
-                        data: doc.data(),
-                        id: doc.id 
-                    }
-                }));
-                dispatch(addFriendEmail({ 
-                    friend: doc.data().user 
-                }));
-                dispatch(addTopPayment({
-                    friend: {
-                        data: doc.data(),
-                        id: doc.id 
-                    }
-                }));
+                usersEmail.push({
+                    email: doc.data().email,
+                    id: doc.id
+                });
+                profilePictures[doc.data().email] = doc.data().photoURL;
             });
-        });
-        
-        // Listener for users, add to store if someone sign up for an account.
-        const unsubUserQ = onSnapshot(collection(db, "users"), snapshot => {
-            snapshot.docs.forEach(doc => {
-                dispatch(addUser({ 
-                    user: { 
-                        email: doc.data().email, 
-                        id: doc.id 
-                    } 
-                }));
-                dispatch(addProfilePicture({
-                    userEmail: doc.data().email,
-                    url: doc.data().photoURL
-                }));
-            });
+            
+            dispatch(setUsers({
+                usersEmail
+            }));
+
+            dispatch(setProfilePictures({
+                profilePictures
+            }))
         });
 
-        // Listener for updates to current user's total in/out, update store
         const currUserQuery = query(usersRef, where("email", "==", getCurrentUser()));
         const unsubCurrUserQ = onSnapshot(currUserQuery, snapshot => {
             snapshot.docs.forEach(doc => {
-                dispatch(setData({
-                    cashToReceive: doc.data().total.receiving,
-                    cashToPay: doc.data().total.paying,
-                    pplToReceiveFromCount: doc.data().peopleToReceive,
-                    pplToPayCount: doc.data().peopleToPay
-                }));
-            })
+                setCashToReceive(doc.data().total.receiving);
+                setCashToPay(doc.data().total.paying);
+                setPplToReceiveFromCount(doc.data().peopleToReceive);
+                setPplToPayCount(doc.data().peopleToPay);
+            });
         });
 
         return () => {
-            unsubFriendshipQ();
-            unsubAcceptedQ();
-            unsubUserQ();
+            unsubFriendshipQuery();
+            unsubUserQuery();
             unsubCurrUserQ();
         }
     }, []);
 
     return (
         <View style={styles.container}>
-            <Greeting />
+            <Greeting 
+                cashToReceive={cashToReceive}
+                cashToPay={cashToPay}
+                pplToReceiveFromCount={pplToReceiveFromCount}
+                pplToPayCount={pplToPayCount}
+            />
             <Top3Payments />
         </View>
     );
@@ -119,7 +115,8 @@ const Home = () => {
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: "white"
+        backgroundColor: "white",
+        padding: 20
     },
 });
 

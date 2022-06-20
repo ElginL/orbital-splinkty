@@ -1,22 +1,33 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     View,
     Text,
     StyleSheet,
     FlatList
 } from 'react-native';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
+import { 
+    emptyActiveGroupMembers,
+    resetReceiptRemainingToInitial 
+} from '../store/receiptSlice';
 import ActiveGroupContact from '../components/ActiveGroupContact';
 import ActiveGroupSearchBar from '../components/ActiveGroupSearchBar';
 import SelectedFriend from '../components/SelectedFriend';
 import HorizontalLine from '../components/HorizontalLine';
 
 const ActiveGroup = () => {
+    const dispatch = useDispatch();
+
     const friendsEmail = useSelector(state => state.friendship.friendsEmail);
     const profileImgs = useSelector(state => state.users.profilePictures);
     const activeGroupMembers = useSelector(state => state.receipt.activeGroupMembers);
     
     const [filteredFriends, setFilteredFriends] = useState(friendsEmail);
+
+    useEffect(() => {
+        dispatch(emptyActiveGroupMembers());
+        dispatch(resetReceiptRemainingToInitial());
+    }, []);
 
     return (
         <View style={styles.container}>
@@ -27,12 +38,12 @@ const ActiveGroup = () => {
             <HorizontalLine />
             <View style={styles.selectedPplContainer}>
                 <FlatList
-                    keyExtractor={item => item}
+                    keyExtractor={item => item.email}
                     data={activeGroupMembers}
                     renderItem={({ item }) => (
                         <SelectedFriend 
-                            email={item}
-                            profileImg={profileImgs[item]}
+                            member={item}
+                            profileImg={profileImgs[item.email]}
                         />
                     )}
                     horizontal={true}
@@ -55,7 +66,7 @@ const ActiveGroup = () => {
                                 <ActiveGroupContact 
                                     email={item}
                                     profileImg={profileImgs[item]}
-                                    contains={activeGroupMembers.includes(item)}
+                                    activeGroupMembers={activeGroupMembers}
                                 />
                             )}
                         />

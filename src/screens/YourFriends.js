@@ -5,21 +5,23 @@ import {
 } from 'react-native';
 import { SwipeListView } from 'react-native-swipe-list-view';
 import { useSelector } from 'react-redux';
-import Contact from './Contact';
-import DeleteFriendBin from './DeleteFriendBin';
+import Contact from '../components/Contact';
+import DeleteFriendBin from '../components/DeleteFriendBin';
 
-const FriendsPayments = () => {
+const YourFriends = () => {
     const profileImgs = useSelector(state => state.users.profilePictures);
     const friends = useSelector(state => state.friendship.friendsWithPayments);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.sectionHeader}>
-                Friends
-            </Text>
             {
                 friends.length === 0
-                    ? <Text style={styles.emptyText}>No Friends Yet...</Text>
+                    ? (
+                        <Text style={styles.emptyText}>
+                            No Friends Yet... {'\n'}
+                            Press Magnifying Glass to search for friends
+                        </Text>
+                    )
                     : (
                         <SwipeListView
                             keyExtractor={item => item.id}
@@ -46,12 +48,13 @@ const FriendsPayments = () => {
 
 const styles = StyleSheet.create({
     container: {
+        flex: 1,
         backgroundColor: 'white',
     },
     emptyText: {
         fontStyle: 'italic',
         textAlign: 'center',
-        marginTop: 30,
+        marginTop: 200,
     },
     sectionHeader: {
         fontSize: 33,
@@ -59,4 +62,4 @@ const styles = StyleSheet.create({
     },
 });
 
-export default FriendsPayments;
+export default YourFriends;

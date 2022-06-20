@@ -10,20 +10,30 @@ import { useDispatch } from 'react-redux';
 import Checkbox from 'expo-checkbox';
 import { addActiveGroupMember, removeActiveGroupMember } from '../store/receiptSlice';
 
-const ActiveGroupContact = ({ email, profileImg, contains }) => {
+const ActiveGroupContact = ({ email, profileImg, activeGroupMembers }) => {
     const dispatch = useDispatch();
 
     const [isChecked, setIsChecked] = useState(false);
 
     useEffect(() => {
-        if (!contains && isChecked) {
+        const index = activeGroupMembers.findIndex(member => {
+            return member.email === email;
+        })
+
+        if (index === -1) {
             setIsChecked(false);
+        } else {
+            setIsChecked(true);
         }
-    }, [contains]);
+    }, [activeGroupMembers]);
 
     const addMember = newMember => {
         dispatch(addActiveGroupMember({
-            newMember
+            newMember: {
+                email: newMember,
+                items: [],
+                totalPrice: 0
+            }
         }));
     };
 
@@ -39,10 +49,8 @@ const ActiveGroupContact = ({ email, profileImg, contains }) => {
             activeOpacity={0.7}
             onPress={() => {
                 if (!isChecked) {
-                    setIsChecked(true);
                     addMember(email);
                 } else {
-                    setIsChecked(false);
                     removeMember(email);
                 }
             }}>

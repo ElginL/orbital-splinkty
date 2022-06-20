@@ -1,21 +1,21 @@
 import { TouchableOpacity } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { FontAwesome } from '@expo/vector-icons';
-import Friends from '../screens/Friends';
-import FriendsSearchBar from '../components/FriendsSearchBar';
+import FriendsTab from './FriendsTab'
+import FriendsSearchBar from '../screens/FriendsSearchBar';
 
 const Stack = createNativeStackNavigator();
 
-const FriendsNavigator = () => {
+const FriendsStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen 
-                name="Friends"
-                component={Friends}
+                name="FriendsTab"
+                component={FriendsTab}
                 options={({ navigation }) => ({
                     headerRight: () => (
                         <TouchableOpacity
-                            onPress={() => navigation.navigate("Search Friends")}>
+                            onPress={() => navigation.navigate("Add Friends")}>
                             <FontAwesome 
                                 name="search" 
                                 size={25} 
@@ -24,14 +24,15 @@ const FriendsNavigator = () => {
                             />
                         </TouchableOpacity>
                     ),
+                    headerTitle: "Friends"
                 })}
             />
             <Stack.Screen 
-                name="Search Friends" 
+                name="Add Friends" 
                 component={FriendsSearchBar} 
             />
         </Stack.Navigator>
     );
 };
 
-export default FriendsNavigator
+export default FriendsStack;

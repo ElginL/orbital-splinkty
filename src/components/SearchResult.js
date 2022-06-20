@@ -5,18 +5,17 @@ import {
     TouchableOpacity,
     Image
 } from 'react-native';
-import { useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import { 
-    addDoc, 
-    collection, 
-    deleteDoc, 
-    doc 
+    addDoc,
+    collection,
+    deleteDoc,
+    doc
 } from 'firebase/firestore';
 import { getCurrentUser, db } from '../firebase/loginAPI';
-import { deleteSentFriendRequest } from '../store/friendsSlice';
 
-const SearchResult = ({ user, outgoingReqs, profilePic }) => {
-    const dispatch = useDispatch();
+const SearchResult = ({ user, profilePic }) => {
+    const outgoingReqs = useSelector(state => state.friendship.sentFriendRequests);
 
     const addFriendHandler = otherUser => {
         addDoc(collection(db, "friendrequests"), {
@@ -34,17 +33,12 @@ const SearchResult = ({ user, outgoingReqs, profilePic }) => {
             }
         }
 
-        dispatch(deleteSentFriendRequest({
-            id
-        }));
-
         const docRef = doc(db, "friendrequests", id);
         try {
             await deleteDoc(docRef);
         } catch (error) {
             console.log(error.message);
         }
-
     }
 
     const outgoingReqsContains = (email) => {
@@ -57,35 +51,33 @@ const SearchResult = ({ user, outgoingReqs, profilePic }) => {
     }
 
     return (
-        <View>
-            <View style={styles.searchResult}>
-                <View style={styles.userDisplay}>
-                    <Image
-                        source={{ uri: profilePic }} 
-                        style={styles.contactImg} />
-                    <Text style={styles.name}>{user.email}</Text>
-                </View>
-                {
-                    (() => {
-                        if (!outgoingReqsContains(user.email)) {
-                            return (
-                                <TouchableOpacity
-                                    onPress={() => addFriendHandler(user.email) }
-                                    style={styles.addBtn}>
-                                    <Text style={styles.addText}>Add</Text>
-                                </TouchableOpacity>
-                            )
-                        }
+        <View style={styles.searchResult}>
+            <View style={styles.userDisplay}>
+                <Image
+                    source={{ uri: profilePic }} 
+                    style={styles.contactImg} />
+                <Text style={styles.name}>{user.email}</Text>
+            </View>
+            {
+                (() => {
+                    if (!outgoingReqsContains(user.email)) {
                         return (
                             <TouchableOpacity
-                                onPress={cancelHandler}
-                            >
-                                <Text style={styles.pendingText}>Cancel</Text>
+                                onPress={() => addFriendHandler(user.email) }
+                                style={styles.addBtn}>
+                                <Text style={styles.addText}>Add</Text>
                             </TouchableOpacity>
-                        )
-                    })()
-                }
-            </View>
+                        );
+                    }
+                    return (
+                        <TouchableOpacity
+                            onPress={cancelHandler}
+                        >
+                            <Text style={styles.pendingText}>Cancel</Text>
+                        </TouchableOpacity>
+                    );
+                })()
+            }
         </View>
     )
 };

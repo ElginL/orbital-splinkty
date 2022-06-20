@@ -4,10 +4,12 @@ import {
     StyleSheet
 } from 'react-native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
-import ReceiptOptions from '../screens/ReceiptOptions';
-import ScannedItems from '../screens/ScannedItems';
 import ActiveGroup from '../screens/ActiveGroup';
+import BillVerification from '../screens/BillVerification';
+import ScannedItems from '../screens/ScannedItems';
 import SplitItems from '../screens/SplitItems';
+import SplitBillHeader from './SplitBillHeader';
+import SplitRequestTab from './SplitRequestTab';
 
 const Stack = createNativeStackNavigator();
 
@@ -22,12 +24,17 @@ const NextButton = ({ navigation, location }) => {
     )
 }
 
-const CameraNavigator = () => {
+const BillStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="Receipt Options"
-                component={ReceiptOptions}
+                name="Split Requests"
+                component={SplitRequestTab}
+                options={({ navigation }) => ({
+                    headerTitle: () => (
+                        <SplitBillHeader navigation={navigation} />
+                    )
+                })}
             />
             <Stack.Screen
                 name="Scanned Items"
@@ -57,8 +64,21 @@ const CameraNavigator = () => {
             <Stack.Screen
                 name="SplitItems"
                 component={SplitItems}
+                options={({ navigation }) => ({
+                    title: "Split Items",
+                    headerRight: () => (
+                        <NextButton
+                            navigation={navigation}
+                            location="SplitBillVerification"
+                        />
+                    )
+                })}
+            />
+            <Stack.Screen
+                name="SplitBillVerification"
+                component={BillVerification}
                 options={{
-                    title: "Split Items"
+                    title: "Bill Verification"
                 }}
             />
         </Stack.Navigator>
@@ -72,4 +92,4 @@ const styles = StyleSheet.create({
     }
 })
 
-export default CameraNavigator; 
+export default BillStack; 

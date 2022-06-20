@@ -1,58 +1,41 @@
 import {
+    FlatList,
     StyleSheet, 
     Text,
     View,
-    FlatList
 } from 'react-native';
-import { getCurrentUser } from '../firebase/loginAPI';
 import { useSelector } from 'react-redux';
 import ContactSimple from './ContactSimple';
 
 const Top3Payments = () => {
-    const profilePictures = useSelector(state => state.users.profilePictures);
-    
-    const currTop3Payments = useSelector(state => state.currUser.top3Payments);
-    const currTop3PaymentsCopy = currTop3Payments.map(obj => {
-        const amount = obj.data.payments.payment;
+    const profileImgs = useSelector(state => state.users.profilePictures);
 
-        const friend = obj.data.otherUser === getCurrentUser()
-            ? obj.data.user 
-            : obj.data.otherUser;
-            
-        const isOweFriend = (obj.data.payments.isOweOtherUser && friend == obj.data.otherUser) || 
-                            (!obj.data.payments.isOweOtherUser && friend == obj.data.user);
-        
-        return {
-            amount,
-            friend,
-            isOweFriend,
-            friendProfilePicURL: profilePictures[friend],
-            id: obj.id
-        };
+    const friendsWithPayment = useSelector(state => state.friendship.friendsWithPayments);
+    const sortedFriendsWithPayment = [...friendsWithPayment].sort((first, second) => {
+        return second.amount - first.amount;
     });
 
-    const hasTopOutstandingPayments = () => {
-        for (const payment of currTop3PaymentsCopy) {
-            if (payment.amount !== 0) {
-                return true;
-            }
-        }
-        return false;
-    }
+    let top3Payments = sortedFriendsWithPayment.slice(0, 3);
+    top3Payments = top3Payments.filter(payment => payment.amount > 0);
 
     return (
         <View style={styles.container}>
-            <Text style={styles.sectionHeader}>Top Outstanding Payments</Text>
+            <Text style={styles.sectionHeader}>
+                Top Outstanding Payments
+            </Text>
             {
-                !hasTopOutstandingPayments()
+                top3Payments.length === 0
                     ? <Text style={styles.emptyText}>No Outstanding Payments!</Text>
                     : (
                         <FlatList
                             keyExtractor={item => item.id}
                             listKey={item => item.id}
-                            data={currTop3PaymentsCopy}
+                            data={top3Payments}
                             renderItem={({ item }) => (
-                                <ContactSimple item={item} />
+                                <ContactSimple
+                                    item={item}
+                                    profileImg={profileImgs[item.friend]} 
+                                />
                             )}
                         />
                     )

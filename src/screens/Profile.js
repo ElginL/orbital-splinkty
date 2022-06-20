@@ -10,35 +10,21 @@ import {
     logOutUser,
     getCurrentUser
 } from '../firebase/loginAPI';
-import { useDispatch } from 'react-redux';
-import { resetUsers } from '../store/usersSlice';
-import { resetFriends } from '../store/friendsSlice';
-import { resetCurrentUser } from '../store/currUserSlice';
-import LoadingOverlay from '../components/LoadingOverlay';
-import ProfileImgPicker from '../components/ProfileImgPicker';
-import NotificationSettings from '../components/NotificationSettings';
 import HorizontalLine from '../components/HorizontalLine';
+import NotificationSettings from '../components/NotificationSettings';
+import ProfileImgPicker from '../components/ProfileImgPicker';
+import LoadingOverlay from '../components/LoadingOverlay';
 
 const Profile = () => {
-    const dispatch = useDispatch();
     const [isLoading, setIsLoading] = useState(false);
 
     const logOutHandler = () => {
-        dispatch(resetFriends());
-        dispatch(resetUsers());
-        dispatch(resetCurrentUser());
-
         setIsLoading(true);
-        logOutUser()
-            .then(() => {})
-            .catch((error) => {
-                alert(error);
-            });
-    }
 
-    const renderLoading = () => {
-        if (isLoading) {
-            return <LoadingOverlay />;
+        try {
+            logOutUser();
+        } catch (error) {
+            alert(error);
         }
     }
 
@@ -46,7 +32,9 @@ const Profile = () => {
         <SafeAreaView style={styles.container}>
             <View style={styles.userProfile}>
                 <ProfileImgPicker />
-                <Text style={styles.userText}>{getCurrentUser()}</Text>
+                <Text style={styles.userText}>
+                    {getCurrentUser()}
+                </Text>
             </View>
             <View style={styles.settings}>
                 <Text style={styles.settingsText}>Settings</Text>
@@ -58,17 +46,19 @@ const Profile = () => {
                 style={styles.logOutBtn}>
                 <Text style={styles.logOutText}>Log Out</Text>
             </TouchableOpacity>
-            {renderLoading()}
+            {
+                isLoading
+                    ? <LoadingOverlay />
+                    : null
+            }
         </SafeAreaView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
-    },
-    logOutBtn: {
-        marginTop: '25%'
+        flex: 1,
+        backgroundColor: 'white'
     },
     logOutText: {
         color: 'rgb(10, 132, 255)',
