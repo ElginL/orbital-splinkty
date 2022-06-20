@@ -43,70 +43,131 @@ const IncomingSplitRequest = ({ item }) => {
             }
         }
 
-        // Update users collection.
-        usersQuerySnapshot.forEach(async document => {
-            const userDocRef = doc(db, "users", document.id);
-            if (document.data().email === item.from) {
-                if (friendshipDoc.data().paymentAmount === 0) {
-                    await updateDoc(userDocRef, {
-                        peopleToReceive: document.data().peopleToReceive + 1,
-                    });
-                }
-
-                await updateDoc(userDocRef, {
-                    total: {
-                        paying: document.data().total.paying,
-                        receiving: document.data().total.receiving + item.totalPrice
-                    }
-                });
+        let requestSenderDoc = null;
+        let requestReceiverDoc = null;
+        usersQuerySnapshot.forEach(doc => {
+            if (doc.data().email === item.from) {
+                requestSenderDoc = doc;
             } else {
-                if (friendshipDoc.data().paymentAmount === 0) {
-                    await updateDoc(userDocRef, {
-                        peopleToPay: document.data().peopleToPay + 1
-                    })
-                }
-
-                await updateDoc(userDocRef, {
-                    total: {
-                        paying: document.data().total.paying + item.totalPrice,
-                        receiving: document.data().total.receiving
-                    }
-                });
+                requestReceiverDoc = doc;
             }
         })
 
-        // Update friendship collection
         const friendshipDocRef = doc(db, 'friendship', friendshipDoc.id);
+        const requestSenderDocRef = doc(db, 'users', requestSenderDoc.id);
+        const requestReceiverDocRef = doc(db, 'users', requestReceiverDoc.id);
         if (friendshipDoc.data().paymentAmount === 0) {
             await updateDoc(friendshipDocRef, {
-                isOweIndex1: friendshipDoc.data().connection[0] !== item.from,
-                paymentAmount: item.totalPrice
+                isOweIndex1: friendshipDoc.data().connection[1] === item.from,
+                paymentAmount: parseFloat(item.totalPrice.toFixed(2))
+            });
+
+            await updateDoc(requestSenderDocRef, {
+                peopleToReceive: requestSenderDoc.data().peopleToReceive + 1,
+                total: {
+                    ...requestSenderDoc.data().total,
+                    receiving: parseFloat((requestSenderDoc.data().total.receiving + item.totalPrice).toFixed(2))
+                }
+            });
+
+            await updateDoc(requestReceiverDocRef, {
+                peopleToPay: requestReceiverDoc.data().peopleToPay + 1,
+                total: {
+                    ...requestReceiverDoc.data().total,
+                    paying: parseFloat((requestReceiverDoc.data().total.paying + item.totalPrice).toFixed(2))
+                }
             })
-        } else if (friendshipDoc.data().connection[0] === item.from) {
-            if (friendshipDoc.data().isOweIndex1) {
-                const newPaymentAmount = friendshipDoc.data().paymentAmount - item.totalPrice;
+        } else {
+            if (friendshipDoc.data().isOweIndex1 && friendshipDoc.data().connection[1] === item.from ||
+                !friendshipDoc.data().isOweIndex1 && friendshipDoc.data().connection[0] === item.from) {
+        
                 await updateDoc(friendshipDocRef, {
-                    isOweIndex1: newPaymentAmount >= 0,
-                    paymentAmount: Math.abs(newPaymentAmount)
+                    paymentAmount: item.totalPrice + friendshipDoc.data().paymentAmount
                 });
-            } else {
-                await updateDoc(friendshipDocRef, {
-                    paymentAmount: friendshipDoc.data().paymentAmount + item.totalPrice
-                });
+        
+                await updateDoc(requestSenderDocRef, {
+                    total: {
+                        ...requestSenderDoc.data().total,
+                        receiving: parseFloat((requestSenderDoc.data().total.receiving + item.totalPrice).toFixed(2))
+                    }
+                })
+        
+                await updateDoc(requestReceiverDocRef, {
+                    total: {
+                        ...requestReceiverDoc.data().total,
+                        paying: parseFloat((requestReceiverDoc.data().total.paying + item.totalPrice).toFixed(2))
+                    }
+                })
             }
-        } else if (friendshipDoc.data().connection[1] === item.from) {
-            if (friendshipDoc.data().isOweIndex1) {
-                await updateDoc(friendshipDocRef, {
-                    paymentAmount: friendshipDoc.data().paymentAmount + item.totalPrice
-                });
-            } else {
+            else if (friendshipDoc.data().isOweIndex1 && friendshipDoc.data().connection[1] === item.to ||
+                !friendshipDoc.data().isOweIndex1 && friendshipDoc.data().connection[0] === item.to) {
                 const newPaymentAmount = friendshipDoc.data().paymentAmount - item.totalPrice;
-                await updateDoc(friendshipDocRef, {
-                    isOweIndex1: newPaymentAmount < 0,
-                    paymentAmount: Math.abs(newPaymentAmount)
-                });
+
+                if (newPaymentAmount === 0) {
+                    await updateDoc(friendshipDocRef, {
+                        isOweIndex1: true,
+                        paymentAmount: 0
+                    })
+            
+                    await updateDoc(requestSenderDocRef, {
+                        peopleToPay: requestSenderDoc.data().peopleToPay - 1,
+                        total: {
+                            ...requestSenderDoc.data().total,
+                            paying: parseFloat((requestSenderDoc.data().total.paying - item.totalPrice).toFixed(2))
+                        }
+                    })
+            
+                    await updateDoc(requestReceiverDocRef, {
+                        peopleToReceive: requestReceiverDoc.data().peopleToReceive - 1,
+                        total: {
+                            ...requestReceiverDoc.data().total,
+                            receiving: parseFloat((requestReceiverDoc.data().total.receiving - item.totalPrice).toFixed(2))
+                        }
+                    })
+                } else if (newPaymentAmount < 0) {
+                    await updateDoc(requestSenderDocRef, {
+                        peopleToPay: requestSenderDoc.data().peopleToPay - 1,
+                        peopleToReceive: requestSenderDoc.data().peopleToReceive + 1,
+                        total: {
+                            paying: parseFloat((requestSenderDoc.data().total.paying - friendshipDoc.data().paymentAmount).toFixed(2)),
+                            receiving: parseFloat((requestSenderDoc.data().total.receiving + Math.abs(newPaymentAmount)).toFixed(2))
+                        }
+                    })
+            
+                    await updateDoc(requestReceiverDocRef, {
+                        peopleToPay: requestReceiverDoc.data().peopleToPay + 1,
+                        peopleToReceive: requestReceiverDoc.data().peopleToReceive - 1,
+                        total: {
+                            paying: parseFloat((requestReceiverDoc.data().total.paying + Math.abs(newPaymentAmount)).toFixed(2)),
+                            receiving: requestReceiverDoc.data().total.receiving - friendshipDoc.data().paymentAmount
+                        }
+                    })
+            
+                    await updateDoc(friendshipDocRef, {
+                        isOweIndex1: !friendshipDoc.data().isOweIndex1,
+                        paymentAmount: Math.abs(newPaymentAmount)
+                    })
+                } else {
+                    await updateDoc(friendshipDocRef, {
+                        paymentAmount: newPaymentAmount
+                    })
+            
+                    await updateDoc(requestSenderDocRef, {
+                        total: {
+                            ...requestSenderDoc.data().total,
+                            paying: parseFloat((requestSenderDoc.data().total.paying - item.totalPrice).toFixed(2)),
+                        }
+                    })
+            
+                    await updateDoc(requestReceiverDocRef, {
+                        total: {
+                            ...requestReceiverDoc.data().total,
+                            receiving: parseFloat((requestReceiverDoc.data().total.receiving - item.totalPrice).toFixed(2))
+                        }
+                    })
+                }
             }
-        }
+        }        
     }
 
     const declineHandler = async () => {

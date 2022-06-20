@@ -38,7 +38,7 @@ const BillVerification = ({ navigation }) => {
         });
 
         dispatch(emptyReceiptStore());
-        navigation.navigate("Split Bill");
+        navigation.navigate("Outgoing Requests");
     }
 
     return (

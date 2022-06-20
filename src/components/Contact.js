@@ -66,7 +66,7 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
         alignItems: 'center',
         backgroundColor: 'white',
-        marginVertical: 10,
+        marginVertical: 5,
         padding: 10
     },
     contactImg: {

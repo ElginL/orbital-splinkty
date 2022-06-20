@@ -45,7 +45,7 @@ export const receiptSlice = createSlice({
                                 ...member.items,
                                 newItem
                             ],
-                            totalPrice: member.totalPrice + newItem.priceShare
+                            totalPrice: parseFloat((member.totalPrice + newItem.priceShare).toFixed(2))
                         }
                     }
 
@@ -56,13 +56,13 @@ export const receiptSlice = createSlice({
                                 return {
                                     ...newItem,
                                     quantity: member.items[itemIndex].quantity + newItem.quantity,
-                                    priceShare: item.priceShare + newItem.priceShare
+                                    priceShare: parseFloat((item.priceShare + newItem.priceShare).toFixed(2))
                                 }
                             }
 
                             return item;
                         }),
-                        totalPrice: member.totalPrice + newItem.priceShare
+                        totalPrice: parseFloat((member.totalPrice + newItem.priceShare).toFixed(2))
                     }
                 }
 
@@ -75,7 +75,7 @@ export const receiptSlice = createSlice({
                     return {
                         ...member,
                         items: member.items.filter(item => item.id !== action.payload.itemId),
-                        totalPrice: action.payload.totalPrice
+                        totalPrice: parseFloat((action.payload.totalPrice).toFixed(2))
                     }
                 }
 
