@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react';
 import {
     SafeAreaView,
     StyleSheet,
-    View,
     Text,
     FlatList
 } from 'react-native';

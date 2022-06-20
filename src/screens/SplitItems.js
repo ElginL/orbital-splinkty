@@ -12,7 +12,7 @@ import ItemReceiver from '../components/ItemReceiver';
 const SplitItems = () => {
     const profileImgs = useSelector(state => state.users.profilePictures);
 
-    const draggableItems = useSelector(state => state.receipt.receiptItems)
+    const draggableItems = useSelector(state => state.receipt.receiptItems);
     const receivingItemList = useSelector(state => state.receipt.activeGroupMembers);
 
     return (
@@ -35,16 +35,28 @@ const SplitItems = () => {
                     <Text style={styles.activeGroupText}>
                         Group Members
                     </Text>
-                    <FlatList
-                        keyExtractor={item => item.email}
-                        data={receivingItemList}
-                        renderItem={({ item }) => (
-                            <ItemReceiver
-                                member={item}
-                                profileImg={profileImgs[item.email]}
-                            />
-                        )}
-                    />
+                    {
+                        receivingItemList.length === 0
+                            ? (
+                                <Text style={styles.noText}>
+                                    No group members yet, {'\n'} 
+                                    go back one page to select members
+                                </Text>
+                            )
+                            : (
+                                <FlatList
+                                    keyExtractor={item => item.email}
+                                    data={receivingItemList}
+                                    renderItem={({ item }) => (
+                                        <ItemReceiver
+                                            draggableItems={draggableItems}
+                                            member={item}
+                                            profileImg={profileImgs[item.email]}
+                                        />
+                                    )}
+                                />
+                            )
+                    }
                 </View>
             </View>
         </DraxProvider>
@@ -68,6 +80,13 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         flexWrap: 'wrap',
         marginHorizontal: 20
+    },
+    noText: {
+        textAlign: 'center',
+        marginTop: 50,
+        fontStyle: 'italic',
+        fontWeight: '300',
+        opacity: 0.5
     },
     receiverContainer: {
         marginTop: 10,

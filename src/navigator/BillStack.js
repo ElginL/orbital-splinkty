@@ -28,7 +28,7 @@ const BillStack = () => {
     return (
         <Stack.Navigator>
             <Stack.Screen
-                name="Split Bill"
+                name="Split Requests"
                 component={SplitRequestTab}
                 options={({ navigation }) => ({
                     headerTitle: () => (

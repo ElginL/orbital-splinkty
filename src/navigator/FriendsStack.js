@@ -24,6 +24,7 @@ const FriendsStack = () => {
                             />
                         </TouchableOpacity>
                     ),
+                    headerTitle: "Friends"
                 })}
             />
             <Stack.Screen 

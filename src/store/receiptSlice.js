@@ -29,16 +29,53 @@ export const receiptSlice = createSlice({
                 ...state.activeGroupMembers.slice(removeIndex + 1)
             ];
         },
-        editActiveGroupMember: (state, action) => {
+        addItemToMember: (state, action) => {
+            const newItem = action.payload.newItem;
+            
             state.activeGroupMembers = state.activeGroupMembers.map(member => {
                 if (member.email === action.payload.memberToEdit) {
+                    const itemIndex = member.items.findIndex(item => {
+                        return item.description === newItem.description;
+                    });
+
+                    if (itemIndex === -1) {
+                        return {
+                            email: member.email,
+                            items: [
+                                ...member.items,
+                                newItem
+                            ],
+                            totalPrice: member.totalPrice + newItem.priceShare
+                        }
+                    }
+
                     return {
                         email: member.email,
-                        items: [
-                            ...member.items,
-                            action.payload.newItem
-                        ],
-                        totalPrice: member.totalPrice + action.payload.newItem.priceShare
+                        items: member.items.map(item => {
+                            if (item.description === newItem.description) {
+                                return {
+                                    ...newItem,
+                                    quantity: member.items[itemIndex].quantity + newItem.quantity,
+                                    priceShare: item.priceShare + newItem.priceShare
+                                }
+                            }
+
+                            return item;
+                        }),
+                        totalPrice: member.totalPrice + newItem.priceShare
+                    }
+                }
+
+                return member;
+            })
+        },
+        deleteItemFromMember: (state, action) => {
+            state.activeGroupMembers = state.activeGroupMembers.map(member => {
+                if (member.email === action.payload.email) {
+                    return {
+                        ...member,
+                        items: member.items.filter(item => item.id !== action.payload.itemId),
+                        totalPrice: action.payload.totalPrice
                     }
                 }
 
@@ -56,7 +93,7 @@ export const receiptSlice = createSlice({
                 if (item.id === action.payload.id) {
                     return {
                         description: action.payload.description,
-                        price: action.payload.price,
+                        price: item.price + action.payload.priceChange,
                         remainingQuantity: action.payload.remainingQuantity,
                         initialQuantity: action.payload.initialQuantity,
                         id: item.id,
@@ -64,6 +101,16 @@ export const receiptSlice = createSlice({
                 }
 
                 return item;
+            })
+        },
+        changeReceiptItemRemainingQuantity: (state, action) => {
+            state.receiptItems = state.receiptItems.map(item => {
+                if (item.id === action.payload.id) {
+                    return {
+                        ...item,
+                        remain
+                    }
+                }
             })
         },
         deleteReceiptItem: (state, action) => {
@@ -79,18 +126,32 @@ export const receiptSlice = createSlice({
         emptyReceiptStore: state => {
             state.receiptItems = [];
             state.activeGroupMembers = [];
-        }
+        },
+        emptyActiveGroupMembers: state => {
+            state.activeGroupMembers = [];
+        },
+        resetReceiptRemainingToInitial: state => {
+            state.receiptItems = state.receiptItems.map(item => {
+                return {
+                    ...item,
+                    remainingQuantity: item.initialQuantity
+                };
+            });
+        } 
     }
 });
 
 export const {
     addActiveGroupMember,
     removeActiveGroupMember,
-    editActiveGroupMember,
+    addItemToMember,
     addReceiptItem,
     editReceiptItem,
+    deleteItemFromMember,
     deleteReceiptItem,
     setReceiptItems,
-    emptyReceiptStore
+    emptyReceiptStore,
+    emptyActiveGroupMembers,
+    resetReceiptRemainingToInitial
 } = receiptSlice.actions;
 export default receiptSlice.reducer;
