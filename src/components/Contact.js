@@ -31,7 +31,7 @@ const Contact = ({ item, profileImg }) => {
                         return (
                             <View style={styles.paymentContainer}>
                                 <Text style={styles.payAmount}>
-                                    ${item.amount}
+                                    ${item.amount.toFixed(2)}
                                 </Text>
                                 <TouchableOpacity style={styles.payBtn}>
                                     <Text style={styles.payText}>
@@ -45,7 +45,7 @@ const Contact = ({ item, profileImg }) => {
                     return (
                         <View style={styles.paymentContainer}>
                             <Text style={styles.nudgeAmount}>
-                                ${item.amount}
+                                ${item.amount.toFixed(2)}
                             </Text>
                             <TouchableOpacity style={styles.nudgeBtn}>
                                 <Text style={styles.nudgeText}>

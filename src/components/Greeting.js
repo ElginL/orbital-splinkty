@@ -42,7 +42,7 @@ const Greeting = ({
                         Total to pay:
                     </Text>
                     <Text style={styles.paymentAmount}>
-                        ${cashToPay}
+                        ${cashToPay.toFixed(2)}
                     </Text>
                     {
                         pplToReceiveFromCount === 1
@@ -55,7 +55,7 @@ const Greeting = ({
                         Total to receive:
                     </Text>
                     <Text style={styles.receiveAmount}>
-                        ${cashToReceive}
+                        ${cashToReceive.toFixed(2)}
                     </Text>
                     {
                         pplToPayCount === 1

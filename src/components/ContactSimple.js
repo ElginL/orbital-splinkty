@@ -22,7 +22,7 @@ const ContactSimple = ({ item, profileImg }) => {
                         return (
                             <View style={styles.paymentContainer}>
                                 <Text style={styles.payMessage}>To Pay</Text>
-                                <Text style={styles.payAmount}>${item.amount}</Text>
+                                <Text style={styles.payAmount}>${item.amount.toFixed(2)}</Text>
                             </View>
                         );
                     }
@@ -30,7 +30,7 @@ const ContactSimple = ({ item, profileImg }) => {
                     return (
                         <View style={styles.paymentContainer}>
                             <Text style={styles.receiveMessage}>To Receive</Text>
-                            <Text style={styles.receiveAmount}>${item.amount}</Text>
+                            <Text style={styles.receiveAmount}>${item.amount.toFixed(2)}</Text>
                         </View>
                     )
                 })()
