@@ -58,7 +58,7 @@ const ScannedItem = ({ item, isValidFormInput }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.price}>{item.price}</Text>
+            <Text style={styles.price}>{item.price.toFixed(2)}</Text>
             <EditItemModal
                 isVisible={modalVisible}
                 item={item}
@@ -103,9 +103,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     price: {
-        flex: 0.1,
+        flex: 0.13,
         fontSize: 18,
-        fontWeight: "300"
+        fontWeight: "300",
+        textAlign: 'center'
     }
 });
 
