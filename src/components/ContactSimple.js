@@ -10,7 +10,7 @@ const ContactSimple = ({ item, profileImg }) => {
         <View style={styles.contact}>
             <View style={styles.userDisplay}>
                 <Image
-                    source={{ uri: profileImg }} 
+                    source={{ uri: profileImg, cache: 'only-if-cached' }} 
                     style={styles.contactImg} />
                 <Text style={styles.name}>
                     {item.friend}

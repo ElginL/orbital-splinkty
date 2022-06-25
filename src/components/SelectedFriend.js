@@ -28,7 +28,7 @@ const SelectedFriends = ({ member, profileImg }) => {
                 style={styles.cross}
             />
             <Image
-                source={{ uri: profileImg }}
+                source={{ uri: profileImg, cache: 'only-if-cached' }}
                 style={styles.profileImg}
             />
             <Text style={styles.email} ellipsizeMode='tail' numberOfLines={1}>

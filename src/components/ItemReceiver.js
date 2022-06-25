@@ -12,8 +12,9 @@ import { DraxView } from 'react-native-drax';
 import ItemQuantityModal from './ItemQuantityModal';
 import {
     addItemToMember, 
+    changeReceiptItemPriceAndRemainingQty,
     editReceiptItem,
-    deleteItemFromMember 
+    deleteItemFromMember
 } from '../store/receiptSlice';
 import { Entypo } from '@expo/vector-icons';
 
@@ -66,7 +67,7 @@ const ItemReceiver = ({ draggableItems, member, profileImg }) => {
             }
         }
 
-        dispatch(editReceiptItem({
+        dispatch(changeReceiptItemPriceAndRemainingQty({
             description: item.description,
             priceChange: -item.priceShare,
             remainingQuantity: remainingQuantity + item.quantity,
@@ -79,7 +80,7 @@ const ItemReceiver = ({ draggableItems, member, profileImg }) => {
         <View>
             <View style={styles.contact}>
                 <Image
-                    source={{ uri: profileImg }}
+                    source={{ uri: profileImg, cache: 'only-if-cached' }}
                     style={styles.profileImg}
                 />
                 <Text style={styles.emailText}>

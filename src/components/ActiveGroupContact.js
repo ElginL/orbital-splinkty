@@ -56,7 +56,7 @@ const ActiveGroupContact = ({ email, profileImg, activeGroupMembers }) => {
             }}>
             <View style={styles.contactContainer}>
                 <Image 
-                    source={{ uri: profileImg }}
+                    source={{ uri: profileImg, cache: 'only-if-cached' }}
                     style={styles.profileImg}
                 />
                 <Text style={styles.email}>

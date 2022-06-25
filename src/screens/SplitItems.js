@@ -23,12 +23,25 @@ const SplitItems = () => {
                 </Text>
                 <View style={styles.draggableItems}>
                     {
-                        draggableItems.map(item => (
-                            <ItemDraggable
-                                item={item}
-                                key={item.id}
-                            />
-                        ))
+                        (() => {
+                            if (draggableItems.length === 0) {
+                                return (
+                                    <Text style={styles.noItemsText}>
+                                        No items to drag and drop {'\n'}
+                                        Return to add items
+                                    </Text>
+                                )
+                            }
+
+                            return (
+                                draggableItems.map(item => (
+                                    <ItemDraggable
+                                        item={item}
+                                        key={item.id}
+                                    />
+                                ))
+                            )
+                        })()
                     }
                 </View>
                 <View style={styles.receiverContainer}>
@@ -86,6 +99,14 @@ const styles = StyleSheet.create({
         marginTop: 50,
         fontStyle: 'italic',
         fontWeight: '300',
+        opacity: 0.5
+    },
+    noItemsText: {
+        textAlign: 'center',
+        marginVertical: 50,
+        fontStyle: 'italic',
+        fontWeight: '300',
+        width: '100%',
         opacity: 0.5
     },
     receiverContainer: {

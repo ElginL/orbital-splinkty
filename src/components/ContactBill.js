@@ -12,7 +12,7 @@ const ContactBill = ({ member, profileImg }) => {
         <View style={styles.container}>
             <View style={styles.contactContainer}>
                 <Image
-                    source={{ uri: profileImg }}
+                    source={{ uri: profileImg, cache: 'only-if-cached' }}
                     style={styles.profilePic}
                 />
                 <Text style={styles.emailText}>

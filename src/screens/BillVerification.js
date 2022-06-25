@@ -43,16 +43,27 @@ const BillVerification = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <FlatList
-                keyExtractor={item => item.email}
-                data={activeGroupMembers}
-                renderItem={({ item }) => (
-                    <ContactBill
-                        member={item}
-                        profileImg={profileImgs[item.email]}
-                    />
-                )}
-            />
+            {
+                activeGroupMembers.length === 0
+                    ? (
+                        <Text style={styles.noText}>
+                            No members in this split request... {'\n'}
+                            Return to select active group members
+                        </Text>
+                    )
+                    : (
+                        <FlatList
+                            keyExtractor={item => item.email}
+                            data={activeGroupMembers}
+                            renderItem={({ item }) => (
+                                <ContactBill
+                                    member={item}
+                                    profileImg={profileImgs[item.email]}
+                                />
+                            )}
+                        />
+                    ) 
+            }
             <View style={styles.confirmBtnContainer}>
                 <TouchableOpacity style={styles.confirmBtn}
                     onPress={confirmBtnHandler}>
@@ -77,6 +88,12 @@ const styles = StyleSheet.create({
     confirmBtnText: {
         fontSize: 18,
         color: 'rgb(10, 132, 255)'
+    },
+    noText: {
+        fontStyle: 'italic',
+        fontWeight: '300',
+        marginVertical: 100,
+        textAlign: 'center'
     }
 })
 

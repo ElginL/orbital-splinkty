@@ -21,7 +21,9 @@ const EditItemModal = ({
     const [ quantity, setQuantity ] = useState(item.initialQuantity);
     const [ price, setPrice ] = useState(item.price);
 
-    const [ hasError, setHasError ] = useState(false)
+    const [ hasError, setHasError ] = useState(false);
+
+    console.log(price);
 
     return (
         <Modal

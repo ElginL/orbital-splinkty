@@ -180,7 +180,7 @@ const IncomingSplitRequest = ({ item }) => {
             <View style={styles.container}>
                 <View style={styles.requesterContainer}>
                     <Image
-                        source={{ uri: profileImgs[item.from] }}
+                        source={{ uri: profileImgs[item.from], cache: 'only-if-cached' }}
                         style={styles.requesterImg}
                     />
                     <View style={styles.detailsContainer}>

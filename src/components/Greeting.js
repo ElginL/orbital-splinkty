@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
     StyleSheet, 
     Text,
@@ -16,19 +15,13 @@ const Greeting = ({
 }) => {
     const profilePictures = useSelector(state => state.users.profilePictures);
 
-    const [photoURI, setPhotoURI] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-
-    useEffect(() => {
-        if (profilePictures[getCurrentUser()]) {
-            setPhotoURI(profilePictures[getCurrentUser()]);
-        }
-    }, [profilePictures]);
+    const photoURI = profilePictures[getCurrentUser()];
 
     return (
         <View style={styles.container}>
             <Image
                 style={styles.profileImg} 
-                source={{ uri: photoURI }} 
+                source={{ uri: photoURI, cache: 'only-if-cached' }} 
             />
             <Text style={styles.greetingTitle}>
                 Welcome Back

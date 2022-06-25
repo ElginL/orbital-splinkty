@@ -82,16 +82,24 @@ const ScannedItems = ({ route }) => {
                     <Text style={styles.addText}>Add Items</Text>
                 </TouchableOpacity>
             </View>
-            <FlatList
-                keyExtractor={item => item.id}
-                data={items}
-                renderItem={({ item }) => (
-                    <ScannedItem
-                        item={item}
-                        isValidFormInput={isValidFormInput}
+            {
+                items.length === 0
+                    ? <Text style = {styles.noText}>
+                        No Scanned Items Found {'\n'} 
+                        Try taking a nicer image of receipt or add manually
+                    </Text>
+                    : <FlatList
+                        keyExtractor={item => item.id}
+                        data={items}
+                        renderItem={({ item }) => (
+                            <ScannedItem
+                                item={item}
+                                isValidFormInput={isValidFormInput}
+                            />
+                        )}
                     />
-                )}
-            />
+
+            }
             <AddItemModal
                 isVisible={modalVisible}
                 addHandler={addItemHandler}
@@ -102,18 +110,24 @@ const ScannedItems = ({ route }) => {
 };
 
 const styles = StyleSheet.create({
+    addText: {
+        color: 'rgb(10, 132, 255)',
+        fontSize: 18
+    },
     container: {
         backgroundColor: 'white',
         flex: 1
+    },
+    noText: {
+        textAlign: 'center',
+        fontStyle: 'italic',
+        fontWeight: '200',
+        marginTop: 250
     },
     topBar: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         padding: 15,
-    },
-    addText: {
-        color: 'rgb(10, 132, 255)',
-        fontSize: 18
     },
     summaryText: {
         fontSize: 18

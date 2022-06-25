@@ -93,7 +93,7 @@ export const receiptSlice = createSlice({
                 if (item.id === action.payload.id) {
                     return {
                         description: action.payload.description,
-                        price: item.price + action.payload.priceChange,
+                        price: action.payload.priceChange,
                         remainingQuantity: action.payload.remainingQuantity,
                         initialQuantity: action.payload.initialQuantity,
                         id: item.id,
@@ -103,13 +103,14 @@ export const receiptSlice = createSlice({
                 return item;
             })
         },
-        changeReceiptItemRemainingQuantity: (state, action) => {
+        changeReceiptItemPriceAndRemainingQty: (state, action) => {
             state.receiptItems = state.receiptItems.map(item => {
                 if (item.id === action.payload.id) {
                     return {
                         ...item,
-                        remain
-                    }
+                        remainingQuantity: action.payload.remainingQuantity,
+                        priceChange: action.payload.priceChange + item.price
+                    };
                 }
             })
         },
@@ -117,7 +118,7 @@ export const receiptSlice = createSlice({
             const index = state.receiptItems.findIndex(item => item.id === action.payload.id);
             state.receiptItems = [
                 ...state.receiptItems.slice(0, index),
-                ...items.slice(index + 1)
+                ...state.receiptItems.slice(index + 1)
             ];
         },
         setReceiptItems: (state, action) => {
@@ -149,6 +150,7 @@ export const {
     editReceiptItem,
     deleteItemFromMember,
     deleteReceiptItem,
+    changeReceiptItemPriceAndRemainingQty,
     setReceiptItems,
     emptyReceiptStore,
     emptyActiveGroupMembers,

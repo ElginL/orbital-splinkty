@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet, 
     TouchableOpacity,
@@ -16,18 +16,10 @@ import { MaterialIcons } from '@expo/vector-icons';
 import ProfileImgPickerModal from './ProfileImgPickerModal';
 
 const ProfileImgPicker = () => {
-    const NO_PROFILE_IMG = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-
-    const [photoURI, setPhotoURI] = useState(NO_PROFILE_IMG);
     const [modalVisible, setModalVisible] = useState(false);
     
     const profilePictures = useSelector(state => state.users.profilePictures);
-    
-    useEffect(() => {
-        if (profilePictures[getCurrentUser()]) {
-            setPhotoURI(profilePictures[getCurrentUser()]);
-        }
-    }, [profilePictures]);
+    const photoURI = profilePictures[getCurrentUser()];
 
     const onImageLibraryPress = async () => {
         try {
@@ -38,8 +30,6 @@ const ProfileImgPicker = () => {
             });
     
             if (!result.cancelled) {
-                setPhotoURI(result.uri);
-                
                 await uploadImg(result.uri);
                 setModalVisible(false);
             }
@@ -63,8 +53,6 @@ const ProfileImgPicker = () => {
             });
     
             if (!result.cancelled) {
-                setPhotoURI(result.uri);
-                
                 await uploadImg(result.uri);
                 setModalVisible(false);
             }
@@ -76,7 +64,6 @@ const ProfileImgPicker = () => {
     const onDeletePress = async () => {
         await deleteProfileImg();
         
-        setPhotoURI(NO_PROFILE_IMG);
         setModalVisible(false);
     }
     
