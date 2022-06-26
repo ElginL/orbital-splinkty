@@ -45,12 +45,11 @@ const styles = StyleSheet.create({
     container: {
         backgroundColor: 'white',
         width: '70%',
-        height: '20%',
+        padding: 20,
         borderRadius: 15,
         alignItems: 'center',
     },
     dialogue: {
-        marginTop: 30,
         fontSize: 25
     },
     additionalDialogue: {
@@ -59,7 +58,7 @@ const styles = StyleSheet.create({
         fontSize: 12
     },
     buttonsContainer: {
-        width: '60%',
+        width: '70%',
         flexDirection: 'row',
         justifyContent: 'space-between'
     },

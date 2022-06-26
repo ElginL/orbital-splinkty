@@ -121,7 +121,7 @@ const styles = StyleSheet.create({
     noText: {
         textAlign: 'center',
         fontStyle: 'italic',
-        fontWeight: '200',
+        fontWeight: '400',
         marginTop: 250
     },
     topBar: {

@@ -80,7 +80,7 @@ const ItemReceiver = ({ draggableItems, member, profileImg }) => {
         <View>
             <View style={styles.contact}>
                 <Image
-                    source={{ uri: profileImg, cache: 'only-if-cached' }}
+                    source={{ uri: profileImg }}
                     style={styles.profileImg}
                 />
                 <Text style={styles.emailText}>

@@ -21,7 +21,7 @@ const Top3Payments = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.sectionHeader}>
-                Top Outstanding Payments
+                Top Payments
             </Text>
             {
                 top3Payments.length === 0
@@ -37,6 +37,8 @@ const Top3Payments = () => {
                                     profileImg={profileImgs[item.friend]} 
                                 />
                             )}
+                            scrollEnabled={false}
+                            style={styles.list}
                         />
                     )
             }
@@ -45,18 +47,17 @@ const Top3Payments = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1
-    },
     emptyText: {
         fontStyle: 'italic',
         textAlign: 'center',
         marginTop: 30,
+        fontSize: 15,
+        fontWeight: '200'
     },
     sectionHeader: {
         fontSize: 28,
-        margin: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: 15
     }
 });
 

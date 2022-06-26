@@ -23,8 +23,6 @@ const EditItemModal = ({
 
     const [ hasError, setHasError ] = useState(false);
 
-    console.log(price);
-
     return (
         <Modal
             isVisible={isVisible}

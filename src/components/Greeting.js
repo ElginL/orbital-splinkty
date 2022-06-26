@@ -63,7 +63,7 @@ const Greeting = ({
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     greetingTitle: {
         fontSize: 18,
@@ -78,10 +78,10 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     profileImg: {
-        width: 140,
-        height: 140,
-        borderRadius: 70,
-        margin: 20
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+        marginBottom: 5
     },
     receiveText: {
         textAlign: 'center'
@@ -109,12 +109,11 @@ const styles = StyleSheet.create({
     },
     totalContainer: {
         flexDirection: "row",
-        marginVertical: 20,
+        marginVertical: 10,
     },
     username: {
         fontSize: 25,
         fontWeight: 'bold',
-        marginTop: 10
     }
 });
 

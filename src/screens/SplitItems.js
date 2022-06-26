@@ -5,6 +5,7 @@ import {
     FlatList,
 } from 'react-native';
 import { DraxProvider } from 'react-native-drax';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import ItemDraggable from '../components/ItemDraggable';
 import ItemReceiver from '../components/ItemReceiver';
@@ -16,11 +17,11 @@ const SplitItems = () => {
     const receivingItemList = useSelector(state => state.receipt.activeGroupMembers);
 
     return (
-        <DraxProvider>
-            <View style={styles.container}>
-                <Text style={styles.allItemsText}>
-                    Drag and Drop
-                </Text>
+        <GestureHandlerRootView style={styles.container}>
+            <Text style={styles.allItemsText}>
+                Drag and Drop
+            </Text>
+            <DraxProvider>
                 <View style={styles.draggableItems}>
                     {
                         (() => {
@@ -71,8 +72,9 @@ const SplitItems = () => {
                             )
                     }
                 </View>
-            </View>
-        </DraxProvider>
+            </DraxProvider>
+
+            </GestureHandlerRootView>
     );
 };
 
@@ -98,14 +100,14 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 50,
         fontStyle: 'italic',
-        fontWeight: '300',
+        fontWeight: '400',
         opacity: 0.5
     },
     noItemsText: {
         textAlign: 'center',
         marginVertical: 50,
         fontStyle: 'italic',
-        fontWeight: '300',
+        fontWeight: '400',
         width: '100%',
         opacity: 0.5
     },

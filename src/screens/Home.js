@@ -101,13 +101,15 @@ const Home = () => {
 
     return (
         <View style={styles.container}>
-            <Greeting 
-                cashToReceive={cashToReceive}
-                cashToPay={cashToPay}
-                pplToReceiveFromCount={pplToReceiveFromCount}
-                pplToPayCount={pplToPayCount}
-            />
-            <Top3Payments />
+            <View>
+                <Greeting 
+                    cashToReceive={cashToReceive}
+                    cashToPay={cashToPay}
+                    pplToReceiveFromCount={pplToReceiveFromCount}
+                    pplToPayCount={pplToPayCount}
+                />
+                <Top3Payments />
+            </View>
         </View>
     );
 };
@@ -116,7 +118,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
-        padding: 20
+        padding: 20,
     },
 });
 

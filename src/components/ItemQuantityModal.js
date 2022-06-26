@@ -96,6 +96,13 @@ const styles = StyleSheet.create({
         color: 'blue',
         fontSize: 18
     },
+    container: {
+        width: '70%',
+        backgroundColor: 'white',
+        alignItems: 'center',
+        justifyContent: 'center',
+        borderRadius: 25
+    },
     errorMessage: {
         color: 'red',
         fontSize: 12,
@@ -104,14 +111,6 @@ const styles = StyleSheet.create({
     modal: {
         justifyContent: 'center',
         alignItems: 'center'
-    },
-    container: {
-        width: '70%',
-        height: '23%',
-        backgroundColor: 'white',
-        alignItems: 'center',
-        justifyContent: 'center',
-        borderRadius: 25
     },
     quantityInput: {
         borderWidth: 1,
