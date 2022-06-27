@@ -2,12 +2,12 @@ import {
     View,
     Text,
     TouchableOpacity,
-    Image,
     StyleSheet
 } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { removeActiveGroupMember } from '../store/receiptSlice';
+import CachedImage from 'react-native-expo-cached-image';
 
 const SelectedFriends = ({ member, profileImg }) => {
     const dispatch = useDispatch();
@@ -27,7 +27,8 @@ const SelectedFriends = ({ member, profileImg }) => {
                 color="black"
                 style={styles.cross}
             />
-            <Image
+            <CachedImage
+                isBackground
                 source={{ uri: profileImg }}
                 style={styles.profileImg}
             />
@@ -54,6 +55,7 @@ const styles = StyleSheet.create({
         width: 70,
         height: 70,
         borderRadius: 35,
+        overflow: 'hidden'
     },
     email: {
         width: '70%'

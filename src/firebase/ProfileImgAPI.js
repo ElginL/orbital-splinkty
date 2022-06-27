@@ -28,12 +28,11 @@ const uploadImg = async uploadURI => {
     uploadBytes(ProfilePictureRef, blob)
         .then(async () => {
             await updateURLInFirebase();
-            console.log("Success");
         });
 }
 
 const deleteProfileImg = async () => {
-    const desertRef = ref(storage, "ProfilePictures/" + getCurrentUser());
+    const desertRef = ref(storage, "ProfilePictures/" + getCurrentUser() + "_200x200");
 
     try {
         if (desertRef !== undefined) {
@@ -46,7 +45,7 @@ const deleteProfileImg = async () => {
 }
 
 const updateURLInFirebase = async () => {
-    const ProfilePictureRef = ref(storage, "ProfilePictures/" + getCurrentUser());
+    const ProfilePictureRef = ref(storage, "ProfilePictures/" + getCurrentUser() + "_200x200");
 
     try {
         const URL = await getDownloadURL(ProfilePictureRef);

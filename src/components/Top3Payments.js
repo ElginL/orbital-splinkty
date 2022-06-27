@@ -1,5 +1,4 @@
 import {
-    FlatList,
     StyleSheet, 
     Text,
     View,
@@ -21,23 +20,19 @@ const Top3Payments = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.sectionHeader}>
-                Top Outstanding Payments
+                Top Payments
             </Text>
             {
                 top3Payments.length === 0
                     ? <Text style={styles.emptyText}>No Outstanding Payments!</Text>
                     : (
-                        <FlatList
-                            keyExtractor={item => item.id}
-                            listKey={item => item.id}
-                            data={top3Payments}
-                            renderItem={({ item }) => (
-                                <ContactSimple
-                                    item={item}
-                                    profileImg={profileImgs[item.friend]} 
-                                />
-                            )}
-                        />
+                        top3Payments.map(item => (
+                            <ContactSimple
+                                item={item}
+                                profileImg={profileImgs[item.friend]}
+                                key={item.id}
+                            />
+                        ))
                     )
             }
         </View>
@@ -46,17 +41,19 @@ const Top3Payments = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1
+        marginBottom: 10
     },
     emptyText: {
         fontStyle: 'italic',
         textAlign: 'center',
         marginTop: 30,
+        fontSize: 15,
+        fontWeight: '200'
     },
     sectionHeader: {
         fontSize: 28,
-        margin: 10,
-        textAlign: 'center'
+        textAlign: 'center',
+        marginBottom: 15
     }
 });
 

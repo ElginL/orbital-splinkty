@@ -1,7 +1,7 @@
 import {
     Text,
     StyleSheet,
-    View
+    View,
 } from 'react-native';
 import { DraxView } from 'react-native-drax';
 

@@ -15,7 +15,6 @@ const SplitBillMethodsModal = ({
     openCameraHandler,
     pickImageHandler 
 }) => {
-
     return (
         <Modal
             isVisible={isVisible}
@@ -24,41 +23,41 @@ const SplitBillMethodsModal = ({
             style={styles.modal}>
             <View>
                 <View style={styles.optionsContainer}>
-                    <View style={styles.optionContainer}>
-                        <FontAwesome name="camera" size={24} color="black" />
-                        <TouchableOpacity onPress={async () => {
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={async () => {
                             await openCameraHandler();
                             onClose();
                         }}>
-                            <Text style={styles.optionText}>
-                                Camera
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                        <FontAwesome name="camera" size={24} color="black" />
+                        <Text style={styles.optionText}>
+                            Camera
+                        </Text>
+                    </TouchableOpacity>
                     <HorizontalLine />
-                    <View style={styles.optionContainer}>
-                        <FontAwesome name="photo" size={24} color="black" />
-                        <TouchableOpacity onPress={async () => {
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={async () => {
                             await pickImageHandler();
-                            onClose();
-                        }}>
-                            <Text style={styles.optionText}>
-                                Photos Gallery
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                            onClose()}
+                        }>
+                        <FontAwesome name="photo" size={24} color="black" />
+                        <Text style={styles.optionText}>
+                            Photos Gallery
+                        </Text>
+                    </TouchableOpacity>
                     <HorizontalLine />
-                    <View style={styles.optionContainer}>
-                        <FontAwesome name="hand-pointer-o" size={24} color="black" />
-                        <TouchableOpacity onPress={() => {
+                    <TouchableOpacity 
+                        style={styles.button}
+                        onPress={() => {
                             onClose();
                             addManuallyHandler();
                         }}>
-                            <Text style={styles.optionText}>
-                                Add Manually
-                            </Text>
-                        </TouchableOpacity>
-                    </View>
+                        <FontAwesome name="hand-pointer-o" size={24} color="black" />
+                        <Text style={styles.optionText}>
+                            Add Manually
+                        </Text>
+                    </TouchableOpacity>
                 </View>
                 <TouchableOpacity 
                     style={styles.cancelBtn}
@@ -73,6 +72,12 @@ const SplitBillMethodsModal = ({
 };
 
 const styles = StyleSheet.create({
+    button: {
+        width: '80%',
+        alignItems: 'center',
+        flexDirection: 'row',
+        justifyContent: 'center'
+    },
     cancelBtn: {
         backgroundColor: 'white',
         marginVertical: 10,
@@ -85,10 +90,6 @@ const styles = StyleSheet.create({
     },
     modal: {
         justifyContent: 'flex-end'
-    },
-    optionContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
     },
     optionsContainer: {
         backgroundColor: 'white',

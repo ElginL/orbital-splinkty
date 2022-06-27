@@ -24,7 +24,7 @@ const ScannedItem = ({ item, isValidFormInput }) => {
 
         dispatch(editReceiptItem({
             description,
-            price: parseFloat(price),
+            priceChange: parseFloat(parseFloat(price).toFixed(2)),
             remainingQuantity: parseInt(quantity),
             initialQuantity: parseInt(quantity),
             id: itemId,
@@ -58,7 +58,9 @@ const ScannedItem = ({ item, isValidFormInput }) => {
                     </Text>
                 </TouchableOpacity>
             </View>
-            <Text style={styles.price}>{item.price}</Text>
+            <Text style={styles.price}>
+                {item.price.toFixed(2)}
+            </Text>
             <EditItemModal
                 isVisible={modalVisible}
                 item={item}
@@ -103,9 +105,10 @@ const styles = StyleSheet.create({
         fontSize: 16,
     },
     price: {
-        flex: 0.1,
+        flex: 0.2,
         fontSize: 18,
-        fontWeight: "300"
+        fontWeight: "300",
+        textAlign: 'center',
     }
 });
 

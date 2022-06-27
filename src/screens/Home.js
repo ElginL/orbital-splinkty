@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { 
     View,
-    StyleSheet 
+    StyleSheet,
+    ScrollView
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { 
@@ -100,15 +101,17 @@ const Home = () => {
     }, []);
 
     return (
-        <View style={styles.container}>
-            <Greeting 
-                cashToReceive={cashToReceive}
-                cashToPay={cashToPay}
-                pplToReceiveFromCount={pplToReceiveFromCount}
-                pplToPayCount={pplToPayCount}
-            />
-            <Top3Payments />
-        </View>
+        <ScrollView style={styles.container}>
+            <View>
+                <Greeting 
+                    cashToReceive={cashToReceive}
+                    cashToPay={cashToPay}
+                    pplToReceiveFromCount={pplToReceiveFromCount}
+                    pplToPayCount={pplToPayCount}
+                />
+                <Top3Payments />
+            </View>
+        </ScrollView>
     );
 };
 
@@ -116,7 +119,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         backgroundColor: "white",
-        padding: 20
+        padding: 20,
     },
 });
 

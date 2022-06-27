@@ -1,33 +1,25 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     StyleSheet, 
     TouchableOpacity,
     View,
-    Image,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { 
-    uploadImg, 
+    uploadImg,
     deleteProfileImg 
 } from '../firebase/ProfileImgAPI';
 import { getCurrentUser } from '../firebase/loginAPI';
 import { MaterialIcons } from '@expo/vector-icons';
 import ProfileImgPickerModal from './ProfileImgPickerModal';
+import CachedImage from 'react-native-expo-cached-image';
 
 const ProfileImgPicker = () => {
-    const NO_PROFILE_IMG = "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png";
-
-    const [photoURI, setPhotoURI] = useState(NO_PROFILE_IMG);
     const [modalVisible, setModalVisible] = useState(false);
     
     const profilePictures = useSelector(state => state.users.profilePictures);
-    
-    useEffect(() => {
-        if (profilePictures[getCurrentUser()]) {
-            setPhotoURI(profilePictures[getCurrentUser()]);
-        }
-    }, [profilePictures]);
+    const photoURI = profilePictures[getCurrentUser()];
 
     const onImageLibraryPress = async () => {
         try {
@@ -38,8 +30,6 @@ const ProfileImgPicker = () => {
             });
     
             if (!result.cancelled) {
-                setPhotoURI(result.uri);
-                
                 await uploadImg(result.uri);
                 setModalVisible(false);
             }
@@ -63,8 +53,6 @@ const ProfileImgPicker = () => {
             });
     
             if (!result.cancelled) {
-                setPhotoURI(result.uri);
-                
                 await uploadImg(result.uri);
                 setModalVisible(false);
             }
@@ -76,7 +64,6 @@ const ProfileImgPicker = () => {
     const onDeletePress = async () => {
         await deleteProfileImg();
         
-        setPhotoURI(NO_PROFILE_IMG);
         setModalVisible(false);
     }
     
@@ -85,7 +72,8 @@ const ProfileImgPicker = () => {
             <TouchableOpacity
                 style={styles.photoFrame}
                 onPress={() => setModalVisible(true)}>
-                <Image
+                <CachedImage
+                    isBackground
                     style={styles.profileImg} 
                     source={{ uri: photoURI }}
                 />
@@ -126,7 +114,8 @@ const styles = StyleSheet.create({
     profileImg: {
         width: 200,
         height: 200,
-        borderRadius: 100
+        borderRadius: 100,
+        overflow: 'hidden'
     }
 });
 

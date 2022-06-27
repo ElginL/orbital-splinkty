@@ -3,14 +3,15 @@ import {
     View, 
     Text, 
     TouchableOpacity,
-    Image
 } from 'react-native';
+import CachedImage from 'react-native-expo-cached-image';
 
 const FriendRequest = ({ item, declineHandler, acceptHandler, url }) => {
     return (
         <View style={styles.requestContainer}>
             <View style={styles.userDisplay}>
-                <Image 
+                <CachedImage
+                    isBackground 
                     source={{ uri: url }} 
                     style={styles.contactImg} 
                 />
@@ -65,7 +66,8 @@ const styles = StyleSheet.create({
         width: 50,
         height: 50,
         borderRadius: 25,
-        marginRight: 10
+        marginRight: 10,
+        overflow: 'hidden'
     },
     name: {
         fontSize: 17

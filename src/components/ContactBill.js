@@ -1,17 +1,18 @@
 import {
     View,
     Text,
-    Image,
     StyleSheet,
     FlatList
 } from 'react-native';
 import HorizontalLine from './HorizontalLine';
+import CachedImage from 'react-native-expo-cached-image';
 
 const ContactBill = ({ member, profileImg }) => {
     return (
         <View style={styles.container}>
             <View style={styles.contactContainer}>
-                <Image
+                <CachedImage
+                    isBackground
                     source={{ uri: profileImg }}
                     style={styles.profilePic}
                 />
@@ -28,15 +29,11 @@ const ContactBill = ({ member, profileImg }) => {
                         member.items.length === 0
                             ? <Text>No Orders...</Text>
                             : (
-                                <FlatList
-                                    keyExtractor={item => item.id}
-                                    data={member.items}
-                                    renderItem={({ item }) => (
-                                        <Text>
-                                            {item.quantity}x {item.description}
-                                        </Text>
-                                    )}
-                                />
+                                member.items.map(item => (
+                                    <Text>
+                                        {item.quantity}x {item.description}
+                                    </Text>
+                                ))
                             )
                     }
                 </View>
@@ -83,7 +80,8 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 60,
-        marginRight: 20
+        marginRight: 20,
+        overflow: 'hidden'
     },
     totalPriceContainer: {
         alignItems: 'center'

@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import {
     StyleSheet, 
     Text,
     View,
-    Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../firebase/loginAPI';
+import CachedImage from 'react-native-expo-cached-image';
 
 const Greeting = ({
     cashToReceive,
@@ -16,17 +15,12 @@ const Greeting = ({
 }) => {
     const profilePictures = useSelector(state => state.users.profilePictures);
 
-    const [photoURI, setPhotoURI] = useState("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
-
-    useEffect(() => {
-        if (profilePictures[getCurrentUser()]) {
-            setPhotoURI(profilePictures[getCurrentUser()]);
-        }
-    }, [profilePictures]);
+    const photoURI = profilePictures[getCurrentUser()];
 
     return (
         <View style={styles.container}>
-            <Image
+            <CachedImage
+                isBackground
                 style={styles.profileImg} 
                 source={{ uri: photoURI }} 
             />
@@ -42,10 +36,10 @@ const Greeting = ({
                         Total to pay:
                     </Text>
                     <Text style={styles.paymentAmount}>
-                        ${cashToPay}
+                        ${cashToPay.toFixed(2)}
                     </Text>
                     {
-                        pplToReceiveFromCount === 1
+                        pplToPayCount === 1
                             ? <Text style={styles.paymentText}>to {pplToPayCount} person</Text>
                             : <Text style={styles.paymentText}>to {pplToPayCount} people</Text>
                     }
@@ -55,10 +49,10 @@ const Greeting = ({
                         Total to receive:
                     </Text>
                     <Text style={styles.receiveAmount}>
-                        ${cashToReceive}
+                        ${cashToReceive.toFixed(2)}
                     </Text>
                     {
-                        pplToPayCount === 1
+                        pplToReceiveFromCount === 1
                             ? <Text style={styles.receiveText}>from {pplToReceiveFromCount} person</Text>
                             : <Text style={styles.receiveText}>from {pplToReceiveFromCount} people</Text>
                     }
@@ -70,7 +64,7 @@ const Greeting = ({
 
 const styles = StyleSheet.create({
     container: {
-        alignItems: 'center'
+        alignItems: 'center',
     },
     greetingTitle: {
         fontSize: 18,
@@ -85,10 +79,11 @@ const styles = StyleSheet.create({
         textAlign: 'center'
     },
     profileImg: {
-        width: 140,
-        height: 140,
-        borderRadius: 70,
-        margin: 20
+        width: 150,
+        height: 150,
+        borderRadius: 75,
+        marginBottom: 5,
+        overflow: 'hidden'
     },
     receiveText: {
         textAlign: 'center'
@@ -116,12 +111,11 @@ const styles = StyleSheet.create({
     },
     totalContainer: {
         flexDirection: "row",
-        marginVertical: 20,
+        marginVertical: 10,
     },
     username: {
         fontSize: 25,
         fontWeight: 'bold',
-        marginTop: 10
     }
 });
 

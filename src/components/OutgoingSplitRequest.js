@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    Image,
     TouchableOpacity
 } from 'react-native';
 import { useSelector } from 'react-redux';
@@ -14,6 +13,7 @@ import {
 import { db } from '../firebase/loginAPI';
 import HorizontalLine from './HorizontalLine';
 import SplitDetailsModal from './SplitDetailsModal';
+import CachedImage from 'react-native-expo-cached-image';
 
 const OutgoingSplitRequest = ({ item }) => {
     const profileImgs = useSelector(state => state.users.profilePictures);
@@ -29,7 +29,8 @@ const OutgoingSplitRequest = ({ item }) => {
         <View>
             <View style={styles.container}>
                 <View style={styles.senderContainer}>
-                    <Image
+                    <CachedImage
+                        isBackground
                         source={{ uri: profileImgs[item.to] }}
                         style={styles.profileImg}
                     />
@@ -65,12 +66,6 @@ const OutgoingSplitRequest = ({ item }) => {
 }
 
 const styles = StyleSheet.create({
-    profileImg: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
-        marginRight: 10
-    },
     cancelBtn: {
         paddingVertical: 5,
         paddingHorizontal: 10,
@@ -99,6 +94,13 @@ const styles = StyleSheet.create({
     priceShare: {
         color: 'green',
         fontSize: 18
+    },
+    profileImg: {
+        width: 80,
+        height: 80,
+        borderRadius: 40,
+        marginRight: 10,
+        overflow: 'hidden'
     },
     senderContainer: {
         flexDirection: 'row',

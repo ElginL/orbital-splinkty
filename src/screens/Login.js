@@ -26,11 +26,11 @@ const Login = ({ navigation }) => {
     const logInHandler = () => {
         setIsLoading(true);
 
-        try {
-            logInUser(email, password);
-        } catch (error) {
-            logInFailHandler(error);
-        }
+        logInUser(email, password)
+            .then(() => {})
+            .catch((error) => {
+                logInFailHandler(error);
+            });
     };
 
     const logInFailHandler = (error) => {

@@ -3,8 +3,10 @@ import {
     Text,
     StyleSheet,
     FlatList,
+    ScrollView
 } from 'react-native';
-import { DraxProvider } from 'react-native-drax';
+import { DraxProvider, DraxList } from 'react-native-drax';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import ItemDraggable from '../components/ItemDraggable';
 import ItemReceiver from '../components/ItemReceiver';
@@ -16,25 +18,40 @@ const SplitItems = () => {
     const receivingItemList = useSelector(state => state.receipt.activeGroupMembers);
 
     return (
-        <DraxProvider>
-            <View style={styles.container}>
-                <Text style={styles.allItemsText}>
-                    Drag and Drop
-                </Text>
+        <GestureHandlerRootView style={styles.container}>
+            <Text style={styles.allItemsText}>
+                Drag and Drop
+            </Text>
+            <DraxProvider>
                 <View style={styles.draggableItems}>
                     {
-                        draggableItems.map(item => (
-                            <ItemDraggable
-                                item={item}
-                                key={item.id}
-                            />
-                        ))
+                        (() => {
+                            if (draggableItems.length === 0) {
+                                return (
+                                    <Text style={styles.noItemsText}>
+                                        No items to drag and drop {'\n'}
+                                        Return to add items
+                                    </Text>
+                                )
+                            }
+
+                            return (
+                                <DraxList
+                                    data={draggableItems}
+                                    renderItemContent={({ item }) => (
+                                        <ItemDraggable
+                                            item={item}
+                                        />
+                                    )}
+                                    keyExtractor={item => item.id}
+                                    numColumns={3}
+                                />
+
+                            )
+                        })()
                     }
                 </View>
-                <View style={styles.receiverContainer}>
-                    <Text style={styles.activeGroupText}>
-                        Group Members
-                    </Text>
+                <ScrollView style={styles.receiverContainer}>
                     {
                         receivingItemList.length === 0
                             ? (
@@ -44,22 +61,20 @@ const SplitItems = () => {
                                 </Text>
                             )
                             : (
-                                <FlatList
-                                    keyExtractor={item => item.email}
-                                    data={receivingItemList}
-                                    renderItem={({ item }) => (
-                                        <ItemReceiver
-                                            draggableItems={draggableItems}
-                                            member={item}
-                                            profileImg={profileImgs[item.email]}
-                                        />
-                                    )}
-                                />
+                                receivingItemList.map(item => (
+                                    <ItemReceiver
+                                        draggableItems={draggableItems}
+                                        member={item}
+                                        profileImg={profileImgs[item.email]}
+                                        key={item.email}
+                                    />
+                                ))
                             )
                     }
-                </View>
-            </View>
-        </DraxProvider>
+                </ScrollView>
+            </DraxProvider>
+
+            </GestureHandlerRootView>
     );
 };
 
@@ -85,7 +100,15 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         marginTop: 50,
         fontStyle: 'italic',
-        fontWeight: '300',
+        fontWeight: '400',
+        opacity: 0.5
+    },
+    noItemsText: {
+        textAlign: 'center',
+        marginVertical: 50,
+        fontStyle: 'italic',
+        fontWeight: '400',
+        width: '100%',
         opacity: 0.5
     },
     receiverContainer: {

@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
     View,
     Text,
-    Image,
     StyleSheet,
     TouchableOpacity,
 } from 'react-native';
@@ -19,6 +18,7 @@ import {
 import { db } from '../firebase/loginAPI';
 import HorizontalLine from './HorizontalLine';
 import SplitDetailsModal from './SplitDetailsModal';
+import CachedImage from 'react-native-expo-cached-image';
 
 const IncomingSplitRequest = ({ item }) => {
     const profileImgs = useSelector(state => state.users.profilePictures);
@@ -59,14 +59,14 @@ const IncomingSplitRequest = ({ item }) => {
         if (friendshipDoc.data().paymentAmount === 0) {
             await updateDoc(friendshipDocRef, {
                 isOweIndex1: friendshipDoc.data().connection[1] === item.from,
-                paymentAmount: parseFloat(item.totalPrice.toFixed(2))
+                paymentAmount: item.totalPrice
             });
 
             await updateDoc(requestSenderDocRef, {
                 peopleToReceive: requestSenderDoc.data().peopleToReceive + 1,
                 total: {
                     ...requestSenderDoc.data().total,
-                    receiving: parseFloat((requestSenderDoc.data().total.receiving + item.totalPrice).toFixed(2))
+                    receiving: requestSenderDoc.data().total.receiving + item.totalPrice
                 }
             });
 
@@ -74,7 +74,7 @@ const IncomingSplitRequest = ({ item }) => {
                 peopleToPay: requestReceiverDoc.data().peopleToPay + 1,
                 total: {
                     ...requestReceiverDoc.data().total,
-                    paying: parseFloat((requestReceiverDoc.data().total.paying + item.totalPrice).toFixed(2))
+                    paying: requestReceiverDoc.data().total.paying + item.totalPrice
                 }
             })
         } else {
@@ -88,20 +88,20 @@ const IncomingSplitRequest = ({ item }) => {
                 await updateDoc(requestSenderDocRef, {
                     total: {
                         ...requestSenderDoc.data().total,
-                        receiving: parseFloat((requestSenderDoc.data().total.receiving + item.totalPrice).toFixed(2))
+                        receiving: requestSenderDoc.data().total.receiving + item.totalPrice
                     }
                 })
         
                 await updateDoc(requestReceiverDocRef, {
                     total: {
                         ...requestReceiverDoc.data().total,
-                        paying: parseFloat((requestReceiverDoc.data().total.paying + item.totalPrice).toFixed(2))
+                        paying: requestReceiverDoc.data().total.paying + item.totalPrice
                     }
                 })
             }
             else if (friendshipDoc.data().isOweIndex1 && friendshipDoc.data().connection[1] === item.to ||
                 !friendshipDoc.data().isOweIndex1 && friendshipDoc.data().connection[0] === item.to) {
-                const newPaymentAmount = friendshipDoc.data().paymentAmount - item.totalPrice;
+                const newPaymentAmount = parseFloat((friendshipDoc.data().paymentAmount - item.totalPrice).toFixed(2));
 
                 if (newPaymentAmount === 0) {
                     await updateDoc(friendshipDocRef, {
@@ -113,7 +113,7 @@ const IncomingSplitRequest = ({ item }) => {
                         peopleToPay: requestSenderDoc.data().peopleToPay - 1,
                         total: {
                             ...requestSenderDoc.data().total,
-                            paying: parseFloat((requestSenderDoc.data().total.paying - item.totalPrice).toFixed(2))
+                            paying: requestSenderDoc.data().total.paying - item.totalPrice
                         }
                     })
             
@@ -121,7 +121,7 @@ const IncomingSplitRequest = ({ item }) => {
                         peopleToReceive: requestReceiverDoc.data().peopleToReceive - 1,
                         total: {
                             ...requestReceiverDoc.data().total,
-                            receiving: parseFloat((requestReceiverDoc.data().total.receiving - item.totalPrice).toFixed(2))
+                            receiving: requestReceiverDoc.data().total.receiving - item.totalPrice
                         }
                     })
                 } else if (newPaymentAmount < 0) {
@@ -129,8 +129,8 @@ const IncomingSplitRequest = ({ item }) => {
                         peopleToPay: requestSenderDoc.data().peopleToPay - 1,
                         peopleToReceive: requestSenderDoc.data().peopleToReceive + 1,
                         total: {
-                            paying: parseFloat((requestSenderDoc.data().total.paying - friendshipDoc.data().paymentAmount).toFixed(2)),
-                            receiving: parseFloat((requestSenderDoc.data().total.receiving + Math.abs(newPaymentAmount)).toFixed(2))
+                            paying: requestSenderDoc.data().total.paying - friendshipDoc.data().paymentAmount,
+                            receiving: requestSenderDoc.data().total.receiving + Math.abs(newPaymentAmount)
                         }
                     })
             
@@ -138,7 +138,7 @@ const IncomingSplitRequest = ({ item }) => {
                         peopleToPay: requestReceiverDoc.data().peopleToPay + 1,
                         peopleToReceive: requestReceiverDoc.data().peopleToReceive - 1,
                         total: {
-                            paying: parseFloat((requestReceiverDoc.data().total.paying + Math.abs(newPaymentAmount)).toFixed(2)),
+                            paying: requestReceiverDoc.data().total.paying + Math.abs(newPaymentAmount),
                             receiving: requestReceiverDoc.data().total.receiving - friendshipDoc.data().paymentAmount
                         }
                     })
@@ -155,14 +155,14 @@ const IncomingSplitRequest = ({ item }) => {
                     await updateDoc(requestSenderDocRef, {
                         total: {
                             ...requestSenderDoc.data().total,
-                            paying: parseFloat((requestSenderDoc.data().total.paying - item.totalPrice).toFixed(2)),
+                            paying: requestSenderDoc.data().total.paying - item.totalPrice,
                         }
                     })
             
                     await updateDoc(requestReceiverDocRef, {
                         total: {
                             ...requestReceiverDoc.data().total,
-                            receiving: parseFloat((requestReceiverDoc.data().total.receiving - item.totalPrice).toFixed(2))
+                            receiving: requestReceiverDoc.data().total.receiving - item.totalPrice
                         }
                     })
                 }
@@ -179,7 +179,8 @@ const IncomingSplitRequest = ({ item }) => {
         <View>
             <View style={styles.container}>
                 <View style={styles.requesterContainer}>
-                    <Image
+                    <CachedImage
+                        isBackground
                         source={{ uri: profileImgs[item.from] }}
                         style={styles.requesterImg}
                     />
@@ -273,7 +274,8 @@ const styles = StyleSheet.create({
         width: 80,
         height: 80,
         borderRadius: 40,
-        marginRight: 10
+        marginRight: 10,
+        overflow: 'hidden'
     },
     requesterText: {
         fontSize: 20

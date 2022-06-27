@@ -2,7 +2,7 @@ import {
     View,
     Text,
     StyleSheet,
-    FlatList,
+    ScrollView,
     TouchableOpacity
 } from 'react-native';
 import { 
@@ -42,17 +42,25 @@ const BillVerification = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
-            <FlatList
-                keyExtractor={item => item.email}
-                data={activeGroupMembers}
-                renderItem={({ item }) => (
-                    <ContactBill
-                        member={item}
-                        profileImg={profileImgs[item.email]}
-                    />
-                )}
-            />
+        <ScrollView style={styles.container}>
+            {
+                activeGroupMembers.length === 0
+                    ? (
+                        <Text style={styles.noText}>
+                            No members in this split request... {'\n'}
+                            Return to select active group members
+                        </Text>
+                    )
+                    : (
+                        activeGroupMembers.map(member => (
+                            <ContactBill
+                                member={member}
+                                profileImg={profileImgs[member.email]}
+                                key={member.email}
+                            />
+                        ))
+                    ) 
+            }
             <View style={styles.confirmBtnContainer}>
                 <TouchableOpacity style={styles.confirmBtn}
                     onPress={confirmBtnHandler}>
@@ -61,7 +69,7 @@ const BillVerification = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>                
             </View>
-        </View>
+        </ScrollView>
     );
 };
 
@@ -77,6 +85,12 @@ const styles = StyleSheet.create({
     confirmBtnText: {
         fontSize: 18,
         color: 'rgb(10, 132, 255)'
+    },
+    noText: {
+        fontStyle: 'italic',
+        fontWeight: '300',
+        marginVertical: 100,
+        textAlign: 'center'
     }
 })
 

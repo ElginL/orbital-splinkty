@@ -1,16 +1,49 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     TouchableOpacity,
     StyleSheet
 } from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
+import { useIsFocused } from '@react-navigation/native';
 import { AntDesign } from '@expo/vector-icons';
 import SplitBillMethodsModal from './SplitBillMethodsModal';
-// import { uploadScannedImage, processImage, deleteScannedImage } from '../firebase/ScannedImgAPI';
+import getData from '../firebase/ReceiptProcessing';
+import LoadingOverlay from './LoadingOverlay';
 
 const CreateSplitRequestBtn = ({ navigation }) => {
     const [modalVisible, setModalVisible] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
+    const [base64, setBase64] = useState("");
+
+    const isFocused = useIsFocused();
+
+    useEffect(() => {
+        if (!isFocused) {
+            setIsLoading(false);
+        }
+    }, [isFocused]);
+
+    useEffect(() => {
+        if (isLoading) {
+            const fetchData = async () => {
+                const data = await getData(base64);
+                return data;
+            }
+
+            fetchData()
+                .then(receiptDetails => {
+                    navigation.navigate("Scanned Items", {
+                        quantities: receiptDetails[0],
+                        itemsDescription: receiptDetails[1],
+                        prices: receiptDetails[2]
+                    });
+                })
+                .catch(err => {
+                    console.log(err);
+                })
+        }
+    }, [isLoading]);
 
     const addManuallyHandler = () => {
         navigation.navigate("Scanned Items", {
@@ -28,44 +61,30 @@ const CreateSplitRequestBtn = ({ navigation }) => {
             return;
         }
 
-        const result = await ImagePicker.launchCameraAsync();
+        const result = await ImagePicker.launchCameraAsync({
+            base64: true
+        });
 
         if (!result.cancelled) {
-            // await uploadScannedImage(result.uri);
-            // const details = await processImage();
-
             setModalVisible(false);
-            navigation.navigate("Scanned Items", {
-                // itemsDescription: details[1],
-                // prices: details[2],
-                // quantities: details[0]
-                itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
-                prices: [7.20, 7.70, 5.80, 3.90, 2.40],
-                quantities: [6, 1, 2, 1, 2]
-            });
-
-            // await deleteScannedImage();
+            setBase64(result.base64);
+            setTimeout(() => {
+                setIsLoading(true);
+            }, 500)
         }
     }
 
     const pickImageHandler = async () => {
-        const result = await ImagePicker.launchImageLibraryAsync();
-
+        const result = await ImagePicker.launchImageLibraryAsync({
+            base64: true
+        });
+        
         if (!result.cancelled) {
-            // await uploadScannedImage(result.uri);
-            // const details = await processImage();
-
             setModalVisible(false);
-            navigation.navigate("Scanned Items", {
-                // itemsDescription: details[1],
-                // prices: details[2],
-                // quantities: details[0]
-                itemsDescription: ["Chicken Nuggets", "McSpicy", "Filet O' Fish", "Fries", "Tomyum Noodles"],
-                prices: [7.20, 7.70, 5.80, 3.90, 2.40],
-                quantities: [6, 1, 2, 1, 2]
-            });
-
-            // await deleteScannedImage();
+            setBase64(result.base64);
+            setTimeout(() => {
+                setIsLoading(true);
+            }, 500)
         }
     };
 
@@ -85,6 +104,11 @@ const CreateSplitRequestBtn = ({ navigation }) => {
                 openCameraHandler={openCameraHandler}
                 pickImageHandler={pickImageHandler}
             />
+            {
+                isLoading
+                    ? <LoadingOverlay />
+                    : null
+            }
         </View>
     )
 };

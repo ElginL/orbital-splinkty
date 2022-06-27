@@ -33,7 +33,7 @@ const ProfileImgPickerModal = ({
                             color="black" 
                         />
                         <Text style={styles.buttonText}>
-                            Library
+                            Photos
                         </Text>
                     </TouchableOpacity>
                     <HorizontalLine />
