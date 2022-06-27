@@ -12,8 +12,8 @@ import {
 } from '../store/receiptSlice';
 import ActiveGroupContact from '../components/ActiveGroupContact';
 import ActiveGroupSearchBar from '../components/ActiveGroupSearchBar';
-import SelectedFriend from '../components/SelectedFriend';
 import HorizontalLine from '../components/HorizontalLine';
+import SelectedFriend from '../components/SelectedFriend';
 
 const ActiveGroup = () => {
     const dispatch = useDispatch();

@@ -1,5 +1,4 @@
 import {
-    FlatList,
     StyleSheet, 
     Text,
     View,
@@ -27,19 +26,13 @@ const Top3Payments = () => {
                 top3Payments.length === 0
                     ? <Text style={styles.emptyText}>No Outstanding Payments!</Text>
                     : (
-                        <FlatList
-                            keyExtractor={item => item.id}
-                            listKey={item => item.id}
-                            data={top3Payments}
-                            renderItem={({ item }) => (
-                                <ContactSimple
-                                    item={item}
-                                    profileImg={profileImgs[item.friend]} 
-                                />
-                            )}
-                            scrollEnabled={false}
-                            style={styles.list}
-                        />
+                        top3Payments.map(item => (
+                            <ContactSimple
+                                item={item}
+                                profileImg={profileImgs[item.friend]}
+                                key={item.id}
+                            />
+                        ))
                     )
             }
         </View>
@@ -47,6 +40,9 @@ const Top3Payments = () => {
 };
 
 const styles = StyleSheet.create({
+    container: {
+        marginBottom: 10
+    },
     emptyText: {
         fontStyle: 'italic',
         textAlign: 'center',

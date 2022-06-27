@@ -112,7 +112,9 @@ export const receiptSlice = createSlice({
                         priceChange: action.payload.priceChange + item.price
                     };
                 }
-            })
+
+                return item;
+            });
         },
         deleteReceiptItem: (state, action) => {
             const index = state.receiptItems.findIndex(item => item.id === action.payload.id);

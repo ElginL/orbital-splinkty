@@ -3,15 +3,16 @@ import {
     View, 
     Text, 
     TouchableOpacity,
-    Image
 } from 'react-native';
+import CachedImage from 'react-native-expo-cached-image';
 
 const Contact = ({ item, profileImg }) => {
     return (
         <View style={styles.contact}>
             <View style={styles.userDisplay}>
-                <Image 
-                    source={{ uri: profileImg, cache: 'only-if-cached' }} 
+                <CachedImage
+                    isBackground
+                    source={{ uri: profileImg }} 
                     style={styles.contactImg} />
                 <Text style={styles.name}>
                     {item.friend}
@@ -73,7 +74,8 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         borderRadius: 30,
-        marginRight: 10
+        marginRight: 10,
+        overflow: 'hidden'
     },
     name: {
         fontSize: 18

@@ -2,10 +2,10 @@ import {
     StyleSheet, 
     Text,
     View,
-    Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../firebase/loginAPI';
+import CachedImage from 'react-native-expo-cached-image';
 
 const Greeting = ({
     cashToReceive,
@@ -19,9 +19,10 @@ const Greeting = ({
 
     return (
         <View style={styles.container}>
-            <Image
+            <CachedImage
+                isBackground
                 style={styles.profileImg} 
-                source={{ uri: photoURI, cache: 'only-if-cached' }} 
+                source={{ uri: photoURI }} 
             />
             <Text style={styles.greetingTitle}>
                 Welcome Back
@@ -38,7 +39,7 @@ const Greeting = ({
                         ${cashToPay.toFixed(2)}
                     </Text>
                     {
-                        pplToReceiveFromCount === 1
+                        pplToPayCount === 1
                             ? <Text style={styles.paymentText}>to {pplToPayCount} person</Text>
                             : <Text style={styles.paymentText}>to {pplToPayCount} people</Text>
                     }
@@ -51,7 +52,7 @@ const Greeting = ({
                         ${cashToReceive.toFixed(2)}
                     </Text>
                     {
-                        pplToPayCount === 1
+                        pplToReceiveFromCount === 1
                             ? <Text style={styles.receiveText}>from {pplToReceiveFromCount} person</Text>
                             : <Text style={styles.receiveText}>from {pplToReceiveFromCount} people</Text>
                     }
@@ -81,7 +82,8 @@ const styles = StyleSheet.create({
         width: 150,
         height: 150,
         borderRadius: 75,
-        marginBottom: 5
+        marginBottom: 5,
+        overflow: 'hidden'
     },
     receiveText: {
         textAlign: 'center'

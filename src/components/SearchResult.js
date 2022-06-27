@@ -3,7 +3,6 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
-    Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { 
@@ -13,6 +12,7 @@ import {
     doc
 } from 'firebase/firestore';
 import { getCurrentUser, db } from '../firebase/loginAPI';
+import CachedImage from 'react-native-expo-cached-image';
 
 const SearchResult = ({ user, profilePic }) => {
     const outgoingReqs = useSelector(state => state.friendship.sentFriendRequests);
@@ -53,8 +53,9 @@ const SearchResult = ({ user, profilePic }) => {
     return (
         <View style={styles.searchResult}>
             <View style={styles.userDisplay}>
-                <Image
-                    source={{ uri: profilePic, cache: 'only-if-cached' }} 
+                <CachedImage
+                    isBackground
+                    source={{ uri: profilePic }} 
                     style={styles.contactImg} />
                 <Text style={styles.name}>{user.email}</Text>
             </View>
@@ -83,11 +84,31 @@ const SearchResult = ({ user, profilePic }) => {
 };
 
 const styles = StyleSheet.create({
+    addBtn: {
+        backgroundColor: '#24a0ed',
+        paddingVertical: 5,
+        paddingHorizontal: 20
+    },
+    addText: {
+        color: 'white',
+        fontSize: 18
+    },
     contactImg: {
         width: 50,
         height: 50,
         borderRadius: 25,
-        marginRight: 10
+        marginRight: 10,
+        overflow: 'hidden'
+    },
+    name: {
+        fontSize: 17
+    },
+    pendingText: {
+        backgroundColor: '#3083ba',
+        paddingVertical: 5,
+        paddingHorizontal: 9,
+        fontSize: 18,
+        color: 'white'
     },
     searchResult: {
         flexDirection: 'row',
@@ -99,25 +120,6 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center'
     },
-    name: {
-        fontSize: 17
-    },
-    addBtn: {
-        backgroundColor: '#24a0ed',
-        paddingVertical: 5,
-        paddingHorizontal: 20
-    },
-    addText: {
-        color: 'white',
-        fontSize: 18
-    },
-    pendingText: {
-        backgroundColor: '#3083ba',
-        paddingVertical: 5,
-        paddingHorizontal: 9,
-        fontSize: 18,
-        color: 'white'
-    }
 });
 
 export default SearchResult;

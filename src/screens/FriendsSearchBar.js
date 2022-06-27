@@ -79,7 +79,6 @@ const FriendsSearchBar = () => {
             <HorizontalLine />
             <FlatList
                 keyExtractor={item => item.id}
-                listKey={item => item.id}
                 data={filteredUsers}
                 renderItem={({ item }) => {
                     return (

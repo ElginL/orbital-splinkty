@@ -24,7 +24,7 @@ const Profile = () => {
         try {
             logOutUser();
         } catch (error) {
-            alert(error);
+            console.log(error);
         }
     }
 

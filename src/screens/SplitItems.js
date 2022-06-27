@@ -3,8 +3,9 @@ import {
     Text,
     StyleSheet,
     FlatList,
+    ScrollView
 } from 'react-native';
-import { DraxProvider } from 'react-native-drax';
+import { DraxProvider, DraxList } from 'react-native-drax';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import { useSelector } from 'react-redux';
 import ItemDraggable from '../components/ItemDraggable';
@@ -35,20 +36,22 @@ const SplitItems = () => {
                             }
 
                             return (
-                                draggableItems.map(item => (
-                                    <ItemDraggable
-                                        item={item}
-                                        key={item.id}
-                                    />
-                                ))
+                                <DraxList
+                                    data={draggableItems}
+                                    renderItemContent={({ item }) => (
+                                        <ItemDraggable
+                                            item={item}
+                                        />
+                                    )}
+                                    keyExtractor={item => item.id}
+                                    numColumns={3}
+                                />
+
                             )
                         })()
                     }
                 </View>
-                <View style={styles.receiverContainer}>
-                    <Text style={styles.activeGroupText}>
-                        Group Members
-                    </Text>
+                <ScrollView style={styles.receiverContainer}>
                     {
                         receivingItemList.length === 0
                             ? (
@@ -58,20 +61,17 @@ const SplitItems = () => {
                                 </Text>
                             )
                             : (
-                                <FlatList
-                                    keyExtractor={item => item.email}
-                                    data={receivingItemList}
-                                    renderItem={({ item }) => (
-                                        <ItemReceiver
-                                            draggableItems={draggableItems}
-                                            member={item}
-                                            profileImg={profileImgs[item.email]}
-                                        />
-                                    )}
-                                />
+                                receivingItemList.map(item => (
+                                    <ItemReceiver
+                                        draggableItems={draggableItems}
+                                        member={item}
+                                        profileImg={profileImgs[item.email]}
+                                        key={item.email}
+                                    />
+                                ))
                             )
                     }
-                </View>
+                </ScrollView>
             </DraxProvider>
 
             </GestureHandlerRootView>

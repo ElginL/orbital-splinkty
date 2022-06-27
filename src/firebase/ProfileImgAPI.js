@@ -28,7 +28,6 @@ const uploadImg = async uploadURI => {
     uploadBytes(ProfilePictureRef, blob)
         .then(async () => {
             await updateURLInFirebase();
-            console.log("Success");
         });
 }
 

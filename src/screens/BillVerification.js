@@ -2,7 +2,7 @@ import {
     View,
     Text,
     StyleSheet,
-    FlatList,
+    ScrollView,
     TouchableOpacity
 } from 'react-native';
 import { 
@@ -42,7 +42,7 @@ const BillVerification = ({ navigation }) => {
     }
 
     return (
-        <View style={styles.container}>
+        <ScrollView style={styles.container}>
             {
                 activeGroupMembers.length === 0
                     ? (
@@ -52,16 +52,13 @@ const BillVerification = ({ navigation }) => {
                         </Text>
                     )
                     : (
-                        <FlatList
-                            keyExtractor={item => item.email}
-                            data={activeGroupMembers}
-                            renderItem={({ item }) => (
-                                <ContactBill
-                                    member={item}
-                                    profileImg={profileImgs[item.email]}
-                                />
-                            )}
-                        />
+                        activeGroupMembers.map(member => (
+                            <ContactBill
+                                member={member}
+                                profileImg={profileImgs[member.email]}
+                                key={member.email}
+                            />
+                        ))
                     ) 
             }
             <View style={styles.confirmBtnContainer}>
@@ -72,7 +69,7 @@ const BillVerification = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>                
             </View>
-        </View>
+        </ScrollView>
     );
 };
 

@@ -3,17 +3,17 @@ import {
     StyleSheet, 
     TouchableOpacity,
     View,
-    Image,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
 import { 
-    uploadImg, 
+    uploadImg,
     deleteProfileImg 
 } from '../firebase/ProfileImgAPI';
 import { getCurrentUser } from '../firebase/loginAPI';
 import { MaterialIcons } from '@expo/vector-icons';
 import ProfileImgPickerModal from './ProfileImgPickerModal';
+import CachedImage from 'react-native-expo-cached-image';
 
 const ProfileImgPicker = () => {
     const [modalVisible, setModalVisible] = useState(false);
@@ -72,7 +72,8 @@ const ProfileImgPicker = () => {
             <TouchableOpacity
                 style={styles.photoFrame}
                 onPress={() => setModalVisible(true)}>
-                <Image
+                <CachedImage
+                    isBackground
                     style={styles.profileImg} 
                     source={{ uri: photoURI }}
                 />
@@ -113,7 +114,8 @@ const styles = StyleSheet.create({
     profileImg: {
         width: 200,
         height: 200,
-        borderRadius: 100
+        borderRadius: 100,
+        overflow: 'hidden'
     }
 });
 

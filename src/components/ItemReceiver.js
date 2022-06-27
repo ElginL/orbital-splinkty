@@ -3,7 +3,6 @@ import {
     View,
     Text,
     StyleSheet,
-    Image,
     FlatList,
     TouchableOpacity
 } from 'react-native';
@@ -17,6 +16,7 @@ import {
     deleteItemFromMember
 } from '../store/receiptSlice';
 import { Entypo } from '@expo/vector-icons';
+import CachedImage from 'react-native-expo-cached-image';
 
 const ItemReceiver = ({ draggableItems, member, profileImg }) => {
     const dispatch = useDispatch();
@@ -31,14 +31,14 @@ const ItemReceiver = ({ draggableItems, member, profileImg }) => {
     }, [isAllDrop, modalData]);
 
     const receiveDragDropHandler = quantityDropped => {
-        const priceShare = modalData.payload.price / modalData.payload.initialQuantity * quantityDropped;
+        const priceShare = parseFloat((modalData.payload.price / modalData.payload.initialQuantity * quantityDropped).toFixed(2));
 
         dispatch(addItemToMember({
             memberToEdit: member.email,
             newItem: {
                 description: modalData.payload.description,
                 quantity: quantityDropped,
-                priceShare: parseFloat(priceShare.toFixed(2)),
+                priceShare,
                 id: modalData.payload.id
             }
         }));
@@ -79,7 +79,8 @@ const ItemReceiver = ({ draggableItems, member, profileImg }) => {
     return (
         <View>
             <View style={styles.contact}>
-                <Image
+                <CachedImage
+                    isBackground
                     source={{ uri: profileImg }}
                     style={styles.profileImg}
                 />
@@ -152,7 +153,8 @@ const styles = StyleSheet.create({
         width: 66,
         height: 66,
         borderRadius: 33,
-        marginRight: 20
+        marginRight: 20,
+        overflow: 'hidden'
     },
     receivedItem: {
         margin: 10,

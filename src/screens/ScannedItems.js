@@ -49,7 +49,7 @@ const ScannedItems = ({ route }) => {
         dispatch(addReceiptItem({
             newItem: {
                 description,
-                price: parseFloat(price),
+                price: parseFloat(parseFloat(price).toFixed(2)),
                 remainingQuantity: parseInt(quantity),
                 initialQuantity: parseInt(quantity),
                 id: Math.random(1000),

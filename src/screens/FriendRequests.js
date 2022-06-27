@@ -80,7 +80,6 @@ const FriendRequests = () => {
                     : (
                         <FlatList
                             keyExtractor={item => item.id}
-                            listKey={item => item.id}
                             data={incomingFriendRequests}
                             renderItem={({ item }) => (
                                 <FriendRequest

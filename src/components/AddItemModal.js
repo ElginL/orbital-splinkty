@@ -134,6 +134,9 @@ const styles = StyleSheet.create({
         color: 'red',
         fontSize: 22
     },
+    error: {
+        color: 'red'
+    },
     formSection: {
         marginVertical: 10
     },
@@ -167,9 +170,6 @@ const styles = StyleSheet.create({
     warning: {
         color: 'orange'
     },
-    error: {
-        color: 'red'
-    }
 });
 
 export default AddItemModal;

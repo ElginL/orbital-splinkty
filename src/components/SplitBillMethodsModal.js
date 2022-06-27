@@ -15,7 +15,6 @@ const SplitBillMethodsModal = ({
     openCameraHandler,
     pickImageHandler 
 }) => {
-
     return (
         <Modal
             isVisible={isVisible}

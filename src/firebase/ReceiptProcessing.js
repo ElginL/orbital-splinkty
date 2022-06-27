@@ -1,7 +1,10 @@
 import axios from 'axios';
+import {
+    receiptScanningURL
+} from '@env';
 
 const getData = async (base64) => {
-    const functionUrl = "https://us-central1-splinkty-8a9f7.cloudfunctions.net/widgets/getData";
+    const functionUrl = receiptScanningURL;
 
     try {
         const { data } = await axios.post(functionUrl, {

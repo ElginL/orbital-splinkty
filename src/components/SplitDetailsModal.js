@@ -2,7 +2,8 @@ import Modal from 'react-native-modal';
 import {
     View,
     Text,
-    StyleSheet
+    StyleSheet,
+    FlatList
 } from 'react-native';
 import HorizontalLine from './HorizontalLine';
 
@@ -36,16 +37,19 @@ const SplitDetailsModal = ({ isVisible, onClose, item, isIncoming }) => {
                             </View>
                         )
                 }
-                {
-                    item.items.map(order => (
+                <FlatList
+                    keyExtractor={item => Math.random(1000)}
+                    data={item.items}
+                    renderItem={({ item }) => (
                         <View 
                             style={styles.orderContainer}
                             key={Math.random(1000)}>
-                            <Text style={styles.orderText}>{order.quantity}x {order.description}</Text>
-                            <Text style={styles.priceText}>${order.priceShare}</Text>
+                            <Text style={styles.orderText}>{item.quantity}x {item.description}</Text>
+                            <Text style={styles.priceText}>${item.priceShare}</Text>
                         </View>
-                    ))
-                }
+                        
+                    )}
+                />
                 <HorizontalLine />
                 <Text style={styles.totalPrice}>
                     Total: ${item.totalPrice}

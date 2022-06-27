@@ -1,5 +1,4 @@
 import {
-    SafeAreaView,
     StyleSheet,
     View,
     Text,
