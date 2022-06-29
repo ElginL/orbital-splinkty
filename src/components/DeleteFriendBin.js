@@ -10,11 +10,19 @@ import {
 } from 'firebase/firestore';
 import { db } from '../firebase/loginAPI';
 import DeleteFriendModal from './DeleteFriendModal';
+import ErrorMessageModal from './ErrorMessageModal';
 
 const DeleteFriendBin = ({ item }) => {
     const [isVisible, setIsVisible] = useState(false);
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
 
     const deleteFriendHandler = async (id) => {
+        if (item.amount !== 0) {
+            setIsVisible(false);
+            setErrorModalVisible(true);
+            return;
+        }
+
         try {
             const docRef = doc(db, 'friendship', id);
             await deleteDoc(docRef);
@@ -36,6 +44,11 @@ const DeleteFriendBin = ({ item }) => {
                 isVisible={isVisible}
                 deleteFriendHandler={() => deleteFriendHandler(item.id)}
                 onClose={() => setIsVisible(false)}
+            />
+            <ErrorMessageModal
+                message="Clear debts before deleting friends"
+                isVisible={errorModalVisible}
+                onClose={() => setErrorModalVisible(false)}
             />
         </TouchableOpacity>
     )

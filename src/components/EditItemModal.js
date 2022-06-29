@@ -83,7 +83,7 @@ const EditItemModal = ({
                             *All Fields Must Be Filled
                         </Text>
                         <Text style={hasError? styles.error : styles.warning}>
-                            *Price Must Only Have At Most One Decimal
+                            *Quantity or price must be valid
                         </Text>
                         <View style={styles.btnContainer}>
                             <TouchableOpacity 

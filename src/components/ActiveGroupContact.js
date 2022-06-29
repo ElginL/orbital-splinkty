@@ -3,12 +3,12 @@ import {
     View,
     Text,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    Image
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import Checkbox from 'expo-checkbox';
 import { addActiveGroupMember, removeActiveGroupMember } from '../store/receiptSlice';
-import CachedImage from 'react-native-expo-cached-image';
 
 const ActiveGroupContact = ({ email, profileImg, activeGroupMembers }) => {
     const dispatch = useDispatch();
@@ -54,10 +54,10 @@ const ActiveGroupContact = ({ email, profileImg, activeGroupMembers }) => {
                 }
             }}>
             <View style={styles.contactContainer}>
-                <CachedImage
-                    isBackground 
+                <Image
                     source={{ uri: profileImg }}
                     style={styles.profileImg}
+                    cache="only-if-cached"
                 />
                 <Text style={styles.email}>
                     {email}

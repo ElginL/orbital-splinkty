@@ -62,6 +62,14 @@ export const receiptSlice = createSlice({
         },
         deleteReceiptItem: (state, action) => {
             const index = state.receiptItems.findIndex(item => item.id === action.payload.id);
+
+            state.activeGroupMembers = state.activeGroupMembers.map(member => {
+                return {
+                    ...member,
+                    items: member.items.filter(item => item.id !== action.payload.id)
+                }
+            })
+
             state.receiptItems = [
                 ...state.receiptItems.slice(0, index),
                 ...state.receiptItems.slice(index + 1)

@@ -69,12 +69,18 @@ const Login = ({ navigation }) => {
                             onChangeText={input => setEmail(input)}
                             keyboardType="email-address"
                             placeholder="Enter your email address"
+                            autoCapitalize='none'
+                            autoComplete='off'
+                            autoCorrect={false}
                         />
                         <TextInput
                             style={AuthStyles.textInput}
                             onChangeText={input => setPassword(input)}
                             placeholder="Enter your password"
                             secureTextEntry
+                            autoCapitalize='none'
+                            autoComplete='off'
+                            autoCorrect={false}
                         />
                         <TouchableOpacity
                             style={AuthStyles.blueBGBtn}

@@ -26,8 +26,10 @@ const uploadImg = async uploadURI => {
     const ProfilePictureRef = ref(storageRef, "ProfilePictures/" + getCurrentUser());
     
     uploadBytes(ProfilePictureRef, blob)
-        .then(async () => {
-            await updateURLInFirebase();
+        .then(() => {
+            setTimeout(async () => {
+                await updateURLInFirebase();
+            }, 2000);
         });
 }
 

@@ -6,7 +6,7 @@ import {
     FlatList,
     TouchableOpacity
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { useSelector } from 'react-redux';
 import ActiveGroupContact from '../components/ActiveGroupContact';
 import ActiveGroupSearchBar from '../components/ActiveGroupSearchBar';
 import HorizontalLine from '../components/HorizontalLine';

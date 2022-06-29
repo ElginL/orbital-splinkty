@@ -1,12 +1,12 @@
 import {
     Text,
     TouchableOpacity,
-    StyleSheet
+    StyleSheet,
+    Image
 } from 'react-native';
 import { Entypo } from '@expo/vector-icons';
 import { useDispatch } from 'react-redux';
 import { removeActiveGroupMember } from '../store/receiptSlice';
-import CachedImage from 'react-native-expo-cached-image';
 
 const SelectedFriends = ({ member, profileImg }) => {
     const dispatch = useDispatch();
@@ -26,10 +26,10 @@ const SelectedFriends = ({ member, profileImg }) => {
                 color="black"
                 style={styles.cross}
             />
-            <CachedImage
-                isBackground
+            <Image
                 source={{ uri: profileImg }}
                 style={styles.profileImg}
+                cache="only-if-cached"
             />
             <Text style={styles.email} ellipsizeMode='tail' numberOfLines={1}>
                 {member.email}

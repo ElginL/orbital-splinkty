@@ -74,6 +74,9 @@ const FriendsSearchBar = () => {
                     style={styles.searchText}
                     onChangeText={text => setFilteredUsers(filterUsers(text))}
                     placeholder="Search For Friends"
+                    autoCapitalize='none'
+                    autoComplete='off'
+                    autoCorrect={false}
                 />
             </View>
             <HorizontalLine />

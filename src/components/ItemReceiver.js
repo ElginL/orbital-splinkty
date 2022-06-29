@@ -4,7 +4,8 @@ import {
     Text,
     StyleSheet,
     FlatList,
-    TouchableOpacity
+    TouchableOpacity,
+    Image
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { DraxView } from 'react-native-drax';
@@ -15,7 +16,6 @@ import {
     changeRemainingQtyInReceiptItems
 } from '../store/receiptSlice';
 import { Entypo } from '@expo/vector-icons';
-import CachedImage from 'react-native-expo-cached-image';
 
 const ItemReceiver = ({ member, profileImg }) => {
     const dispatch = useDispatch();
@@ -62,10 +62,10 @@ const ItemReceiver = ({ member, profileImg }) => {
     return (
         <View>
             <View style={styles.contact}>
-                <CachedImage
-                    isBackground
+                <Image
                     source={{ uri: profileImg }}
                     style={styles.profileImg}
+                    cache="only-if-cached"
                 />
                 <Text style={styles.emailText}>
                     {member.email}

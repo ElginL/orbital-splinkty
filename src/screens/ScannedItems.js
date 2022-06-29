@@ -9,7 +9,8 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import {
     addReceiptItem,
-    setReceiptItems
+    setReceiptItems,
+    emptyReceiptStore
 } from '../store/receiptSlice';
 import AddItemModal from '../components/AddItemModal';
 import ScannedItem from '../components/ScannedItem';
@@ -35,6 +36,8 @@ const ScannedItems = ({ route }) => {
                 id: Math.random(1000)
             })
         }
+
+        dispatch(emptyReceiptStore());
 
         dispatch(setReceiptItems({
             receiptItems: initialItems

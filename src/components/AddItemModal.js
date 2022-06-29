@@ -84,7 +84,7 @@ const AddItemModal = ({
                             *All Fields Must Be Filled
                         </Text>
                         <Text style={hasError ? styles.error : styles.warning}>
-                            *Quantity or Price invalid
+                            *Quantity and Price must be valid
                         </Text>
                         <TouchableOpacity
                             style={styles.addBtn}

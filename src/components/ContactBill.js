@@ -2,19 +2,18 @@ import {
     View,
     Text,
     StyleSheet,
-    FlatList
+    Image
 } from 'react-native';
 import HorizontalLine from './HorizontalLine';
-import CachedImage from 'react-native-expo-cached-image';
 
 const ContactBill = ({ member, profileImg }) => {
     return (
         <View style={styles.container}>
             <View style={styles.contactContainer}>
-                <CachedImage
-                    isBackground
+                <Image
                     source={{ uri: profileImg }}
                     style={styles.profilePic}
+                    cache="only-if-cached"
                 />
                 <Text style={styles.emailText}>
                     {member.email}

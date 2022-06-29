@@ -86,18 +86,27 @@ const Signup = ({ navigation }) => {
                             onChangeText={input => setEmail(input)}
                             keyboardType="email-address"
                             placeholder="Enter your email address"
+                            autoCapitalize='none'
+                            autoComplete='off'
+                            autoCorrect={false}
                         />
                         <TextInput
                             style={AuthStyles.textInput}
                             onChangeText={input => setPassword(input)}
                             placeholder="Enter your password"
                             secureTextEntry
+                            autoCapitalize='none'
+                            autoComplete='off'
+                            autoCorrect={false}
                         />
                         <TextInput
                             style={AuthStyles.textInput}
                             onChangeText={input => setConfirmPassword(input)}
                             placeholder="Confirm Password"
                             secureTextEntry
+                            autoCapitalize='none'
+                            autoComplete='off'
+                            autoCorrect={false}
                         />
                         <TouchableOpacity 
                             style={AuthStyles.blueBGBtn}
@@ -110,7 +119,9 @@ const Signup = ({ navigation }) => {
                         <TouchableOpacity 
                             style={AuthStyles.blueBGBtn}
                             onPress={() => navigation.navigate("Login")}>
-                            <Text style={AuthStyles.buttonText}>Go back to sign in</Text>
+                            <Text style={AuthStyles.buttonText}>
+                                Go back to sign in
+                            </Text>
                         </TouchableOpacity>
                     </View>
                 </View>
