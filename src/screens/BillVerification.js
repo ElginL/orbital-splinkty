@@ -1,3 +1,4 @@
+import React, { useState } from 'react';
 import {
     View,
     Text,
@@ -12,17 +13,60 @@ import {
 import { db, getCurrentUser } from '../firebase/loginAPI';
 import { useDispatch, useSelector } from 'react-redux';
 import { emptyReceiptStore } from '../store/receiptSlice';
-
 import ContactBill from '../components/ContactBill';
+import ErrorMessageModal from '../components/ErrorMessageModal';
 
 const BillVerification = ({ navigation }) => {
     const dispatch = useDispatch();
 
+    const [errorModalVisible, setErrorModalVisible] = useState(false);
+    const [errorMessage, setErrorMessage] = useState("");
+
     const profileImgs = useSelector(state => state.users.profilePictures);
-    const activeGroupMembers = useSelector(state => state.receipt.activeGroupMembers);
+    let activeGroupMembers = useSelector(state => state.receipt.activeGroupMembers);
+    const receiptItems = useSelector(state => state.receipt.receiptItems);
+
+    activeGroupMembers = activeGroupMembers.map(member => {
+        let totalPrice = 0;
+
+        return {
+            ...member,
+            items: member.items.map(memberItem => {
+                const receiptItemIndex = receiptItems.findIndex(receiptItem => {
+                    return receiptItem.description === memberItem.description;
+                });
+
+                const priceShare = parseFloat((receiptItems[receiptItemIndex].price
+                    / receiptItems[receiptItemIndex].initialQuantity
+                    * memberItem.quantity).toFixed(2));
+
+                totalPrice += priceShare
+                
+                return {
+                    ...memberItem,
+                    priceShare
+                }
+            }),
+            totalPrice
+        }
+    })
 
     const confirmBtnHandler = () => {
+        setErrorModalVisible(true);
+
+        if (activeGroupMembers.length === 0) {
+            setErrorMessage("No members to split with found");
+            return;
+        } else if (receiptItems.length === 0) {
+            setErrorMessage("No items to split!");
+            return;
+        }
+
         activeGroupMembers.forEach(async member => {
+            if (member.items.length === 0) {
+                return;
+            }
+
             await addDoc(collection(db, "splitrequests"), {
                 from: getCurrentUser(),
                 to: member.email,
@@ -69,6 +113,11 @@ const BillVerification = ({ navigation }) => {
                     </Text>
                 </TouchableOpacity>                
             </View>
+            <ErrorMessageModal
+                message={errorMessage}
+                isVisible={errorModalVisible}
+                onClose={() => setErrorModalVisible(false)}
+            />
         </ScrollView>
     );
 };

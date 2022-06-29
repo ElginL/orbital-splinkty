@@ -64,10 +64,22 @@ const ScannedItems = ({ route }) => {
             return false;
         }
 
+        for (let i = 0; i < quantity.length; i++) {
+            if (quantity.charAt(i) === ',' || quantity.charAt(i) === "." ||
+                quantity.charAt(i) === " " || quantity.charAt(i) === "-") {
+                return false;
+            }
+        }
+
         let dotCount = 0;
         for (let i = 0; i < price.length; i++) {
             if (price.charAt(i) === ".") {
                 dotCount++;
+            }
+
+            if (price.charAt(i) === "," || price.charAt(i) === "-" ||
+                price.charAt(i) === " ") {
+                return false;
             }
         }
 

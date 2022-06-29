@@ -6,9 +6,8 @@ import {
     TouchableOpacity,
     View,
     TextInput,
-    TouchableWithoutFeedback,
-    Keyboard
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const EditItemModal = ({
     isVisible,
@@ -28,7 +27,8 @@ const EditItemModal = ({
             isVisible={isVisible}
             onBackButtonPress={onClose}
             style={styles.modal}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAwareScrollView
+                resetScrollToCoords={{ x: 0, y: 0 }}>
                 <View style={{ flex: 1 }}>
                     <View style={styles.topBar}>
                         <TouchableOpacity
@@ -113,7 +113,7 @@ const EditItemModal = ({
                         </View>
                     </View>
                 </View>
-            </TouchableWithoutFeedback>
+            </KeyboardAwareScrollView>
         </Modal>
     )
 };

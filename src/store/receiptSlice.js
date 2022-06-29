@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
 
 /*
-    activeGroupMembers: [ { email: 'test1@test.com', items: [ { id: 32131, description: 'nuggets', priceShare: 4.32, quantity: 3 }, ... ], totalPrice: 9.43 }, ... ]
+    activeGroupMembers: [ { email: 'test1@test.com', items: [ { id: 32131, description: 'nuggets', quantity: 3 }, ... ] }, ... ]
     receiptItems: [{ id: 2, description: 'Nuggets', remainingQuantity: 6, initialQuantity: 6, price: 7.20 }, ... ]
-*/
+    */
 const initialState = {
     activeGroupMembers: [],
     receiptItems: [],
@@ -13,6 +13,60 @@ export const receiptSlice = createSlice({
     name: 'receipt',
     initialState,
     reducers: {
+        addReceiptItem: (state, action) => {
+            state.receiptItems = [
+                ...state.receiptItems,
+                action.payload.newItem
+            ];
+        },
+        setReceiptItems: (state, action) => {
+            state.receiptItems = action.payload.receiptItems;
+        },
+        editReceiptItem: (state, action) => {
+            state.receiptItems = state.receiptItems.map(item => {
+                if (item.id === action.payload.id) {
+                    const initialQtyChange = action.payload.newQuantity - item.initialQuantity;
+
+                    if (initialQtyChange < 0) {
+                        // Remove item that is edited from all active group members
+                        state.activeGroupMembers = state.activeGroupMembers.map(member => {
+                            return {
+                                ...member,
+                                items: member.items.filter(memberItem => {
+                                    return memberItem.description !== item.description
+                                })
+                            }
+                        });
+
+                        // Return new item with all updated fields
+                        return {
+                            ...item,
+                            description: action.payload.newDescription,
+                            price: action.payload.newPrice,
+                            remainingQuantity: action.payload.newQuantity,
+                            initialQuantity: action.payload.newQuantity
+                        }
+                    }
+                    
+                    return {
+                        ...item,
+                        description: action.payload.newDescription,
+                        price: action.payload.newPrice,
+                        remainingQuantity: item.remainingQuantity + initialQtyChange,
+                        initialQuantity: action.payload.newQuantity
+                    }
+                }
+                
+                return item;
+            })
+        },
+        deleteReceiptItem: (state, action) => {
+            const index = state.receiptItems.findIndex(item => item.id === action.payload.id);
+            state.receiptItems = [
+                ...state.receiptItems.slice(0, index),
+                ...state.receiptItems.slice(index + 1)
+            ];
+        },
         addActiveGroupMember: (state, action) => {
             state.activeGroupMembers = [ 
                 ...state.activeGroupMembers, 
@@ -23,6 +77,23 @@ export const receiptSlice = createSlice({
             const removeIndex = state.activeGroupMembers.findIndex(member => {
                 return member.email === action.payload.memberToRemove;
             });
+
+            const memberItems = state.activeGroupMembers[removeIndex].items;
+
+            state.receiptItems = state.receiptItems.map(item => {
+                const itemIndex = memberItems.findIndex(memberItem => {
+                    return memberItem.description === item.description
+                });
+
+                if (itemIndex !== -1) {
+                    return {
+                        ...item,
+                        remainingQuantity: item.remainingQuantity + memberItems[itemIndex].quantity
+                    }
+                }
+
+                return item;
+            })
 
             state.activeGroupMembers = [
                 ...state.activeGroupMembers.slice(0, removeIndex),
@@ -38,35 +109,47 @@ export const receiptSlice = createSlice({
                         return item.description === newItem.description;
                     });
 
+                    // Item is not in items array of active group member.
                     if (itemIndex === -1) {
                         return {
-                            email: member.email,
+                            ...member,
                             items: [
                                 ...member.items,
                                 newItem
-                            ],
-                            totalPrice: member.totalPrice + newItem.priceShare
+                            ]
                         }
                     }
 
                     return {
-                        email: member.email,
+                        ...member,
                         items: member.items.map(item => {
                             if (item.description === newItem.description) {
                                 return {
                                     ...newItem,
-                                    quantity: member.items[itemIndex].quantity + newItem.quantity,
-                                    priceShare: item.priceShare + newItem.priceShare
+                                    quantity: item.quantity + newItem.quantity,
                                 }
                             }
 
                             return item;
                         }),
-                        totalPrice: member.totalPrice + newItem.priceShare
                     }
                 }
 
                 return member;
+            })
+        },
+        changeRemainingQtyInReceiptItems: (state, action) => {
+            state.receiptItems = state.receiptItems.map(item => {
+                if (item.id === action.payload.itemId) {
+                    return {
+                        ...item,
+                        remainingQuantity: action.payload.method === "DECREMENT"
+                            ? item.remainingQuantity - action.payload.qtyChange
+                            : item.remainingQuantity + action.payload.qtyChange
+                    }
+                }
+
+                return item;
             })
         },
         deleteItemFromMember: (state, action) => {
@@ -75,87 +158,29 @@ export const receiptSlice = createSlice({
                     return {
                         ...member,
                         items: member.items.filter(item => item.id !== action.payload.itemId),
-                        totalPrice: action.payload.totalPrice
                     }
                 }
 
                 return member;
             })
         },
-        addReceiptItem: (state, action) => {
-            state.receiptItems = [
-                ...state.receiptItems,
-                action.payload.newItem
-            ];
-        },
-        editReceiptItem: (state, action) => {
-            state.receiptItems = state.receiptItems.map(item => {
-                if (item.id === action.payload.id) {
-                    return {
-                        description: action.payload.description,
-                        price: action.payload.priceChange,
-                        remainingQuantity: action.payload.remainingQuantity,
-                        initialQuantity: action.payload.initialQuantity,
-                        id: item.id,
-                    }
-                }
-
-                return item;
-            })
-        },
-        changeReceiptItemPriceAndRemainingQty: (state, action) => {
-            state.receiptItems = state.receiptItems.map(item => {
-                if (item.id === action.payload.id) {
-                    return {
-                        ...item,
-                        remainingQuantity: action.payload.remainingQuantity,
-                        priceChange: action.payload.priceChange + item.price
-                    };
-                }
-
-                return item;
-            });
-        },
-        deleteReceiptItem: (state, action) => {
-            const index = state.receiptItems.findIndex(item => item.id === action.payload.id);
-            state.receiptItems = [
-                ...state.receiptItems.slice(0, index),
-                ...state.receiptItems.slice(index + 1)
-            ];
-        },
-        setReceiptItems: (state, action) => {
-            state.receiptItems = action.payload.receiptItems;
-        },
         emptyReceiptStore: state => {
             state.receiptItems = [];
             state.activeGroupMembers = [];
         },
-        emptyActiveGroupMembers: state => {
-            state.activeGroupMembers = [];
-        },
-        resetReceiptRemainingToInitial: state => {
-            state.receiptItems = state.receiptItems.map(item => {
-                return {
-                    ...item,
-                    remainingQuantity: item.initialQuantity
-                };
-            });
-        } 
     }
 });
 
 export const {
+    addReceiptItem,
+    setReceiptItems,
+    editReceiptItem,
+    deleteReceiptItem,
     addActiveGroupMember,
     removeActiveGroupMember,
     addItemToMember,
-    addReceiptItem,
-    editReceiptItem,
+    changeRemainingQtyInReceiptItems,
     deleteItemFromMember,
-    deleteReceiptItem,
-    changeReceiptItemPriceAndRemainingQty,
-    setReceiptItems,
     emptyReceiptStore,
-    emptyActiveGroupMembers,
-    resetReceiptRemainingToInitial
 } = receiptSlice.actions;
 export default receiptSlice.reducer;

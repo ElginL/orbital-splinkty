@@ -6,9 +6,8 @@ import {
     TouchableOpacity,
     View,
     TextInput,
-    TouchableWithoutFeedback,
-    Keyboard
 } from 'react-native';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view';
 
 const AddItemModal = ({
     isVisible,
@@ -26,7 +25,8 @@ const AddItemModal = ({
             isVisible={isVisible}
             onBackButtonPress={onClose}
             style={styles.modal}>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+            <KeyboardAwareScrollView
+                resetScrollToCoords={{ x: 0, y: 0 }}>
                 <View style={{ flex: 1 }}>
                     <View style={styles.topBar}>
                         <TouchableOpacity
@@ -84,7 +84,7 @@ const AddItemModal = ({
                             *All Fields Must Be Filled
                         </Text>
                         <Text style={hasError ? styles.error : styles.warning}>
-                            *Price Must Only Have At Most One Decimal
+                            *Quantity or Price invalid
                         </Text>
                         <TouchableOpacity
                             style={styles.addBtn}
@@ -106,7 +106,7 @@ const AddItemModal = ({
                         </TouchableOpacity>
                     </View>
                 </View>
-            </TouchableWithoutFeedback>
+            </KeyboardAwareScrollView>
         </Modal>
     )
 };

@@ -11,14 +11,13 @@ import { DraxView } from 'react-native-drax';
 import ItemQuantityModal from './ItemQuantityModal';
 import {
     addItemToMember, 
-    changeReceiptItemPriceAndRemainingQty,
-    editReceiptItem,
-    deleteItemFromMember
+    deleteItemFromMember,
+    changeRemainingQtyInReceiptItems
 } from '../store/receiptSlice';
 import { Entypo } from '@expo/vector-icons';
 import CachedImage from 'react-native-expo-cached-image';
 
-const ItemReceiver = ({ draggableItems, member, profileImg }) => {
+const ItemReceiver = ({ member, profileImg }) => {
     const dispatch = useDispatch();
 
     const [modalData, setModalData] = useState({ isVisible: false, payload: null });
@@ -31,22 +30,19 @@ const ItemReceiver = ({ draggableItems, member, profileImg }) => {
     }, [isAllDrop, modalData]);
 
     const receiveDragDropHandler = quantityDropped => {
-        const priceShare = parseFloat((modalData.payload.price / modalData.payload.initialQuantity * quantityDropped).toFixed(2));
-
         dispatch(addItemToMember({
             memberToEdit: member.email,
             newItem: {
                 description: modalData.payload.description,
                 quantity: quantityDropped,
-                priceShare,
                 id: modalData.payload.id
             }
         }));
 
-        dispatch(editReceiptItem({
-            ...modalData.payload,
-            priceChange: modalData.payload.price,
-            remainingQuantity: modalData.payload.remainingQuantity - quantityDropped,
+        dispatch(changeRemainingQtyInReceiptItems({
+            method: "DECREMENT",
+            itemId: modalData.payload.id,
+            qtyChange: quantityDropped
         }));
     }
 
@@ -54,25 +50,12 @@ const ItemReceiver = ({ draggableItems, member, profileImg }) => {
         dispatch(deleteItemFromMember({
             itemId: item.id,
             email: member.email,
-            totalPrice: member.totalPrice - item.priceShare 
         }));
 
-        let remainingQuantity = 0;
-        let initialQuantity = 0;
-        for (const draggableItem of draggableItems) {
-            if (draggableItem.description === item.description) {
-                remainingQuantity = draggableItem.remainingQuantity;
-                initialQuantity = draggableItem.initialQuantity;
-                break;
-            }
-        }
-
-        dispatch(changeReceiptItemPriceAndRemainingQty({
-            description: item.description,
-            priceChange: -item.priceShare,
-            remainingQuantity: remainingQuantity + item.quantity,
-            initialQuantity,
-            id: item.id
+        dispatch(changeRemainingQtyInReceiptItems({
+            method: "INCREMENT",
+            itemId: item.id,
+            qtyChange: item.quantity,
         }));
     }
 

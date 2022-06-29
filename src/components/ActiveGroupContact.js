@@ -32,7 +32,6 @@ const ActiveGroupContact = ({ email, profileImg, activeGroupMembers }) => {
             newMember: {
                 email: newMember,
                 items: [],
-                totalPrice: 0
             }
         }));
     };

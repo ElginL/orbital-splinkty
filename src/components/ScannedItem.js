@@ -23,10 +23,9 @@ const ScannedItem = ({ item, isValidFormInput }) => {
         }
 
         dispatch(editReceiptItem({
-            description,
-            priceChange: parseFloat(parseFloat(price).toFixed(2)),
-            remainingQuantity: parseInt(quantity),
-            initialQuantity: parseInt(quantity),
+            newDescription: description,
+            newPrice: parseFloat(parseFloat(price).toFixed(2)),
+            newQuantity: parseInt(quantity),
             id: itemId,
         }));
 

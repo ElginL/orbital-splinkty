@@ -42,7 +42,7 @@ const ContactBill = ({ member, profileImg }) => {
                         Total price:
                     </Text>
                     <Text style={styles.calculatedPrice}>
-                        ${member.totalPrice}
+                        ${member.totalPrice.toFixed(2)}
                     </Text>
                 </View>
             </View>
