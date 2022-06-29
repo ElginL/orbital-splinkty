@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { 
     View,
     StyleSheet,
-    ScrollView
+    ScrollView,
 } from 'react-native';
 import { useDispatch } from 'react-redux';
 import { 

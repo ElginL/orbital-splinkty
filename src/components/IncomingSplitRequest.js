@@ -4,6 +4,7 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
+    Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import {
@@ -18,7 +19,6 @@ import {
 import { db } from '../firebase/loginAPI';
 import HorizontalLine from './HorizontalLine';
 import SplitDetailsModal from './SplitDetailsModal';
-import CachedImage from 'react-native-expo-cached-image';
 
 const IncomingSplitRequest = ({ item }) => {
     const profileImgs = useSelector(state => state.users.profilePictures);
@@ -179,10 +179,10 @@ const IncomingSplitRequest = ({ item }) => {
         <View>
             <View style={styles.container}>
                 <View style={styles.requesterContainer}>
-                    <CachedImage
-                        isBackground
+                    <Image
                         source={{ uri: profileImgs[item.from] }}
                         style={styles.requesterImg}
+                        cache="only-if-cached"
                     />
                     <View style={styles.detailsContainer}>
                         <Text style={styles.requesterText}>

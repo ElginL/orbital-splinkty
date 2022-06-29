@@ -2,7 +2,6 @@ import {
     View,
     Text,
     StyleSheet,
-    FlatList,
     ScrollView
 } from 'react-native';
 import { DraxProvider, DraxList } from 'react-native-drax';
@@ -63,7 +62,6 @@ const SplitItems = () => {
                             : (
                                 receivingItemList.map(item => (
                                     <ItemReceiver
-                                        draggableItems={draggableItems}
                                         member={item}
                                         profileImg={profileImgs[item.email]}
                                         key={item.email}
@@ -73,8 +71,7 @@ const SplitItems = () => {
                     }
                 </ScrollView>
             </DraxProvider>
-
-            </GestureHandlerRootView>
+        </GestureHandlerRootView>
     );
 };
 

@@ -1,34 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import {
     View,
     Text,
     StyleSheet,
-    FlatList
+    FlatList,
+    TouchableOpacity
 } from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
-import { 
-    emptyActiveGroupMembers,
-    resetReceiptRemainingToInitial 
-} from '../store/receiptSlice';
+import { useSelector } from 'react-redux';
 import ActiveGroupContact from '../components/ActiveGroupContact';
 import ActiveGroupSearchBar from '../components/ActiveGroupSearchBar';
 import HorizontalLine from '../components/HorizontalLine';
 import SelectedFriend from '../components/SelectedFriend';
 
-const ActiveGroup = () => {
-    const dispatch = useDispatch();
-
+const ActiveGroup = ({ navigation }) => {
     const friendsEmail = useSelector(state => state.friendship.friendsEmail);
     const profileImgs = useSelector(state => state.users.profilePictures);
     const activeGroupMembers = useSelector(state => state.receipt.activeGroupMembers);
     
     const [filteredFriends, setFilteredFriends] = useState(friendsEmail);
-
-    useEffect(() => {
-        dispatch(emptyActiveGroupMembers());
-        dispatch(resetReceiptRemainingToInitial());
-    }, []);
-
+    
     return (
         <View style={styles.container}>
             <ActiveGroupSearchBar
@@ -52,25 +42,39 @@ const ActiveGroup = () => {
                 <HorizontalLine />
             </View>
             {
-                filteredFriends.length === 0
+                friendsEmail.length === 0
                     ? (
-                        <Text style={styles.noResultText}>
-                            No Search Results...
-                        </Text>
-                    )
-                    : (
-                        <FlatList
-                            keyExtractor={item => item}
-                            data={filteredFriends}
-                            renderItem={({ item }) => (
-                                <ActiveGroupContact 
-                                    email={item}
-                                    profileImg={profileImgs[item]}
-                                    activeGroupMembers={activeGroupMembers}
-                                />
-                            )}
-                        />
-                    )
+                        <View style={styles.noFriendsContainer}>
+                            <Text style={styles.noResultText}>
+                                You do not have friends yet...
+                            </Text>
+                            <TouchableOpacity style={styles.navigateBtn}
+                                onPress={() => navigation.navigate("SendFriendRequest")}>
+                                <Text style={styles.navigateLink}>
+                                    Click to Add Friends
+                                </Text>
+                            </TouchableOpacity>
+                        </View>
+                    ) 
+                    : filteredFriends.length === 0
+                        ? (
+                            <Text style={styles.noResultText}>
+                                No Search Results...
+                            </Text>
+                        )
+                        : (
+                            <FlatList
+                                keyExtractor={item => item}
+                                data={filteredFriends}
+                                renderItem={({ item }) => (
+                                    <ActiveGroupContact 
+                                        email={item}
+                                        profileImg={profileImgs[item]}
+                                        activeGroupMembers={activeGroupMembers}
+                                    />
+                                )}
+                            />
+                        )
             }
         </View>
     )
@@ -81,10 +85,21 @@ const styles = StyleSheet.create({
         flex: 1,
         backgroundColor: 'white'
     },
+    navigateLink: {
+        color: 'rgb(10, 132, 255)',
+        fontSize: 18,
+        marginTop: 10,
+        fontStyle: 'italic',
+        fontWeight: '200'
+    },
+    noFriendsContainer: {
+        alignItems: 'center'
+    },
     noResultText: {
         marginTop: 50,
         fontSize: 18,
-        textAlign: 'center'
+        fontStyle: "italic",
+        fontWeight: '200'
     }
 })
 

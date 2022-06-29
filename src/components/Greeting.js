@@ -2,10 +2,10 @@ import {
     StyleSheet, 
     Text,
     View,
+    Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../firebase/loginAPI';
-import CachedImage from 'react-native-expo-cached-image';
 
 const Greeting = ({
     cashToReceive,
@@ -19,10 +19,10 @@ const Greeting = ({
 
     return (
         <View style={styles.container}>
-            <CachedImage
-                isBackground
+            <Image
                 style={styles.profileImg} 
                 source={{ uri: photoURI }} 
+                cache="only-if-cached"
             />
             <Text style={styles.greetingTitle}>
                 Welcome Back

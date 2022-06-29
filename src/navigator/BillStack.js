@@ -6,6 +6,7 @@ import {
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import ActiveGroup from '../screens/ActiveGroup';
 import BillVerification from '../screens/BillVerification';
+import FriendsSearchBar from '../screens/FriendsSearchBar';
 import ScannedItems from '../screens/ScannedItems';
 import SplitItems from '../screens/SplitItems';
 import SplitBillHeader from './SplitBillHeader';
@@ -79,6 +80,13 @@ const BillStack = () => {
                 component={BillVerification}
                 options={{
                     title: "Bill Verification"
+                }}
+            />
+            <Stack.Screen 
+                name="SendFriendRequest" 
+                component={FriendsSearchBar} 
+                options={{
+                    headerTitle: 'Send Friend Request'
                 }}
             />
         </Stack.Navigator>

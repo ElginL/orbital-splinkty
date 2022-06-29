@@ -3,6 +3,7 @@ import {
     Text,
     StyleSheet,
     TouchableOpacity,
+    Image
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import { 
@@ -12,7 +13,6 @@ import {
     doc
 } from 'firebase/firestore';
 import { getCurrentUser, db } from '../firebase/loginAPI';
-import CachedImage from 'react-native-expo-cached-image';
 
 const SearchResult = ({ user, profilePic }) => {
     const outgoingReqs = useSelector(state => state.friendship.sentFriendRequests);
@@ -53,10 +53,10 @@ const SearchResult = ({ user, profilePic }) => {
     return (
         <View style={styles.searchResult}>
             <View style={styles.userDisplay}>
-                <CachedImage
-                    isBackground
+                <Image
                     source={{ uri: profilePic }} 
-                    style={styles.contactImg} />
+                    style={styles.contactImg} 
+                    cache="only-if-cached" />
                 <Text style={styles.name}>{user.email}</Text>
             </View>
             {

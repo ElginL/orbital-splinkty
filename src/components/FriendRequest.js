@@ -3,17 +3,17 @@ import {
     View, 
     Text, 
     TouchableOpacity,
+    Image
 } from 'react-native';
-import CachedImage from 'react-native-expo-cached-image';
 
 const FriendRequest = ({ item, declineHandler, acceptHandler, url }) => {
     return (
         <View style={styles.requestContainer}>
             <View style={styles.userDisplay}>
-                <CachedImage
-                    isBackground 
+                <Image
                     source={{ uri: url }} 
                     style={styles.contactImg} 
+                    cache="only-if-cached"
                 />
                 <Text style={styles.name}>
                     {item.from}

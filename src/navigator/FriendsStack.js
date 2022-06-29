@@ -30,6 +30,9 @@ const FriendsStack = () => {
             <Stack.Screen 
                 name="Add Friends" 
                 component={FriendsSearchBar} 
+                options={{
+                    headerTitle: 'Send Friend Request'
+                }}
             />
         </Stack.Navigator>
     );
