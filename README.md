@@ -8,7 +8,7 @@ Powered By:
 <a href="https://docs.google.com/document/d/1SlQsbSLH2CgwTS_Y1v8dfrqgjovoPbgwGx44P9LKwko/edit?usp=sharing">Click</a> to read a more detailed version of our README
 
 ## Milestone 2 Application Testing
-Repository's Github Releases: https://github.com/ElginL/orbital-splinkty/releases/tag/v1.0.0
+Repository's Github Releases: https://github.com/ElginL/orbital-splinkty/releases/tag/v1.1.0
 ### Testing on Android emulator (Recommended)
 1) Download Android Studio
 2) Install and launch an emulator
