@@ -67,8 +67,14 @@ const ActiveGroupContact = ({ email, profileImg, activeGroupMembers }) => {
             <Checkbox 
                 style={styles.checkBox}
                 value={isChecked}
-                onValueChange={setIsChecked}
                 color="rgb(10, 132, 255)"
+                onValueChange={() => {
+                    if (!isChecked) {
+                        addMember(email);
+                    } else {
+                        removeMember(email);
+                    }
+                }}
             />
         </TouchableOpacity>
     )
