@@ -14,7 +14,6 @@ const Greeting = ({
     pplToPayCount
 }) => {
     const profilePictures = useSelector(state => state.users.profilePictures);
-
     const photoURI = profilePictures[getCurrentUser()];
 
     return (

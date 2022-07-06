@@ -3,10 +3,15 @@ import {
     View, 
     Text, 
     TouchableOpacity,
-    Image
+    Image,
 } from 'react-native';
+import { useSelector } from 'react-redux';
+import { getCurrentUser } from '../firebase/loginAPI';
+import { sendPushNotification } from '../firebase/notifications';
 
 const Contact = ({ item, profileImg }) => {
+    const notifTokens = useSelector(state => state.users.notificationTokens);
+
     return (
         <View style={styles.contact}>
             <View style={styles.userDisplay}>
@@ -51,7 +56,15 @@ const Contact = ({ item, profileImg }) => {
                             <Text style={styles.nudgeAmount}>
                                 ${item.amount.toFixed(2)}
                             </Text>
-                            <TouchableOpacity style={styles.nudgeBtn}>
+                            <TouchableOpacity 
+                                style={styles.nudgeBtn}
+                                onPress={async () => {
+                                    await sendPushNotification(
+                                        notifTokens[item.friend],
+                                        `${getCurrentUser()} sent you a poke!`,
+                                        `Please pay back ${item.amount.toFixed(2)}!`
+                                    )
+                                }}>
                                 <Text style={styles.nudgeText}>
                                     Nudge
                                 </Text>

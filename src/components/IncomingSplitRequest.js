@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     },
     acceptText: {
         color: 'white',
-        fontSize: 18,
+        fontSize: 16,
     },
     buttonsContainer: {
         flexDirection: 'row'
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        padding: 20
+        padding: 20,
     },
     declineBtn: {
         backgroundColor: 'lightgrey',
@@ -262,7 +262,7 @@ const styles = StyleSheet.create({
         fontSize: 18,
     },
     declineText: {
-        fontSize: 18
+        fontSize: 16
     },
     priceShare: {
         fontSize: 18,
@@ -273,9 +273,9 @@ const styles = StyleSheet.create({
         alignItems: 'center'
     },
     requesterImg: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
         marginRight: 10,
         overflow: 'hidden'
     },

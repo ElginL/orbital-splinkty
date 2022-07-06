@@ -98,9 +98,9 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     profileImg: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
         marginRight: 10,
         overflow: 'hidden'
     },

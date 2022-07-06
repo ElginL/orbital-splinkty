@@ -20,10 +20,12 @@ import {
 import { useDispatch, useSelector } from 'react-redux';
 import { db, getCurrentUser } from '../firebase/loginAPI';
 import FriendRequest from '../components/FriendRequest';
+import { sendPushNotification } from '../firebase/notifications';
 
 const FriendRequests = () => {
     const dispatch = useDispatch();
-    
+    const notifTokens = useSelector(state => state.users.notificationTokens)
+
     useEffect(() => {
         const incomingRequestsQuery = query(collection(db, "friendrequests"), where('to', '==', getCurrentUser()));
         const unsubIncomingRequestsQuery = onSnapshot(incomingRequestsQuery, snapshot => {
@@ -66,6 +68,12 @@ const FriendRequests = () => {
             isOweIndex1: true,
             paymentAmount: 0
         });
+
+        await sendPushNotification(
+            notifTokens[user],
+            "Friend Request",
+            `${getCurrentUser()} accepted your friend request!`
+        )
     }
 
     return (

@@ -1,5 +1,14 @@
 {
   "expo": {
+    "plugins": [
+      [
+        "expo-notifications",
+        {
+          "icon": "./src/assets/SplinktyIcon.jpg",
+          "color": "#ffffff"
+        }
+      ]
+    ],
     "name": "Splinkty",
     "slug": "Splinkty",
     "version": "1.0.0",

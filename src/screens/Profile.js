@@ -3,7 +3,7 @@ import {
     StyleSheet, 
     TouchableOpacity,
     Text,
-    SafeAreaView,
+    ScrollView,
     View
 } from 'react-native';
 import {
@@ -14,22 +14,26 @@ import HorizontalLine from '../components/HorizontalLine';
 import NotificationSettings from '../components/NotificationSettings';
 import ProfileImgPicker from '../components/ProfileImgPicker';
 import LoadingOverlay from '../components/LoadingOverlay';
+import { deleteToken } from '../firebase/notifications';
 
 const Profile = () => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const logOutHandler = () => {
-        setIsLoading(true);
+    const logOutHandler = async () => {
+        setIsLoading(true);        
+
+        await deleteToken(getCurrentUser());
 
         try {
             logOutUser();
+            
         } catch (error) {
             console.log(error);
         }
     }
 
     return (
-        <SafeAreaView style={styles.container}>
+        <ScrollView style={styles.container}>
             <View style={styles.userProfile}>
                 <ProfileImgPicker />
                 <Text style={styles.userText}>
@@ -51,14 +55,14 @@ const Profile = () => {
                     ? <LoadingOverlay />
                     : null
             }
-        </SafeAreaView>
+        </ScrollView>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: 'white'
+        backgroundColor: 'white',
     },
     logOutText: {
         color: 'rgb(10, 132, 255)',

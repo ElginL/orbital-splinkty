@@ -9,11 +9,18 @@ import {
     collection,
     onSnapshot,
     query,
+    doc,
+    updateDoc,
     where
 } from "firebase/firestore";
 import { db, getCurrentUser } from '../firebase/loginAPI';
-import { setUsers, setProfilePictures } from '../store/usersSlice';
+import { 
+    setUsers, 
+    addUserPic,
+    addUserNotifToken
+} from '../store/usersSlice';
 import { setFriendsWithPayments, setFriendsEmail } from '../store/friendsSlice';
+import { getToken } from '../firebase/notifications';
 import Greeting from '../components/Greeting';
 import Top3Payments from '../components/Top3Payments';
 
@@ -64,32 +71,44 @@ const Home = () => {
         
         const unsubUserQuery = onSnapshot(usersRef, snapshot => {
             const usersEmail = [];
-            const profilePictures = {};
 
             snapshot.docs.forEach(doc => {
                 usersEmail.push({
                     email: doc.data().email,
                     id: doc.id
                 });
-                profilePictures[doc.data().email] = doc.data().photoURL;
+                
+                dispatch(addUserPic({
+                    email: doc.data().email,
+                    profilePic: doc.data().photoURL
+                }));
+
+                dispatch(addUserNotifToken({
+                    email: doc.data().email,
+                    token: doc.data().notifToken
+                }))
             });
             
             dispatch(setUsers({
                 usersEmail
             }));
-
-            dispatch(setProfilePictures({
-                profilePictures
-            }))
         });
 
         const currUserQuery = query(usersRef, where("email", "==", getCurrentUser()));
         const unsubCurrUserQ = onSnapshot(currUserQuery, snapshot => {
-            snapshot.docs.forEach(doc => {
-                setCashToReceive(doc.data().total.receiving);
-                setCashToPay(doc.data().total.paying);
-                setPplToReceiveFromCount(doc.data().peopleToReceive);
-                setPplToPayCount(doc.data().peopleToPay);
+            snapshot.docs.forEach(async document => {
+                setCashToReceive(document.data().total.receiving);
+                setCashToPay(document.data().total.paying);
+                setPplToReceiveFromCount(document.data().peopleToReceive);
+                setPplToPayCount(document.data().peopleToPay);
+
+                const userRef = doc(db, "users", document.id);
+                const token = await getToken();
+                if (token) {
+                    await updateDoc(userRef, {
+                        notifToken: token
+                    });
+                }
             });
         });
 

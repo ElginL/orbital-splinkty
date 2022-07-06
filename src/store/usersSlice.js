@@ -4,7 +4,8 @@ import { createSlice } from '@reduxjs/toolkit';
 // profilePictures: { "test1@test.com": url, "test2@test.com": url, ... }
 const initialState = {
     users: [],
-    profilePictures: {}
+    profilePictures: {},
+    notificationTokens: {}
 };
 
 export const usersSlice = createSlice({
@@ -14,15 +15,25 @@ export const usersSlice = createSlice({
         setUsers: (state, action) => {
             state.users = action.payload.usersEmail;
         },
-        setProfilePictures: (state, action) => {
-            state.profilePictures = action.payload.profilePictures;
+        addUserPic: (state, action) => {
+            state.profilePictures = {
+                ...state.profilePictures,
+                [action.payload.email]: action.payload.profilePic
+            }
+        },
+        addUserNotifToken: (state, action) => {
+            state.notificationTokens = {
+                ...state.notificationTokens,
+                [action.payload.email]: action.payload.token
+            }
         }
     }
 });
 
 export const { 
     setUsers,
-    setProfilePictures
+    addUserPic,
+    addUserNotifToken
 } = usersSlice.actions;
 
 export default usersSlice.reducer;

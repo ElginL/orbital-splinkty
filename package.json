@@ -46,7 +46,9 @@
     "react-native-web": "0.17.7",
     "react-redux": "^8.0.2",
     "webpack-dev-server": "~3.11.0",
-    "expo-image-manipulator": "~10.3.1"
+    "expo-image-manipulator": "~10.3.1",
+    "expo-device": "~4.2.0",
+    "expo-notifications": "~0.15.4"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

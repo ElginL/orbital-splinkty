@@ -41,7 +41,8 @@ const Top3Payments = () => {
 
 const styles = StyleSheet.create({
     container: {
-        marginBottom: 10
+        marginBottom: 10,
+        paddingBottom: 30
     },
     emptyText: {
         fontStyle: 'italic',
