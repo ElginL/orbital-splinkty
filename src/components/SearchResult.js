@@ -54,9 +54,12 @@ const SearchResult = ({ user, profilePic }) => {
         <View style={styles.searchResult}>
             <View style={styles.userDisplay}>
                 <Image
-                    source={{ uri: profilePic }} 
+                    source={{ 
+                        uri: profilePic, 
+                        cache: "only-if-cached" 
+                    }} 
                     style={styles.contactImg} 
-                    cache="only-if-cached" />
+                />
                 <Text style={styles.name}>{user.email}</Text>
             </View>
             {

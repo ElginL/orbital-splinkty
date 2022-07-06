@@ -12,63 +12,85 @@ import {
     collection
 } from "firebase/firestore"
 import { 
-    uploadBytes, 
+    uploadBytesResumable, 
     ref, 
     getDownloadURL, 
     deleteObject 
 } from "firebase/storage";
+import { manipulateAsync, SaveFormat } from 'expo-image-manipulator';
+
+const defaultURL = async () => {
+    const storageRef = ref(storage);
+
+    const defaultPicRef = ref(storageRef, "ProfilePictures/" + "blank.png");
+    const url = await getDownloadURL(defaultPicRef);
+
+    return url;
+}
 
 const uploadImg = async uploadURI => {
-    const response = await fetch(uploadURI);
+    // Compress image before sending it for upload.
+    const compressedResult = await manipulateAsync(
+        uploadURI,
+        [{ resize: { width: 200, height: 200 }}],
+        { compress: 1, format: SaveFormat.JPEG }
+    )
+
+    const metadata = {
+        contentType: 'image/jpeg'
+    };
+
+    const response = await fetch(compressedResult.uri);
     const blob = await response.blob();
 
-    const storageRef = ref(storage);
-    const ProfilePictureRef = ref(storageRef, "ProfilePictures/" + getCurrentUser());
-    
-    uploadBytes(ProfilePictureRef, blob)
-        .then(() => {
-            setTimeout(async () => {
-                await updateURLInFirebase();
-            }, 2000);
-        });
+    const storageRef = ref(storage, `ProfilePictures/${getCurrentUser()}`);
+    const uploadTask = uploadBytesResumable(storageRef, blob, metadata);
+
+    uploadTask.on('state_changed', 
+        snapshot => {
+            const progress = snapshot.bytesTransferred / snapshot.totalBytes * 100;
+            console.log('Upload is ' + progress + '% done');
+        },
+        error => {
+            console.log("Failed to upload image to firebase")
+        },
+        async () => {
+            const url = await getDownloadURL(uploadTask.snapshot.ref);
+            
+            await updateURL(url);
+        })
 }
 
 const deleteProfileImg = async () => {
-    const desertRef = ref(storage, "ProfilePictures/" + getCurrentUser() + "_200x200");
+    const desertRef = ref(storage, "ProfilePictures/" + getCurrentUser());
 
     try {
         if (desertRef !== undefined) {
             deleteObject(desertRef);
-            await updateURLInFirebaseHelper("https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png");
+
+            const url = await defaultURL(); 
+            await updateURL(url);
+            
         }
     } catch (error) {
         console.log(error.message);
     }
 }
 
-const updateURLInFirebase = async () => {
-    const ProfilePictureRef = ref(storage, "ProfilePictures/" + getCurrentUser() + "_200x200");
-
-    try {
-        const URL = await getDownloadURL(ProfilePictureRef);
-        await updateURLInFirebaseHelper(URL);
-    } catch (err) {
-        console.log(err.message);
-    }
-}
-
-const updateURLInFirebaseHelper = async (url) => {
-    const q = query(collection(db, "users"), where("email", '==', getCurrentUser()));
+const updateURL = async url => {
+    const q  = query(collection(db, "users"), where("email", "==", getCurrentUser()));
     const querySnapshot = await getDocs(q);
     querySnapshot.forEach(async document => {
-        const userRef = doc(db, 'users', document.id);
+        const userRef = doc(db, "users", document.id);
         await updateDoc(userRef, {
             photoURL: url
-        });
+        })
     })
 }
 
+
 export {
     uploadImg,
-    deleteProfileImg
+    deleteProfileImg,
+    defaultURL
 }

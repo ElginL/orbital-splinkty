@@ -21,8 +21,10 @@ const Greeting = ({
         <View style={styles.container}>
             <Image
                 style={styles.profileImg} 
-                source={{ uri: photoURI }} 
-                cache="only-if-cached"
+                source={{ 
+                    uri: photoURI, 
+                    cache: "only-if-cached"
+                }} 
             />
             <Text style={styles.greetingTitle}>
                 Welcome Back

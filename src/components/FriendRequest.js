@@ -11,9 +11,11 @@ const FriendRequest = ({ item, declineHandler, acceptHandler, url }) => {
         <View style={styles.requestContainer}>
             <View style={styles.userDisplay}>
                 <Image
-                    source={{ uri: url }} 
+                    source={{
+                        uri: url,
+                        cache: "only-if-cached"
+                    }} 
                     style={styles.contactImg} 
-                    cache="only-if-cached"
                 />
                 <Text style={styles.name}>
                     {item.from}

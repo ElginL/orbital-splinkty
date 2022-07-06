@@ -30,9 +30,11 @@ const OutgoingSplitRequest = ({ item }) => {
             <View style={styles.container}>
                 <View style={styles.senderContainer}>
                     <Image
-                        source={{ uri: profileImgs[item.to] }}
+                        source={{ 
+                            uri: profileImgs[item.to],
+                            cache: "only-if-cached"
+                        }}
                         style={styles.profileImg}
-                        cache="only-if-cached"
                     />
                     <View style={styles.senderDetailsContainer}>
                         <Text style={styles.senderText}>

@@ -16,6 +16,7 @@ import { ErrorPopup } from '../components/PopupDialogs';
 import getErrorMessage from '../firebase/authErrorMessages';
 import { addDoc, collection } from 'firebase/firestore';
 import { createUser, db } from '../firebase/loginAPI';
+import { defaultURL } from '../firebase/ProfileImgAPI';
 
 const Signup = ({ navigation }) => {
     const [email, setEmail] = useState("");
@@ -25,15 +26,18 @@ const Signup = ({ navigation }) => {
     const [isFailed, setFailed] = useState(false);
     const [errorMessage, setErrorMessage] = useState("");
 
-    const signUpHandler = () => {
+    const signUpHandler = async () => {
         setIsLoading(true);
+
+        const defaultProfilePic = await defaultURL();
+
         try {
             createUser(email, password, confirmPassword)
                 .then(userCredential => {
                     addDoc(collection(db, "users"), {
                         uid: userCredential.user.uid,
                         email: userCredential.user.email,
-                        photoURL: "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png",
+                        photoURL: defaultProfilePic,
                         peopleToPay: 0,
                         peopleToReceive: 0,
                         total: {
