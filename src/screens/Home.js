@@ -53,6 +53,7 @@ const Home = () => {
                 friendsWithPayments.push({
                     amount: doc.data().paymentAmount,
                     friend: doc.data().connection[friendArrayIndex],
+                    nudgeTime: doc.data().nudgeTime ? doc.data().nudgeTime : 0,
                     isOweFriend,
                     id: doc.id
                 });

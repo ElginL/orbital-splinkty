@@ -6,7 +6,8 @@ import {
     doc,
     getDocs,
     collection,
-    updateDoc
+    updateDoc,
+    Timestamp
 } from 'firebase/firestore';
 import { db } from './loginAPI';
 
@@ -22,7 +23,7 @@ async function sendPushNotification(expoPushToken, title, body) {
     await fetch('https://exp.host/--/api/v2/push/send', {
         method: 'POST',
         headers: {
-            Accept: 'application/json',
+            Accept: 'application/json', 
             'Accept-encoding': 'gzip, deflate',
             'Content-Type': 'application/json',
         },
@@ -79,9 +80,18 @@ async function deleteToken(userEmail) {
     })
 };
 
+async function updateNudgeTime(docId) {
+    const docRef = doc(db, "friendship", docId);
+
+    await updateDoc(docRef, {
+        nudgeTime: Timestamp.now().seconds
+    });
+}
+
 export {
     sendPushNotification,
     registerForPushNotificationsAsync,
     getToken,
-    deleteToken
+    deleteToken,
+    updateNudgeTime
 }
