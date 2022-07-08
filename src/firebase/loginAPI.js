@@ -62,18 +62,17 @@ const logInUser = (email, password) => {
     return signInWithEmailAndPassword(auth, email, password);
 }
 
+const getCurrentUser = () => {
+    if (auth !== null) {
+        return auth.currentUser.email;
+    }
+};
+
 // Log out currently logged in user
 const logOutUser = () => {
     return signOut(auth);
 }
 
-const getCurrentUser = () => {
-    if (auth != null) {
-        return auth.currentUser.email;
-    }
-    
-    return null;
-};
 
 export { 
     createUser,

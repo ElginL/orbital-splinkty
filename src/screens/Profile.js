@@ -14,22 +14,14 @@ import HorizontalLine from '../components/HorizontalLine';
 import NotificationSettings from '../components/NotificationSettings';
 import ProfileImgPicker from '../components/ProfileImgPicker';
 import LoadingOverlay from '../components/LoadingOverlay';
-import { deleteToken } from '../firebase/notifications';
 
 const Profile = () => {
     const [isLoading, setIsLoading] = useState(false);
 
-    const logOutHandler = async () => {
+    const logOutHandler = () => {
         setIsLoading(true);        
 
-        await deleteToken(getCurrentUser());
-
-        try {
-            logOutUser();
-            
-        } catch (error) {
-            console.log(error);
-        }
+        logOutUser();
     }
 
     return (

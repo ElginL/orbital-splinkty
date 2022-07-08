@@ -26,14 +26,14 @@ export const usersSlice = createSlice({
                 ...state.notificationTokens,
                 [action.payload.email]: action.payload.token
             }
-        }
+        },
     }
 });
 
 export const { 
     setUsers,
     addUserPic,
-    addUserNotifToken
+    addUserNotifToken,
 } = usersSlice.actions;
 
 export default usersSlice.reducer;

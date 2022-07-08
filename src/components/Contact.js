@@ -122,7 +122,8 @@ const Contact = ({ item, profileImg }) => {
             <PaymentModal 
                 isVisible={modalVisible}
                 onClose={() => setModalVisible(false)}
-                itemId={item.id}
+                item={item}
+                notifToken={notifTokens[item.friend]}
             />
         </View>
     );

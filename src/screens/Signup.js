@@ -43,7 +43,8 @@ const Signup = ({ navigation }) => {
                         total: {
                             receiving: 0,
                             paying: 0
-                        }
+                        },
+                        notificationOn: true
                     });
                 })
                 .catch((error) => {

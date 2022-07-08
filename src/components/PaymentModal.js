@@ -10,26 +10,36 @@ import {
     doc,
     updateDoc
 } from 'firebase/firestore'
-import { db } from '../firebase/loginAPI';
+import { db, getCurrentUser } from '../firebase/loginAPI';
 import { Entypo } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
+import { sendPushNotification } from '../firebase/notifications';
 
 const PaymentModal = ({
     isVisible,
     onClose,
-    itemId
+    item,
+    notifToken
 }) => {
     const openWithLink = link => {
         Linking.openURL(link);
-    }
+    };
 
     const payHandler = async () => {
-        const docRef = doc(db, "friendship", itemId);
+        const docRef = doc(db, "friendship", item.id);
 
         await updateDoc(docRef, {
             paymentAmount: 0
         });
-    }
+
+        await sendPushNotification(
+            notifToken,
+            "Payment Received",
+            `${getCurrentUser()} paid you $${item.amount.toFixed(2)}`
+        );
+
+        onClose();
+    };
 
     return (
         <Modal

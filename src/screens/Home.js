@@ -17,7 +17,7 @@ import { db, getCurrentUser } from '../firebase/loginAPI';
 import { 
     setUsers, 
     addUserPic,
-    addUserNotifToken
+    addUserNotifToken,
 } from '../store/usersSlice';
 import { setFriendsWithPayments, setFriendsEmail } from '../store/friendsSlice';
 import { getToken } from '../firebase/notifications';
@@ -84,12 +84,11 @@ const Home = () => {
                     profilePic: doc.data().photoURL
                 }));
 
-                dispatch(addUserNotifToken({
-                    email: doc.data().email,
-                    token: doc.data().notifToken
-                }))
+                doc.data().notificationOn
+                    ? dispatch(addUserNotifToken({ email: doc.data().email, token: doc.data().notifToken }))
+                    : dispatch(addUserNotifToken({ email: doc.data().email, token: null }));
             });
-            
+
             dispatch(setUsers({
                 usersEmail
             }));
@@ -105,7 +104,7 @@ const Home = () => {
 
                 const userRef = doc(db, "users", document.id);
                 const token = await getToken();
-                if (token) {
+                if (token && document.data().notificationOn) {
                     await updateDoc(userRef, {
                         notifToken: token
                     });
