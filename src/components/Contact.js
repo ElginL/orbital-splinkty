@@ -10,9 +10,11 @@ import { useSelector } from 'react-redux';
 import { getCurrentUser } from '../firebase/loginAPI';
 import { sendPushNotification, updateNudgeTime } from '../firebase/notifications';
 import { Timestamp } from 'firebase/firestore';
+import PaymentModal from './PaymentModal';
 
 const Contact = ({ item, profileImg }) => {
     const notifTokens = useSelector(state => state.users.notificationTokens);
+    const [modalVisible, setModalVisible] = useState(false);
 
     // Cooldown in seconds
     const NUDGE_COOLDOWN = 300;
@@ -36,7 +38,6 @@ const Contact = ({ item, profileImg }) => {
             clearInterval(timerId);
         };
     }, [item.nudgeTime]);
-
 
     return (
         <View style={styles.contact}>
@@ -68,7 +69,9 @@ const Contact = ({ item, profileImg }) => {
                                 <Text style={styles.payAmount}>
                                     ${item.amount.toFixed(2)}
                                 </Text>
-                                <TouchableOpacity style={styles.payBtn}>
+                                <TouchableOpacity 
+                                    style={styles.payBtn}
+                                    onPress={() => setModalVisible(true)}>
                                     <Text style={styles.payText}>
                                         Pay
                                     </Text>
@@ -116,6 +119,11 @@ const Contact = ({ item, profileImg }) => {
                     );
                 })()
             }
+            <PaymentModal 
+                isVisible={modalVisible}
+                onClose={() => setModalVisible(false)}
+                itemId={item.id}
+            />
         </View>
     );
 };
