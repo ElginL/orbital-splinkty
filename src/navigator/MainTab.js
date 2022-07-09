@@ -1,7 +1,7 @@
 import BillStack from './BillStack';
 import FriendsStack from './FriendsStack';
+import ProfileStack from './ProfileStack';
 import Home from '../screens/Home';
-import Profile from '../screens/Profile';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { FontAwesome, FontAwesome5, MaterialCommunityIcons } from '@expo/vector-icons';
@@ -57,8 +57,8 @@ const MainTab = () => {
                     }}
                 />
                 <Tab.Screen
-                    name="Profile" 
-                    component={Profile}
+                    name="ProfileStack" 
+                    component={ProfileStack}
                     options={{
                         tabBarLabel: 'Profile',
                         tabBarIcon: ({ color, size }) => (
@@ -67,7 +67,8 @@ const MainTab = () => {
                                 color={color} 
                                 size={size} 
                             />
-                        )
+                        ),
+                        headerShown: false
                     }} 
                 />
             </Tab.Navigator>

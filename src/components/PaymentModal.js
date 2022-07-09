@@ -8,18 +8,23 @@ import {
 import Modal from 'react-native-modal';
 import {
     doc,
-    updateDoc
-} from 'firebase/firestore'
+    updateDoc,
+    addDoc,
+    Timestamp,
+    collection,
+    serverTimestamp
+} from 'firebase/firestore';
 import { db, getCurrentUser } from '../firebase/loginAPI';
 import { Entypo } from '@expo/vector-icons';
 import * as Linking from 'expo-linking';
 import { sendPushNotification } from '../firebase/notifications';
+import { changePayments } from '../firebase/users';
 
 const PaymentModal = ({
     isVisible,
     onClose,
     item,
-    notifToken
+    notifToken,
 }) => {
     const openWithLink = link => {
         Linking.openURL(link);
@@ -28,9 +33,25 @@ const PaymentModal = ({
     const payHandler = async () => {
         const docRef = doc(db, "friendship", item.id);
 
+        // Change payment amount to 0 in friendship document.
         await updateDoc(docRef, {
             paymentAmount: 0
         });
+
+        // Add to payment history collection.
+        const timestamp = Timestamp.now().toDate().toLocaleString();
+        await addDoc(collection(db, "payhistory"), {
+            timestamp: serverTimestamp(),
+            // time: Date().toLocaleString().substring(16, 21),
+            // date: timestamp.substring(0, 6) + timestamp.substring(8, 10),
+            // day: Date().toLocaleString().substring(0, 4),
+            connection: [getCurrentUser(), item.friend],
+            payToIndex1: true
+        });
+
+        // Update users doc for friend and the current user.
+        await changePayments(getCurrentUser(), item.amount, true);
+        await changePayments(item.friend, item.amount, false);
 
         await sendPushNotification(
             notifToken,

@@ -31,7 +31,7 @@ const ContactBill = ({ member, profileImg }) => {
                             ? <Text>No Orders...</Text>
                             : (
                                 member.items.map(item => (
-                                    <Text>
+                                    <Text key={item.id}>
                                         {item.quantity}x {item.description}
                                     </Text>
                                 ))
