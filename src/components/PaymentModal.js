@@ -39,14 +39,11 @@ const PaymentModal = ({
         });
 
         // Add to payment history collection.
-        const timestamp = Timestamp.now().toDate().toLocaleString();
         await addDoc(collection(db, "payhistory"), {
             timestamp: serverTimestamp(),
-            // time: Date().toLocaleString().substring(16, 21),
-            // date: timestamp.substring(0, 6) + timestamp.substring(8, 10),
-            // day: Date().toLocaleString().substring(0, 4),
-            connection: [getCurrentUser(), item.friend],
-            payToIndex1: true
+            sender: getCurrentUser(),
+            receiver: item.friend,
+            amount: item.amount
         });
 
         // Update users doc for friend and the current user.

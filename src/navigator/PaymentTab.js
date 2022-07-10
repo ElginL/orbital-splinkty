@@ -19,11 +19,11 @@ const PaymentTab = () => {
                 swipeEnabled: false
             }}>
             <Tab.Screen
-                name="Receive History"
+                name="Received"
                 component={PayReceiveHistory}
             />
             <Tab.Screen
-                name="Payments History"
+                name="Paid"
                 component={PaySentHistory}
             />
         </Tab.Navigator>
