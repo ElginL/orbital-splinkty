@@ -15,14 +15,14 @@ const Greeting = ({
 }) => {
     const profilePictures = useSelector(state => state.users.profilePictures);
 
-    const photoURI = profilePictures[getCurrentUser()];
-
     return (
         <View style={styles.container}>
             <Image
                 style={styles.profileImg} 
-                source={{ uri: photoURI }} 
-                cache="only-if-cached"
+                source={{ 
+                    uri: profilePictures[getCurrentUser()], 
+                    cache: "only-if-cached"
+                }} 
             />
             <Text style={styles.greetingTitle}>
                 Welcome Back

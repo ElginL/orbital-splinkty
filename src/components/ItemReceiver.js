@@ -63,9 +63,11 @@ const ItemReceiver = ({ member, profileImg }) => {
         <View>
             <View style={styles.contact}>
                 <Image
-                    source={{ uri: profileImg }}
+                    source={{
+                        uri: profileImg, 
+                        cache: "only-if-cached"
+                    }}
                     style={styles.profileImg}
-                    cache="only-if-cached"
                 />
                 <Text style={styles.emailText}>
                     {member.email}

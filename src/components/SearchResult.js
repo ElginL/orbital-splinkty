@@ -13,15 +13,23 @@ import {
     doc
 } from 'firebase/firestore';
 import { getCurrentUser, db } from '../firebase/loginAPI';
+import { sendPushNotification } from '../firebase/notifications';
 
 const SearchResult = ({ user, profilePic }) => {
     const outgoingReqs = useSelector(state => state.friendship.sentFriendRequests);
+    const notifTokens = useSelector(state => state.users.notificationTokens);
 
-    const addFriendHandler = otherUser => {
-        addDoc(collection(db, "friendrequests"), {
+    const addFriendHandler = async otherUser => {
+        await addDoc(collection(db, "friendrequests"), {
             from: getCurrentUser(),
             to: otherUser
         });
+
+        await sendPushNotification(
+            notifTokens[otherUser],
+            `${otherUser} sent you a friend request!`,
+            "Accept or Decline it!"
+        )
     }
 
     const cancelHandler = async () => {
@@ -54,9 +62,12 @@ const SearchResult = ({ user, profilePic }) => {
         <View style={styles.searchResult}>
             <View style={styles.userDisplay}>
                 <Image
-                    source={{ uri: profilePic }} 
+                    source={{ 
+                        uri: profilePic, 
+                        cache: "only-if-cached" 
+                    }} 
                     style={styles.contactImg} 
-                    cache="only-if-cached" />
+                />
                 <Text style={styles.name}>{user.email}</Text>
             </View>
             {

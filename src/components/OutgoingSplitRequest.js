@@ -30,9 +30,11 @@ const OutgoingSplitRequest = ({ item }) => {
             <View style={styles.container}>
                 <View style={styles.senderContainer}>
                     <Image
-                        source={{ uri: profileImgs[item.to] }}
+                        source={{ 
+                            uri: profileImgs[item.to],
+                            cache: "only-if-cached"
+                        }}
                         style={styles.profileImg}
-                        cache="only-if-cached"
                     />
                     <View style={styles.senderDetailsContainer}>
                         <Text style={styles.senderText}>
@@ -96,9 +98,9 @@ const styles = StyleSheet.create({
         fontSize: 18
     },
     profileImg: {
-        width: 80,
-        height: 80,
-        borderRadius: 40,
+        width: 60,
+        height: 60,
+        borderRadius: 30,
         marginRight: 10,
         overflow: 'hidden'
     },
