@@ -27,7 +27,7 @@ const SearchResult = ({ user, profilePic }) => {
 
         await sendPushNotification(
             notifTokens[otherUser],
-            `${otherUser} sent you a friend request!`,
+            `${getCurrentUser()} sent you a friend request!`,
             "Accept or Decline it!"
         )
     }
