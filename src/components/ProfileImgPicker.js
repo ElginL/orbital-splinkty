@@ -3,7 +3,7 @@ import {
     StyleSheet, 
     TouchableOpacity,
     View,
-    Image
+    Image,
 } from 'react-native';
 import { useSelector } from 'react-redux';
 import * as ImagePicker from 'expo-image-picker';
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         height: 200,
         borderRadius: 100,
         overflow: 'hidden'
-    }
+    },
 });
 
 export default ProfileImgPicker;

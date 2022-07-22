@@ -10,6 +10,7 @@ const ErrorMessageModal = ({
     isVisible,
     onClose
 }) => {
+    console.log(isVisible);
     return (
         <Modal
             isVisible={isVisible}
@@ -31,6 +32,7 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 20,
         alignItems: 'center',
+        zIndex: 10000
     },
     error: {
         color: 'red',
