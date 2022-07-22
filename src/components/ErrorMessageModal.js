@@ -10,7 +10,6 @@ const ErrorMessageModal = ({
     isVisible,
     onClose
 }) => {
-    console.log(isVisible);
     return (
         <Modal
             isVisible={isVisible}

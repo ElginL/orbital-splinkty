@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit';
 
 /*
     friendsWithPayments: [
-        { amount: 99, friend: 'test1@test.com', isOweFriend: true, id: 43242 },
+        { amount: 99, friend: 'test1@test.com', isOweFriend: true, nudgeTime: 0, id: 43242 },
         ...
     ]
 

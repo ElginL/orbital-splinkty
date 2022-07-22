@@ -19,7 +19,7 @@ describe("renders ContactSimple correctly", () => {
 
         // Make sure that the amount is present.
         getByText("$6.50");
-    })
+    });
 
     it("not owe friend", () => {
         const component = (
@@ -38,5 +38,5 @@ describe("renders ContactSimple correctly", () => {
 
         // Make sure the amount is correct.
         getByText("$4.00");
-    })
+    });
 })
