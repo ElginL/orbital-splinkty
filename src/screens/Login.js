@@ -53,7 +53,9 @@ const Login = ({ navigation }) => {
 
     return (
         <KeyboardAwareScrollView
-            resetScrollToCoords={{ x: 0, y: 0 }}
+            extraScrollHeight={100}
+            enableOnAndroid={true}
+            extraHeight={80}
             contentContainerStyle={AuthStyles.screenContainer}
             >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

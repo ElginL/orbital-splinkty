@@ -1,5 +1,5 @@
 const AUTH_ERRORS = {
-    "auth/wrong-password": "The password is invalid or the user does not have a password.",
+    "auth/wrong-password": "The username or password is invalid",
     "auth/claims-too-large": "The claims payload provided to setCustomUserClaims() exceeds the maximum allowed size of 1000 bytes.",
     "auth/email-already-exists": "The provided email is already in use by an existing user. Each user must have a unique email.",
     "auth/id-token-expired": "The provided Firebase ID token is expired.",
@@ -127,7 +127,7 @@ const AUTH_ERRORS = {
     "auth/unsupported-tenant-operation": "This operation is not supported in a multi-tenant context.",
     "auth/unverified-email": "The operation requires a verified email.",
     "auth/user-cancelled": "The user did not grant your application the permissions it requested.",
-    "auth/user-not-found": "There is no user record corresponding to this identifier. The user may have been deleted.",
+    "auth/user-not-found": "The username or password is invalid",
     "auth/user-disabled": "The user account has been disabled by an administrator.",
     "auth/user-mismatch": "The supplied credentials do not correspond to the previously signed in user.",
     "auth/weak-password": "The password must be 6 characters long or more.",

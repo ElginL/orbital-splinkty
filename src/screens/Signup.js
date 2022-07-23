@@ -75,7 +75,9 @@ const Signup = ({ navigation }) => {
 
     return (
         <KeyboardAwareScrollView
-            resetScrollToCoords={{ x: 0, y: 0 }}
+            extraScrollHeight={100}
+            enableOnAndroid={true}
+            extraHeight={80}
             contentContainerStyle={AuthStyles.screenContainer}
             >
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -84,7 +86,7 @@ const Signup = ({ navigation }) => {
                         style={AuthStyles.teamLogo}
                         source={require('../assets/SplinktyIcon.png')}
                     />
-                    <Text style={AuthStyles.headerTitle}>Sign Up</Text>
+                    <Text style={AuthStyles.headerTitle}>Register Account</Text>
                     <View style={AuthStyles.formContainer}>
                         <TextInput
                             style={AuthStyles.textInput}

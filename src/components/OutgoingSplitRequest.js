@@ -74,11 +74,12 @@ const styles = StyleSheet.create({
         borderWidth: 1,
         borderColor: 'red',
         borderRadius: 20,
-        marginTop: 10
+        marginTop: 10,
+        width: 150
     },
     cancelText: {
         color: 'red',
-        textAlign: 'center'
+        textAlign: 'center',
     },
     container: {
         flexDirection: 'row',
