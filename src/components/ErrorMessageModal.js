@@ -31,7 +31,6 @@ const styles = StyleSheet.create({
         backgroundColor: 'white',
         borderRadius: 20,
         alignItems: 'center',
-        zIndex: 10000
     },
     error: {
         color: 'red',
