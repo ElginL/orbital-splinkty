@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "1024868372034",
+    "project_id": "splinkty-8a9f7",
+    "storage_bucket": "splinkty-8a9f7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1024868372034:android:0973472c3bc52ca19ea7db",
+        "android_client_info": {
+          "package_name": "com.splinkty"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1024868372034-4h2bjqt32mrhkbcukeusmqar7d9rthvb.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyC8of8AXDcKIHbCQL_3rtZAem0MuU8KaOI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1024868372034-4h2bjqt32mrhkbcukeusmqar7d9rthvb.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
