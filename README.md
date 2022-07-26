@@ -19,6 +19,16 @@ A mobile application that simplifies bill splitting by utilizing Optical Charact
   </tr>
 </table>
 
+## Home Screenshot
+<table>
+  <tr>
+    <td align="center">Home</td>
+  </tr>
+  <tr>
+    <td><img src="https://user-images.githubusercontent.com/88147891/180938166-b4e4b39b-fb4a-463c-9dc6-1a4935c0d53c.jpg" width=270 height=480></td>
+  </tr>
+</table>
+
 ## Friend List Screenshot
 <table>
   <tr>
